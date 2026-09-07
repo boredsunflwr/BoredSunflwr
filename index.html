@@ -55,31 +55,39 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Physics Fluid Trails Canvas overlay */
-    #fluid-canvas {
+    /* Viscous Fluid Trail Canvas Wrapper */
+    .fluid-container-wrapper {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
       pointer-events: none;
-      z-index: 5;
+      z-index: 6;
+      /* Contrast + Blur creates metaball liquid merging like liquid simulation */
+      filter: url('#liquid-metaball-filter');
     }
 
-    /* Classic Cursor Dot Pointer */
+    #fluid-canvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Core Cursor Dot - Restored to Previous Dual Black/Red Tone */
     .custom-cursor-dot {
       position: fixed;
       top: 0;
       left: 0;
-      width: 10px;
-      height: 10px;
-      background: #ffffff;
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
       pointer-events: none;
       z-index: 99999;
       transform: translate(-50%, -50%);
-      box-shadow: 0 0 10px #ffffff, 0 0 20px #ff3344;
-      transition: transform 0.05s ease-out;
+      background: radial-gradient(circle, #ff0022 0%, #000000 75%);
+      border: 1px solid rgba(255, 60, 80, 0.6);
+      box-shadow: 0 0 15px rgba(255, 0, 40, 0.8), 0 0 30px rgba(0, 0, 0, 0.9);
+      transition: width 0.2s ease, height 0.2s ease, background 0.2s ease;
     }
 
     /* Ambient Spotlight Overlay */
@@ -601,9 +609,25 @@
 </head>
 <body>
 
+  <svg style="position: absolute; width: 0; height: 0;">
+    <defs>
+      <filter id="liquid-metaball-filter">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+        <feColorMatrix in="blur" mode="matrix" values="
+          1 0 0 0 0  
+          0 1 0 0 0  
+          0 0 1 0 0  
+          0 0 0 22 -8" result="goo" />
+        <feBlend in="SourceGraphic" in2="goo" />
+      </filter>
+    </defs>
+  </svg>
+
   <div class="bg-gradient-base"></div>
 
-  <canvas id="fluid-canvas"></canvas>
+  <div class="fluid-container-wrapper">
+    <canvas id="fluid-canvas"></canvas>
+  </div>
 
   <div id="dot-cursor" class="custom-cursor-dot"></div>
 
@@ -802,7 +826,7 @@
   </section>
 
   <script>
-    /* Canvas Fluid Physics Engine */
+    /* Noth.in Fluid Dynamic Particle Physics Engine */
     const canvas = document.getElementById('fluid-canvas');
     const ctx = canvas.getContext('2d');
     const dotCursor = document.getElementById('dot-cursor');
@@ -832,11 +856,24 @@
       const dy = mouseY - prevMouseY;
       const speed = Math.sqrt(dx * dx + dy * dy);
 
-      // Spawn fluid physics particles based on mouse movement speed
-      if (speed > 1.5) {
-        const count = Math.min(Math.floor(speed * 0.4), 8);
+      // Invert cursor center based on dark/light background surface underneath
+      const targetElem = document.elementFromPoint(mouseX, mouseY);
+      if (targetElem) {
+        const tag = targetElem.tagName.toLowerCase();
+        if (tag === 'input' || tag === 'button' || targetElem.classList.contains('playlist-right')) {
+          dotCursor.style.background = 'radial-gradient(circle, #000000 0%, #d6001c 85%)';
+          dotCursor.style.borderColor = '#000000';
+        } else {
+          dotCursor.style.background = 'radial-gradient(circle, #ff0022 0%, #000000 75%)';
+          dotCursor.style.borderColor = 'rgba(255, 60, 80, 0.6)';
+        }
+      }
+
+      // Generate viscous liquid blobs on motion
+      if (speed > 1.2) {
+        const count = Math.min(Math.floor(speed * 0.35), 6);
         for (let i = 0; i < count; i++) {
-          particles.push(new FluidParticle(mouseX, mouseY, dx, dy, speed));
+          particles.push(new NothInLiquidBlob(mouseX, mouseY, dx, dy, speed));
         }
       }
 
@@ -844,66 +881,56 @@
       prevMouseY = mouseY;
     });
 
-    class FluidParticle {
+    class NothInLiquidBlob {
       constructor(x, y, dx, dy, speed) {
-        this.x = x + (Math.random() - 0.5) * 10;
-        this.y = y + (Math.random() - 0.5) * 10;
-        const angle = Math.atan2(dy, dx) + (Math.random() - 0.5) * 0.8;
-        const pSpeed = speed * (0.1 + Math.random() * 0.25);
-        this.vx = Math.cos(angle) * pSpeed;
-        this.vy = Math.sin(angle) * pSpeed;
+        this.x = x + (Math.random() - 0.5) * 14;
+        this.y = y + (Math.random() - 0.5) * 14;
+        const angle = Math.atan2(dy, dx) + (Math.random() - 0.5) * 0.6;
+        const velocity = speed * (0.08 + Math.random() * 0.15);
+        this.vx = Math.cos(angle) * velocity;
+        this.vy = Math.sin(angle) * velocity;
         
-        this.radius = Math.min(Math.max(speed * 0.4, 8), 35) * (0.8 + Math.random() * 0.5);
+        // Fluid droplet dimensions
+        this.baseRadius = Math.min(Math.max(speed * 0.5, 12), 32) * (0.8 + Math.random() * 0.4);
+        this.radius = this.baseRadius;
         this.life = 1.0;
-        this.decay = 0.02 + Math.random() * 0.025;
-        this.aspect = 1 + Math.min(speed * 0.05, 2);
-        this.angle = angle;
+        this.decay = 0.022 + Math.random() * 0.018;
+        
+        // Dynamic black to red fluid gradient mix
+        this.isRedCore = Math.random() > 0.4;
       }
 
       update() {
         this.x += this.vx;
         this.y += this.vy;
-        this.vx *= 0.92;
-        this.vy *= 0.92;
+        this.vx *= 0.90;
+        this.vy *= 0.90;
         this.life -= this.decay;
-        this.radius *= 0.97;
+        this.radius = this.baseRadius * Math.sin(this.life * Math.PI * 0.5);
       }
 
       draw(ctx) {
-        if (this.life <= 0 || this.radius <= 1) return;
+        if (this.life <= 0 || this.radius <= 0.5) return;
 
         ctx.save();
-        ctx.translate(this.x, this.y);
-        ctx.rotate(this.angle);
-        ctx.scale(this.aspect, 1 / this.aspect);
+        ctx.beginPath();
 
-        // Detect surface color under particle for inversion
-        let isLightSurface = false;
-        const elemUnder = document.elementFromPoint(this.x, this.y);
-        if (elemUnder) {
-          const tag = elemUnder.tagName.toLowerCase();
-          if (tag === 'input' || tag === 'button' || elemUnder.classList.contains('playlist-right') || tag === 'h1' || tag === 'h2') {
-            isLightSurface = true;
-          }
-        }
-
-        // Color inversion relative to background position
-        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, this.radius);
-        if (isLightSurface) {
-          // Dark ink fluid on bright/ui elements
-          grad.addColorStop(0, `rgba(15, 0, 5, ${this.life * 0.85})`);
-          grad.addColorStop(0.6, `rgba(60, 0, 15, ${this.life * 0.5})`);
-          grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius);
+        
+        if (this.isRedCore) {
+          // Red core bleeding into deep black viscous borders
+          grad.addColorStop(0, `rgba(255, 20, 50, ${this.life * 0.95})`);
+          grad.addColorStop(0.55, `rgba(140, 0, 25, ${this.life * 0.8})`);
+          grad.addColorStop(1, `rgba(10, 0, 3, ${this.life * 0.9})`);
         } else {
-          // Crimson neon fluid on dark gradient background
-          grad.addColorStop(0, `rgba(255, 40, 70, ${this.life * 0.9})`);
-          grad.addColorStop(0.5, `rgba(180, 0, 35, ${this.life * 0.6})`);
-          grad.addColorStop(1, 'rgba(120, 0, 20, 0)');
+          // Deep black ink core bleeding into red highlight borders
+          grad.addColorStop(0, `rgba(5, 0, 2, ${this.life * 0.98})`);
+          grad.addColorStop(0.65, `rgba(180, 10, 30, ${this.life * 0.75})`);
+          grad.addColorStop(1, `rgba(255, 0, 40, ${this.life * 0.85})`);
         }
 
         ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
+        ctx.arc(this.x, this.y, Math.max(this.radius, 0), 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       }
@@ -916,7 +943,7 @@
         const p = particles[i];
         p.update();
         p.draw(ctx);
-        if (p.life <= 0 || p.radius <= 1) {
+        if (p.life <= 0 || p.radius <= 0.5) {
           particles.splice(i, 1);
         }
       }
@@ -925,7 +952,7 @@
     }
     renderFluidCanvas();
 
-    /* App State & Flow */
+    /* App Flow Logic */
     let userName = "Star";
     let langIndex = 0;
     let charIndex = 0;
