@@ -5,15 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Happy Birthday!</title>
   
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Outfit:wght@300;400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-  <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- Canvas Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
@@ -21,7 +18,7 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      cursor: none !important; /* Hide default browser cursor */
+      cursor: none !important;
     }
 
     html {
@@ -39,25 +36,60 @@
       position: relative;
     }
 
-    /* CUSTOM INVERTING CURSOR WITH SMOOTH LAG & HOVER EXPANSION */
-    .custom-cursor-follower {
+    /* Solid Dynamic Single-Color Cursor */
+    .custom-cursor-dot {
       position: fixed;
       top: 0;
       left: 0;
-      width: 48px;
-      height: 48px;
-      background-color: #ffffff;
+      width: 18px;
+      height: 18px;
       border-radius: 50%;
       pointer-events: none;
       z-index: 999999;
-      mix-blend-mode: difference;
-      transform: translate(-50%, -50%) scale(1);
-      transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), width 0.2s ease, height 0.2s ease;
+      transform: translate(-50%, -50%);
+      background: #ff3344;
+      box-shadow: 0 0 14px rgba(255, 51, 68, 0.85);
+      transition: background 0.2s ease, box-shadow 0.2s ease;
     }
 
-    /* Expanded Cursor State on Hover */
-    .custom-cursor-follower.cursor-expanded {
-      transform: translate(-50%, -50%) scale(1.85);
+    .custom-cursor-dot.dark-mode {
+      background: #000000;
+      box-shadow: 0 0 14px rgba(0, 0, 0, 0.9);
+    }
+
+    /* Container for Image Trail Items */
+    #image-trail-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 99999;
+      overflow: hidden;
+    }
+
+    /* Spawns Transparent PNG Trail Elements */
+    .trail-image {
+      position: absolute;
+      width: 75px;
+      height: 75px;
+      object-fit: contain;
+      pointer-events: none;
+      will-change: transform, opacity;
+      transform: translate(-50%, -50%) scale(0) rotate(0deg);
+      opacity: 0;
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.35s ease;
+    }
+
+    .trail-image.active {
+      opacity: 0.9;
+    }
+
+    .trail-image.fade-out {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.3) rotate(15deg) !important;
+      transition: transform 0.4s ease, opacity 0.4s ease;
     }
 
     /* Ambient Background Layer */
@@ -598,16 +630,14 @@
 </head>
 <body>
 
-  <!-- Custom Big Difference-Inverting Cursor Follower -->
-  <div id="cursor-follower" class="custom-cursor-follower"></div>
+  <div id="image-trail-container"></div>
 
-  <!-- Ambient Background Layer -->
+  <div id="dot-cursor" class="custom-cursor-dot"></div>
+
   <div class="bg-gradient-base"></div>
 
-  <!-- Ambient Light Overlay -->
   <div class="ambient-overlay"></div>
 
-  <!-- Festive Lights -->
   <div id="lights-strip" class="lights-wrapper">
     <div class="light-wire-main">
       <div class="bulb-socket"><div class="socket"></div><div class="bulb-gold"></div></div>
@@ -621,44 +651,39 @@
     </div>
   </div>
 
-  <!-- Back Button -->
-  <button id="corner-back-btn" class="btn-corner-back hover-expand hidden" onclick="handleCornerBack()">
+  <button id="corner-back-btn" class="btn-corner-back hidden" onclick="handleCornerBack()">
     <i class="fa-solid fa-arrow-left"></i> Back
   </button>
 
-  <!-- STEP 1: Enter Name -->
   <section id="step-name" class="fullpage-section">
-    <h2 class="hover-expand">Who is the birthday star? 👑</h2>
-    <input type="text" id="user-name-input" class="input-field hover-expand" placeholder="Enter name..." autocomplete="off" onkeydown="handleKeyPress(event)">
-    <button class="btn-glow hover-expand" onclick="startGreeting()">Celebrate 🎉</button>
+    <h2>Who is the birthday star? 👑</h2>
+    <input type="text" id="user-name-input" class="input-field" placeholder="Enter name..." autocomplete="off" onkeydown="handleKeyPress(event)">
+    <button class="btn-glow" onclick="startGreeting()">Celebrate 🎉</button>
   </section>
 
-  <!-- STEP 2: Multilingual Typewriter -->
   <section id="step-greeting" class="fullpage-section hidden">
     <div class="greeting-container">
-      <h2 class="hb-glow-text hover-expand">
+      <h2 class="hb-glow-text">
         <span id="typewriter-text"></span><span class="cursor"></span>
       </h2>
-      <h1 id="user-name-display" class="fixed-name hover-expand"></h1>
-      <button class="btn-glow hover-expand" onclick="goToLightsStep()">Open Surprise 🎁</button>
+      <h1 id="user-name-display" class="fixed-name"></h1>
+      <button class="btn-glow" onclick="goToLightsStep()">Open Surprise 🎁</button>
     </div>
   </section>
 
-  <!-- STEP 3: Lights Prompt -->
   <section id="step-lights" class="fullpage-section hidden">
-    <h2 class="hover-expand">Set the Celebration Mood! ✨</h2>
+    <h2>Set the Celebration Mood! ✨</h2>
     <p style="color: #ffb3b8; font-size: 1.15rem; margin-bottom: 1.5rem; text-align: center;">
       Tap below to illuminate the room before your cake arrives!
     </p>
-    <button class="btn-glow hover-expand" onclick="turnOnLightsAndShowCake()">Turn On Lights ✨</button>
+    <button class="btn-glow" onclick="turnOnLightsAndShowCake()">Turn On Lights ✨</button>
   </section>
 
-  <!-- STEP 4: Interactive Cake Page -->
   <section id="step-main" class="fullpage-section hidden">
-    <h2 id="welcome-header" class="hover-expand" style="font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900; text-shadow: 0 0 25px #ff3344;"></h2>
+    <h2 id="welcome-header" style="font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900; text-shadow: 0 0 25px #ff3344;"></h2>
     <p class="wish-text">Make a wish and blow out the candles! 🕯️</p>
 
-    <div class="cake-container hover-expand" onclick="blowCandles()">
+    <div class="cake-container" onclick="blowCandles()">
       <svg class="cake" viewBox="0 0 200 200">
         <ellipse cx="100" cy="170" rx="85" ry="18" fill="#1f0305" stroke="#4a0008" stroke-width="2"/>
         <ellipse cx="100" cy="168" rx="75" ry="14" fill="#380207"/>
@@ -673,7 +698,6 @@
 
         <path d="M 35 75 Q 45 90 55 75 Q 65 95 75 75 Q 85 90 95 75 Q 105 95 115 75 Q 125 90 135 75 Q 145 95 155 75 Q 165 85 165 75 Z" fill="#ffffff"/>
 
-        <!-- Lit Candles -->
         <rect x="65" y="45" width="8" height="32" rx="3" fill="#ff4d5a"/>
         <line x1="69" y1="45" x2="69" y2="39" stroke="#000" stroke-width="2"/>
         <path id="flame1" class="flame" d="M 69 22 Q 74 32 69 39 Q 64 32 69 22 Z"/>
@@ -688,22 +712,20 @@
       </svg>
     </div>
 
-    <button id="blow-btn" class="btn-glow hover-expand" onclick="blowCandles()">Blow Out Candles 🎂</button>
+    <button id="blow-btn" class="btn-glow" onclick="blowCandles()">Blow Out Candles 🎂</button>
 
     <div class="scroll-hint-prompt">
       <span>Scroll down for more</span> <i class="fa-solid fa-chevron-down"></i>
     </div>
   </section>
 
-  <!-- STEP 5: TWO COLUMN MUSIC PLAYER SECTION -->
   <section id="step-playlist" class="fullpage-section hidden">
     <div class="music-section-wrapper">
       
-      <div id="music-taste-header" class="music-taste-title hover-expand">User's Sound Track</div>
+      <div id="music-taste-header" class="music-taste-title">User's Sound Track</div>
 
       <div id="music-dual-container" class="music-dual-container">
         
-        <!-- Vinyl Player (Left) -->
         <div class="vinyl-player-left">
           <div class="album-display">
             <div class="album-cover"></div>
@@ -745,56 +767,55 @@
             </div>
 
             <div class="controls-row">
-              <button class="player-btn hover-expand" onclick="prevTrack()"><i class="fa-solid fa-backward-step"></i></button>
-              <button class="player-btn play-btn-large hover-expand" id="play-toggle-btn" onclick="togglePlay()"><i class="fa-solid fa-play"></i></button>
-              <button class="player-btn hover-expand" onclick="nextTrack()"><i class="fa-solid fa-forward-step"></i></button>
+              <button class="player-btn" onclick="prevTrack()"><i class="fa-solid fa-backward-step"></i></button>
+              <button class="player-btn play-btn-large" id="play-toggle-btn" onclick="togglePlay()"><i class="fa-solid fa-play"></i></button>
+              <button class="player-btn" onclick="nextTrack()"><i class="fa-solid fa-forward-step"></i></button>
             </div>
           </div>
         </div>
 
-        <!-- Playlist -->
         <div class="playlist-right">
           <div class="playlist-title">
             <i class="fa-solid fa-compact-disc"></i> Pick Your Poison
           </div>
 
           <ul class="song-list" id="song-list-items">
-            <li class="song-item active-song hover-expand" onclick="selectTrack(0)">
+            <li class="song-item active-song" onclick="selectTrack(0)">
               <div class="song-info">
                 <span class="song-name">Space Song</span>
                 <span class="song-artist">Beach House</span>
               </div>
               <i class="fa-solid fa-play play-icon-small"></i>
             </li>
-            <li class="song-item hover-expand" onclick="selectTrack(1)">
+            <li class="song-item" onclick="selectTrack(1)">
               <div class="song-info">
                 <span class="song-name">PPP</span>
                 <span class="song-artist">Beach House</span>
               </div>
               <i class="fa-solid fa-play play-icon-small"></i>
             </li>
-            <li class="song-item hover-expand" onclick="selectTrack(2)">
+            <li class="song-item" onclick="selectTrack(2)">
               <div class="song-info">
                 <span class="song-name">Levitation</span>
                 <span class="song-artist">Beach House</span>
               </div>
               <i class="fa-solid fa-play play-icon-small"></i>
             </li>
-            <li class="song-item hover-expand" onclick="selectTrack(3)">
+            <li class="song-item" onclick="selectTrack(3)">
               <div class="song-info">
                 <span class="song-name">Cigarette Daydreams</span>
                 <span class="song-artist">Cage The Elephant</span>
               </div>
               <i class="fa-solid fa-play play-icon-small"></i>
             </li>
-            <li class="song-item hover-expand" onclick="selectTrack(4)">
+            <li class="song-item" onclick="selectTrack(4)">
               <div class="song-info">
                 <span class="song-name">Chamber Of Reflection</span>
                 <span class="song-artist">Mac DeMarco</span>
               </div>
               <i class="fa-solid fa-play play-icon-small"></i>
             </li>
-            <li class="song-item hover-expand" onclick="selectTrack(5)">
+            <li class="song-item" onclick="selectTrack(5)">
               <div class="song-info">
                 <span class="song-name">505</span>
                 <span class="song-artist">Arctic Monkeys</span>
@@ -810,52 +831,86 @@
   </section>
 
   <script>
-    /* CUSTOM CURSOR WITH LERP SMOOTH LAG & EXPANSION */
-    const cursorFollower = document.getElementById('cursor-follower');
+    /* SOLID DYNAMIC SINGLE-COLOR CURSOR */
+    const dotCursor = document.getElementById('dot-cursor');
 
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-
-    let cursorX = mouseX;
-    let cursorY = mouseY;
-
-    // Track physical mouse location
     window.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
+      dotCursor.style.left = `${e.clientX}px`;
+      dotCursor.style.top = `${e.clientY}px`;
+
+      // Check background surface under cursor position
+      const elem = document.elementFromPoint(e.clientX, e.clientY);
+      if (elem) {
+        const tag = elem.tagName.toLowerCase();
+        if (tag === 'input' || tag === 'button' || elem.classList.contains('playlist-right') || tag === 'h1') {
+          dotCursor.classList.add('dark-mode');
+        } else {
+          dotCursor.classList.remove('dark-mode');
+        }
+      }
+
+      // Trigger transparent image trail creation on mouse move
+      handleTrailSpawn(e.clientX, e.clientY);
     });
 
-    // Smooth Lag Physics Loop (Lerp Interpolation)
-    function animateCursor() {
-      // 0.15 provides a smooth fluid lag delay
-      cursorX += (mouseX - cursorX) * 0.15;
-      cursorY += (mouseY - cursorY) * 0.15;
+    /* CURSOR IMAGE TRAIL SYSTEM */
+    const trailContainer = document.getElementById('image-trail-container');
 
-      cursorFollower.style.left = `${cursorX}px`;
-      cursorFollower.style.top = `${cursorY}px`;
+    // High-quality transparent celebration PNG assets
+    const trailImages = [
+      'https://cdn-icons-png.flaticon.com/512/3132/3132736.png', // Sparkles
+      'https://cdn-icons-png.flaticon.com/512/2488/2488749.png', // Star
+      'https://cdn-icons-png.flaticon.com/512/1152/1152921.png', // Confetti Popper
+      'https://cdn-icons-png.flaticon.com/512/3132/3132693.png', // Cake
+      'https://cdn-icons-png.flaticon.com/512/1046/1046857.png'  // Heart / Ribbon
+    ];
 
-      requestAnimationFrame(animateCursor);
+    let lastX = 0;
+    let lastY = 0;
+    let imageIndex = 0;
+    const MIN_DISTANCE = 45; // Minimum mouse movement distance (px) before spawning next image
+
+    function handleTrailSpawn(x, y) {
+      const dist = Math.hypot(x - lastX, y - lastY);
+
+      if (dist >= MIN_DISTANCE) {
+        spawnTrailImage(x, y);
+        lastX = x;
+        lastY = y;
+      }
     }
-    animateCursor();
 
-    // Attach Cursor Expansion logic to interactive elements
-    function setupCursorExpansion() {
-      const interactiveTargets = document.querySelectorAll('button, input, a, .hover-expand, .song-item, .cake-container, h1, h2');
-      
-      interactiveTargets.forEach(el => {
-        el.addEventListener('mouseenter', () => {
-          cursorFollower.classList.add('cursor-expanded');
-        });
-        el.addEventListener('mouseleave', () => {
-          cursorFollower.classList.remove('cursor-expanded');
-        });
+    function spawnTrailImage(x, y) {
+      const img = document.createElement('img');
+      img.className = 'trail-image';
+      img.src = trailImages[imageIndex % trailImages.length];
+      imageIndex++;
+
+      img.style.left = `${x}px`;
+      img.style.top = `${y}px`;
+
+      // Random rotation angle (-18 deg to +18 deg)
+      const randomRotation = (Math.random() - 0.5) * 36;
+      const targetScale = 0.8 + Math.random() * 0.4;
+
+      trailContainer.appendChild(img);
+
+      // Trigger entrance scaling & rotation via rAF
+      requestAnimationFrame(() => {
+        img.classList.add('active');
+        img.style.transform = `translate(-50%, -50%) scale(${targetScale}) rotate(${randomRotation}deg)`;
       });
+
+      // Fade out and automatic DOM cleanup
+      setTimeout(() => {
+        img.classList.add('fade-out');
+        setTimeout(() => {
+          if (img.parentNode) img.parentNode.removeChild(img);
+        }, 400);
+      }, 550);
     }
 
-    // Initialize cursor events after DOM fully builds
-    window.addEventListener('DOMContentLoaded', setupCursorExpansion);
-
-    /* App Flow & Stage Management */
+    /* App State & Flow */
     let userName = "Star";
     let langIndex = 0;
     let charIndex = 0;
@@ -910,7 +965,6 @@
       isDeleting = false;
       clearTimeout(typewriterTimeout);
       typewriterLoop();
-      setupCursorExpansion();
     }
 
     function typewriterLoop() {
@@ -944,7 +998,6 @@
       currentStep = 3;
       document.getElementById("step-greeting").classList.add("hidden");
       document.getElementById("step-lights").classList.remove("hidden");
-      setupCursorExpansion();
     }
 
     function turnOnLightsAndShowCake() {
@@ -961,7 +1014,6 @@
         document.getElementById("welcome-header").innerText = `Happy Birthday, ${userName}! 🎉`;
 
         confetti({ particleCount: 140, spread: 100, origin: { y: 0.5 } });
-        setupCursorExpansion();
       }, 700);
     }
 
@@ -989,7 +1041,6 @@
         document.getElementById("step-name").classList.remove("hidden");
         currentStep = 1;
       }
-      setupCursorExpansion();
     }
 
     function blowCandles() {
@@ -1006,7 +1057,7 @@
       confetti({ particleCount: 200, spread: 120, origin: { y: 0.6 } });
     }
 
-    /* Scroll Observer for Vinyl Music Reveal */
+    /* Scroll Observer for Music reveal */
     const musicSection = document.getElementById('step-playlist');
     const lightsStrip = document.getElementById('lights-strip');
     const musicContainer = document.getElementById('music-dual-container');
