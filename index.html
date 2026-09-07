@@ -55,8 +55,8 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Viscous Fluid Trail Canvas Wrapper */
-    .fluid-container-wrapper {
+    /* Fluid Ribbon Canvas */
+    #fluid-canvas {
       position: fixed;
       top: 0;
       left: 0;
@@ -64,30 +64,28 @@
       height: 100vh;
       pointer-events: none;
       z-index: 6;
-      /* Contrast + Blur creates metaball liquid merging like liquid simulation */
-      filter: url('#liquid-metaball-filter');
     }
 
-    #fluid-canvas {
-      width: 100%;
-      height: 100%;
-    }
-
-    /* Core Cursor Dot - Restored to Previous Dual Black/Red Tone */
+    /* Solid Single-Color Dynamic Cursor Core */
     .custom-cursor-dot {
       position: fixed;
       top: 0;
       left: 0;
-      width: 22px;
-      height: 22px;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
       pointer-events: none;
       z-index: 99999;
       transform: translate(-50%, -50%);
-      background: radial-gradient(circle, #ff0022 0%, #000000 75%);
-      border: 1px solid rgba(255, 60, 80, 0.6);
-      box-shadow: 0 0 15px rgba(255, 0, 40, 0.8), 0 0 30px rgba(0, 0, 0, 0.9);
-      transition: width 0.2s ease, height 0.2s ease, background 0.2s ease;
+      background: #ff3344;
+      box-shadow: 0 0 12px rgba(255, 51, 68, 0.8);
+      transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.05s linear;
+    }
+
+    /* Light Surface Inversion class for Cursor */
+    .custom-cursor-dot.dark-mode {
+      background: #000000;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.9);
     }
 
     /* Ambient Spotlight Overlay */
@@ -609,25 +607,9 @@
 </head>
 <body>
 
-  <svg style="position: absolute; width: 0; height: 0;">
-    <defs>
-      <filter id="liquid-metaball-filter">
-        <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
-        <feColorMatrix in="blur" mode="matrix" values="
-          1 0 0 0 0  
-          0 1 0 0 0  
-          0 0 1 0 0  
-          0 0 0 22 -8" result="goo" />
-        <feBlend in="SourceGraphic" in2="goo" />
-      </filter>
-    </defs>
-  </svg>
-
   <div class="bg-gradient-base"></div>
 
-  <div class="fluid-container-wrapper">
-    <canvas id="fluid-canvas"></canvas>
-  </div>
+  <canvas id="fluid-canvas"></canvas>
 
   <div id="dot-cursor" class="custom-cursor-dot"></div>
 
@@ -826,7 +808,7 @@
   </section>
 
   <script>
-    /* Noth.in Fluid Dynamic Particle Physics Engine */
+    /* Noth.in Style Continuous Dynamic Fluid Ribbon Physics */
     const canvas = document.getElementById('fluid-canvas');
     const ctx = canvas.getContext('2d');
     const dotCursor = document.getElementById('dot-cursor');
@@ -839,120 +821,94 @@
       height = canvas.height = window.innerHeight;
     });
 
-    let mouseX = width / 2;
-    let mouseY = height / 2;
-    let prevMouseX = mouseX;
-    let prevMouseY = mouseY;
-    let particles = [];
+    let mouse = { x: width / 2, y: height / 2 };
+    let isDarkModeSurface = false;
+
+    // Trail nodes (Spring physics chain)
+    const TRAIL_LENGTH = 32;
+    const trail = Array.from({ length: TRAIL_LENGTH }, () => ({
+      x: width / 2,
+      y: height / 2,
+      vx: 0,
+      vy: 0
+    }));
 
     window.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
 
-      dotCursor.style.left = `${mouseX}px`;
-      dotCursor.style.top = `${mouseY}px`;
+      dotCursor.style.left = `${mouse.x}px`;
+      dotCursor.style.top = `${mouse.y}px`;
 
-      const dx = mouseX - prevMouseX;
-      const dy = mouseY - prevMouseY;
-      const speed = Math.sqrt(dx * dx + dy * dy);
-
-      // Invert cursor center based on dark/light background surface underneath
-      const targetElem = document.elementFromPoint(mouseX, mouseY);
-      if (targetElem) {
-        const tag = targetElem.tagName.toLowerCase();
-        if (tag === 'input' || tag === 'button' || targetElem.classList.contains('playlist-right')) {
-          dotCursor.style.background = 'radial-gradient(circle, #000000 0%, #d6001c 85%)';
-          dotCursor.style.borderColor = '#000000';
+      // Check background surface under cursor position
+      const elem = document.elementFromPoint(mouse.x, mouse.y);
+      if (elem) {
+        const tag = elem.tagName.toLowerCase();
+        if (tag === 'input' || tag === 'button' || elem.classList.contains('playlist-right') || tag === 'h1') {
+          isDarkModeSurface = true;
+          dotCursor.classList.add('dark-mode');
         } else {
-          dotCursor.style.background = 'radial-gradient(circle, #ff0022 0%, #000000 75%)';
-          dotCursor.style.borderColor = 'rgba(255, 60, 80, 0.6)';
+          isDarkModeSurface = false;
+          dotCursor.classList.remove('dark-mode');
         }
       }
-
-      // Generate viscous liquid blobs on motion
-      if (speed > 1.2) {
-        const count = Math.min(Math.floor(speed * 0.35), 6);
-        for (let i = 0; i < count; i++) {
-          particles.push(new NothInLiquidBlob(mouseX, mouseY, dx, dy, speed));
-        }
-      }
-
-      prevMouseX = mouseX;
-      prevMouseY = mouseY;
     });
 
-    class NothInLiquidBlob {
-      constructor(x, y, dx, dy, speed) {
-        this.x = x + (Math.random() - 0.5) * 14;
-        this.y = y + (Math.random() - 0.5) * 14;
-        const angle = Math.atan2(dy, dx) + (Math.random() - 0.5) * 0.6;
-        const velocity = speed * (0.08 + Math.random() * 0.15);
-        this.vx = Math.cos(angle) * velocity;
-        this.vy = Math.sin(angle) * velocity;
-        
-        // Fluid droplet dimensions
-        this.baseRadius = Math.min(Math.max(speed * 0.5, 12), 32) * (0.8 + Math.random() * 0.4);
-        this.radius = this.baseRadius;
-        this.life = 1.0;
-        this.decay = 0.022 + Math.random() * 0.018;
-        
-        // Dynamic black to red fluid gradient mix
-        this.isRedCore = Math.random() > 0.4;
-      }
-
-      update() {
-        this.x += this.vx;
-        this.y += this.vy;
-        this.vx *= 0.90;
-        this.vy *= 0.90;
-        this.life -= this.decay;
-        this.radius = this.baseRadius * Math.sin(this.life * Math.PI * 0.5);
-      }
-
-      draw(ctx) {
-        if (this.life <= 0 || this.radius <= 0.5) return;
-
-        ctx.save();
-        ctx.beginPath();
-
-        const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius);
-        
-        if (this.isRedCore) {
-          // Red core bleeding into deep black viscous borders
-          grad.addColorStop(0, `rgba(255, 20, 50, ${this.life * 0.95})`);
-          grad.addColorStop(0.55, `rgba(140, 0, 25, ${this.life * 0.8})`);
-          grad.addColorStop(1, `rgba(10, 0, 3, ${this.life * 0.9})`);
-        } else {
-          // Deep black ink core bleeding into red highlight borders
-          grad.addColorStop(0, `rgba(5, 0, 2, ${this.life * 0.98})`);
-          grad.addColorStop(0.65, `rgba(180, 10, 30, ${this.life * 0.75})`);
-          grad.addColorStop(1, `rgba(255, 0, 40, ${this.life * 0.85})`);
-        }
-
-        ctx.fillStyle = grad;
-        ctx.arc(this.x, this.y, Math.max(this.radius, 0), 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
-    }
-
-    function renderFluidCanvas() {
+    function renderFluidRibbon() {
       ctx.clearRect(0, 0, width, height);
 
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
-        p.update();
-        p.draw(ctx);
-        if (p.life <= 0 || p.radius <= 0.5) {
-          particles.splice(i, 1);
-        }
+      // Leader point directly follows mouse
+      trail[0].x = mouse.x;
+      trail[0].y = mouse.y;
+
+      // Follower nodes move using smooth spring physics
+      for (let i = 1; i < TRAIL_LENGTH; i++) {
+        const p1 = trail[i - 1];
+        const p2 = trail[i];
+
+        p2.vx += (p1.x - p2.x) * 0.35;
+        p2.vy += (p1.y - p2.y) * 0.35;
+        p2.vx *= 0.55;
+        p2.vy *= 0.55;
+
+        p2.x += p2.vx;
+        p2.y += p2.vy;
       }
 
-      requestAnimationFrame(renderFluidCanvas);
-    }
-    renderFluidCanvas();
+      // Draw continuous tapered liquid ribbon path
+      if (TRAIL_LENGTH > 2) {
+        ctx.save();
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
 
-    /* App Flow Logic */
+        // Ribbon uses solid current active cursor color
+        const baseRgb = isDarkModeSurface ? '0, 0, 0' : '255, 51, 68';
+
+        for (let i = 0; i < TRAIL_LENGTH - 1; i++) {
+          const xc = (trail[i].x + trail[i + 1].x) / 2;
+          const yc = (trail[i].y + trail[i + 1].y) / 2;
+          
+          // Width tapers down from cursor head to tail end
+          const ribbonWidth = Math.max((1 - i / TRAIL_LENGTH) * 14, 0.5);
+          const opacity = Math.max((1 - i / TRAIL_LENGTH) * 0.85, 0);
+
+          ctx.beginPath();
+          ctx.lineWidth = ribbonWidth;
+          ctx.strokeStyle = `rgba(${baseRgb}, ${opacity})`;
+          
+          ctx.moveTo(trail[i].x, trail[i].y);
+          ctx.quadraticCurveTo(trail[i].x, trail[i].y, xc, yc);
+          ctx.stroke();
+        }
+
+        ctx.restore();
+      }
+
+      requestAnimationFrame(renderFluidRibbon);
+    }
+    renderFluidRibbon();
+
+    /* App State & Flow */
     let userName = "Star";
     let langIndex = 0;
     let charIndex = 0;
