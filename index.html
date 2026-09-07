@@ -5,15 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Happy Birthday!</title>
   
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Outfit:wght@300;400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-  <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- Canvas Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
@@ -33,7 +30,7 @@
       min-height: 100vh;
       overflow-x: hidden;
       overflow-y: auto;
-      background: #050000;
+      background: #020003;
       font-family: 'Outfit', sans-serif;
       color: #ffffff;
       position: relative;
@@ -46,9 +43,9 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: linear-gradient(135deg, #050102 0%, #1f0208 40%, #3b010c 70%, #080003 100%);
+      background: linear-gradient(135deg, #090003 0%, #2b020a 35%, #540313 70%, #0d0005 100%);
       background-size: 200% 200%;
-      animation: ambientGradient 18s ease infinite;
+      animation: ambientGradient 12s ease infinite;
       z-index: 0;
     }
 
@@ -58,57 +55,60 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Metallic Silk Wave Overlay (Inspired by Reference Image) */
+    /* HIGH-VISIBILITY Metallic Silk Wave Overlay */
     .silk-glow-overlay {
       position: fixed;
-      top: -20%;
-      left: -20%;
-      width: 140vw;
-      height: 140vh;
+      top: -30%;
+      left: -30%;
+      width: 160vw;
+      height: 160vh;
       background: 
-        radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.22) 0%, rgba(255, 180, 150, 0.12) 30%, transparent 65%),
-        radial-gradient(ellipse at 70% 80%, rgba(255, 220, 190, 0.18) 0%, rgba(255, 120, 80, 0.08) 40%, transparent 70%),
-        radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+        radial-gradient(ellipse at 35% 25%, rgba(255, 255, 255, 0.75) 0%, rgba(255, 170, 140, 0.45) 25%, transparent 60%),
+        radial-gradient(ellipse at 75% 75%, rgba(255, 210, 180, 0.6) 0%, rgba(255, 80, 100, 0.35) 35%, transparent 65%),
+        radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.3) 0%, transparent 50%);
       mix-blend-mode: screen;
-      opacity: 0.32;
+      opacity: 0.85; /* CRANKED UP OPACITY */
       pointer-events: none;
       z-index: 1;
-      filter: blur(35px) url('#fluid-halftone-filter') contrast(140%);
-      animation: liquidSilkFlow 16s ease-in-out infinite alternate;
+      filter: blur(25px) url('#fluid-halftone-filter') contrast(180%);
+      animation: liquidSilkFlow 10s ease-in-out infinite alternate;
     }
 
     @keyframes liquidSilkFlow {
       0% {
         transform: scale(1) rotate(0deg) translate(0px, 0px);
-        opacity: 0.28;
+        opacity: 0.75;
       }
       50% {
-        transform: scale(1.15) rotate(4deg) translate(-35px, 25px);
-        opacity: 0.38;
+        transform: scale(1.2) rotate(6deg) translate(-50px, 35px);
+        opacity: 0.95;
       }
       100% {
-        transform: scale(1.05) rotate(-3deg) translate(30px, -20px);
-        opacity: 0.28;
+        transform: scale(1.08) rotate(-4deg) translate(40px, -30px);
+        opacity: 0.8;
       }
     }
 
-    /* Subtle White Liquid Glow Lines */
+    /* Vibrant White Liquid Glow Streams */
     .white-highlight-stream {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      top: -10%;
+      left: -10%;
+      width: 120vw;
+      height: 120vh;
       pointer-events: none;
       z-index: 1;
-      opacity: 0.22;
-      background: radial-gradient(circle at 45% 35%, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 55%);
-      animation: softGlowPulse 8s ease-in-out infinite alternate;
+      opacity: 0.65;
+      background: 
+        radial-gradient(circle at 40% 30%, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 45%),
+        radial-gradient(circle at 70% 60%, rgba(255, 200, 200, 0.4) 0%, rgba(255, 255, 255, 0) 50%);
+      mix-blend-mode: overlay;
+      animation: softGlowPulse 6s ease-in-out infinite alternate;
     }
 
     @keyframes softGlowPulse {
-      0% { opacity: 0.15; transform: scale(0.95); }
-      100% { opacity: 0.28; transform: scale(1.05); }
+      0% { opacity: 0.5; transform: scale(0.92) rotate(0deg); }
+      100% { opacity: 0.85; transform: scale(1.1) rotate(3deg); }
     }
 
     /* Physics Spring Blob Cursor */
@@ -119,19 +119,19 @@
       width: 26px;
       height: 26px;
       background: #000000;
-      border: 1.5px solid rgba(255, 77, 77, 0.8);
+      border: 1.5px solid rgba(255, 77, 77, 0.9);
       border-radius: 50%;
       pointer-events: none;
       z-index: 9999;
       transform-origin: center center;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 25px rgba(180, 0, 20, 0.5);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 0, 40, 0.8);
       transition: background 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
     }
 
     .cursor-blob.hovered {
-      background: rgba(180, 0, 20, 0.85);
+      background: rgba(220, 0, 30, 0.9);
       border: 1.5px solid #ff4d5a;
-      box-shadow: 0 0 35px rgba(255, 77, 90, 0.9);
+      box-shadow: 0 0 35px rgba(255, 77, 90, 1);
     }
 
     /* Ambient Spotlight */
@@ -141,11 +141,11 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: radial-gradient(circle at 50% 20%, rgba(255, 120, 50, 0.18) 0%, rgba(0, 0, 0, 0.92) 80%);
+      background: radial-gradient(circle at 50% 20%, rgba(255, 120, 50, 0.25) 0%, rgba(0, 0, 0, 0.85) 85%);
       pointer-events: none;
       z-index: 2;
       opacity: 0;
-      transition: opacity 1.5s ease;
+      transition: opacity 1.2s ease;
     }
 
     body.lights-active .ambient-overlay {
@@ -179,7 +179,7 @@
       display: flex;
       justify-content: space-around;
       width: 100%;
-      border-top: 2px solid rgba(200, 140, 40, 0.5);
+      border-top: 2px solid rgba(255, 180, 50, 0.7);
       padding-top: 2px;
     }
 
@@ -201,13 +201,13 @@
       height: 24px;
       border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
       background: radial-gradient(circle at 35% 35%, #ffffff, #ffb700 85%);
-      box-shadow: 0 0 15px #ffcc00, 0 0 35px #ff8800;
+      box-shadow: 0 0 18px #ffcc00, 0 0 38px #ff8800;
       animation: warmGlow 1.8s infinite alternate ease-in-out;
     }
 
     @keyframes warmGlow {
-      0% { opacity: 0.6; transform: scale(0.95); }
-      100% { opacity: 1; transform: scale(1.08); box-shadow: 0 0 25px #ffe066, 0 0 45px #ff8800; }
+      0% { opacity: 0.7; transform: scale(0.95); }
+      100% { opacity: 1; transform: scale(1.1); box-shadow: 0 0 28px #ffe066, 0 0 50px #ff8800; }
     }
 
     /* Back Button */
@@ -216,19 +216,19 @@
       top: 25px;
       left: 25px;
       z-index: 110;
-      background: rgba(0, 0, 0, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.3);
       color: #ffffff;
       padding: 10px 22px;
       border-radius: 30px;
       font-size: 0.9rem;
       font-weight: 600;
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(12px);
       transition: all 0.3s ease;
     }
 
     .btn-corner-back:hover {
-      background: rgba(255, 77, 77, 0.3);
+      background: rgba(255, 77, 77, 0.4);
       border-color: #ff4d4d;
     }
 
@@ -253,13 +253,13 @@
     .scroll-hint-prompt {
       margin-top: 2rem;
       font-size: 0.95rem;
-      color: #ffb3b8;
+      color: #ffc2c6;
       letter-spacing: 1px;
       display: flex;
       align-items: center;
       gap: 8px;
       animation: bouncePrompt 2s infinite ease-in-out;
-      opacity: 0.85;
+      opacity: 0.9;
     }
 
     @keyframes bouncePrompt {
@@ -271,10 +271,9 @@
     h2 {
       font-size: 2.2rem;
       font-weight: 600;
-      font-style: normal;
       margin-bottom: 1.5rem;
       text-align: center;
-      text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
     }
 
     .input-field {
@@ -284,18 +283,18 @@
       font-size: 1.1rem;
       font-family: inherit;
       border-radius: 35px;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      background: rgba(0, 0, 0, 0.65);
       color: #ffffff;
       text-align: center;
       outline: none;
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(10px);
       transition: all 0.3s ease;
     }
 
     .input-field:focus {
       border-color: #ff4d5a;
-      box-shadow: 0 0 20px rgba(255, 77, 90, 0.5);
+      box-shadow: 0 0 25px rgba(255, 77, 90, 0.7);
     }
 
     .btn-glow {
@@ -305,17 +304,17 @@
       font-family: inherit;
       font-weight: 600;
       color: #ffffff;
-      background: linear-gradient(135deg, #80000a, #4a0006);
-      border: 1px solid rgba(255, 100, 100, 0.4);
+      background: linear-gradient(135deg, #a3000f, #570008);
+      border: 1px solid rgba(255, 120, 120, 0.5);
       border-radius: 35px;
-      box-shadow: 0 4px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(180, 0, 20, 0.4);
+      box-shadow: 0 4px 25px rgba(0, 0, 0, 0.8), 0 0 20px rgba(220, 0, 30, 0.6);
       transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
     }
 
     .btn-glow:hover {
       transform: scale(1.05);
-      background: linear-gradient(135deg, #a8000e, #660009);
-      box-shadow: 0 0 25px rgba(255, 50, 70, 0.8);
+      background: linear-gradient(135deg, #c40012, #7a000b);
+      box-shadow: 0 0 30px rgba(255, 50, 70, 0.9);
     }
 
     .greeting-container {
@@ -326,9 +325,8 @@
       font-family: 'Playfair Display', serif;
       font-size: 3rem;
       font-weight: 700;
-      font-style: normal;
       color: #ffffff;
-      text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+      text-shadow: 0 0 25px rgba(255, 255, 255, 0.9);
       min-height: 80px;
     }
 
@@ -337,7 +335,7 @@
       font-size: 4.8rem;
       font-weight: 900;
       color: #ffffff;
-      text-shadow: 0 0 20px #ff3344, 0 0 50px rgba(255, 0, 40, 0.8);
+      text-shadow: 0 0 25px #ff3344, 0 0 60px rgba(255, 0, 40, 0.9);
       margin-bottom: 2.5rem;
     }
 
@@ -347,7 +345,7 @@
       height: 2.6rem;
       background-color: #ffffff;
       margin-left: 6px;
-      box-shadow: 0 0 10px #ffffff;
+      box-shadow: 0 0 12px #ffffff;
       animation: blink 0.7s infinite;
       vertical-align: middle;
     }
@@ -373,7 +371,7 @@
     /* Candle Flames LIT by Default */
     .flame {
       fill: #ff9d00;
-      filter: drop-shadow(0 0 8px #ff4500) drop-shadow(0 0 15px #ffd700);
+      filter: drop-shadow(0 0 10px #ff4500) drop-shadow(0 0 20px #ffd700);
       transform-origin: center bottom;
       animation: flicker 0.6s ease-in-out infinite alternate;
       transition: opacity 0.5s ease;
@@ -382,7 +380,7 @@
 
     @keyframes flicker {
       0% { transform: scale(1) rotate(-2deg); }
-      100% { transform: scale(1.1) rotate(2deg); }
+      100% { transform: scale(1.12) rotate(2deg); }
     }
 
     .flame.blown-out {
@@ -394,7 +392,6 @@
       font-size: 1.2rem;
       color: #ffb3b8;
       margin-top: 10px;
-      font-style: normal;
       text-align: center;
     }
 
@@ -412,10 +409,9 @@
       font-family: 'Playfair Display', serif;
       font-size: 2.4rem;
       font-weight: 700;
-      font-style: normal;
       color: #ffffff;
       text-align: center;
-      text-shadow: 0 0 20px rgba(255, 77, 90, 0.6);
+      text-shadow: 0 0 25px rgba(255, 77, 90, 0.8);
     }
 
     .music-dual-container {
@@ -450,14 +446,14 @@
     .album-cover {
       width: 280px;
       height: 280px;
-      background: radial-gradient(circle at 35% 35%, #8a0b14, #380004);
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9), inset 0 0 30px rgba(0, 0, 0, 0.6);
+      background: radial-gradient(circle at 35% 35%, #a80e1a, #4a0006);
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.95), inset 0 0 35px rgba(0, 0, 0, 0.7);
       border-radius: 4px;
       position: absolute;
       left: 0;
       top: 10px;
       z-index: 3;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
     }
 
     .vinyl-record {
@@ -469,7 +465,7 @@
       z-index: 2;
       border-radius: 50%;
       background: #0d0d0d;
-      box-shadow: -5px 0 20px rgba(0, 0, 0, 0.8);
+      box-shadow: -5px 0 25px rgba(0, 0, 0, 0.9);
       transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       display: flex;
       align-items: center;
@@ -512,7 +508,7 @@
     .progress-bar-wrap {
       width: 100%;
       height: 4px;
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.2);
       border-radius: 2px;
       overflow: hidden;
     }
@@ -521,7 +517,7 @@
       width: 35%;
       height: 100%;
       background: #ff4d5a;
-      box-shadow: 0 0 10px #ff4d5a;
+      box-shadow: 0 0 12px #ff4d5a;
     }
 
     .controls-row {
@@ -554,7 +550,7 @@
       align-items: center;
       justify-content: center;
       font-size: 1.2rem;
-      box-shadow: 0 0 20px rgba(255, 77, 90, 0.6);
+      box-shadow: 0 0 25px rgba(255, 77, 90, 0.8);
     }
 
     /* Playlist (Right) */
@@ -563,12 +559,12 @@
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      background: rgba(20, 0, 4, 0.5);
-      border: 1px solid rgba(255, 77, 90, 0.2);
+      background: rgba(25, 0, 5, 0.65);
+      border: 1px solid rgba(255, 77, 90, 0.3);
       border-radius: 20px;
       padding: 30px;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
       transform: translateX(70px);
       opacity: 0;
       transition: transform 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.9s ease;
@@ -600,16 +596,16 @@
       align-items: center;
       justify-content: space-between;
       padding: 12px 16px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 12px;
       transition: all 0.3s ease;
       width: 100%;
     }
 
     .song-item:hover, .song-item.active-song {
-      background: rgba(255, 77, 90, 0.15);
-      border-color: rgba(255, 77, 90, 0.5);
+      background: rgba(255, 77, 90, 0.22);
+      border-color: rgba(255, 77, 90, 0.6);
       transform: translateX(6px);
     }
 
@@ -658,28 +654,23 @@
 </head>
 <body>
 
-  <!-- SVG Distortion Filter for Liquid Waves -->
   <svg style="display: none;">
     <defs>
       <filter id="fluid-halftone-filter">
-        <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="3" result="noise" />
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="55" xChannelSelector="R" yChannelSelector="G" />
+        <feTurbulence type="fractalNoise" baseFrequency="0.008" numOctaves="4" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="85" xChannelSelector="R" yChannelSelector="G" />
       </filter>
     </defs>
   </svg>
 
-  <!-- Animated Background Layer -->
   <div class="bg-gradient-base"></div>
   <div class="silk-glow-overlay"></div>
   <div class="white-highlight-stream"></div>
 
-  <!-- Physics Spring Cursor -->
   <div id="blob-cursor" class="cursor-blob"></div>
 
-  <!-- Ambient Light Overlay -->
   <div class="ambient-overlay"></div>
 
-  <!-- Festive Lights -->
   <div id="lights-strip" class="lights-wrapper">
     <div class="light-wire-main">
       <div class="bulb-socket"><div class="socket"></div><div class="bulb-gold"></div></div>
@@ -693,19 +684,16 @@
     </div>
   </div>
 
-  <!-- Back Button -->
   <button id="corner-back-btn" class="btn-corner-back hidden" onclick="handleCornerBack()">
     <i class="fa-solid fa-arrow-left"></i> Back
   </button>
 
-  <!-- STEP 1: Enter Name -->
   <section id="step-name" class="fullpage-section">
     <h2>Who is the birthday star? 👑</h2>
     <input type="text" id="user-name-input" class="input-field" placeholder="Enter name..." autocomplete="off" onkeydown="handleKeyPress(event)">
     <button class="btn-glow" onclick="startGreeting()">Celebrate 🎉</button>
   </section>
 
-  <!-- STEP 2: Multilingual Typewriter -->
   <section id="step-greeting" class="fullpage-section hidden">
     <div class="greeting-container">
       <h2 class="hb-glow-text">
@@ -716,7 +704,6 @@
     </div>
   </section>
 
-  <!-- STEP 3: Lights Prompt -->
   <section id="step-lights" class="fullpage-section hidden">
     <h2>Set the Celebration Mood! ✨</h2>
     <p style="color: #ffb3b8; font-size: 1.15rem; margin-bottom: 1.5rem; text-align: center;">
@@ -725,7 +712,6 @@
     <button class="btn-glow" onclick="turnOnLightsAndShowCake()">Turn On Lights ✨</button>
   </section>
 
-  <!-- STEP 4: Interactive Cake Page -->
   <section id="step-main" class="fullpage-section hidden">
     <h2 id="welcome-header" style="font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900; text-shadow: 0 0 25px #ff3344;"></h2>
     <p class="wish-text">Make a wish and blow out the candles! 🕯️</p>
@@ -745,7 +731,6 @@
 
         <path d="M 35 75 Q 45 90 55 75 Q 65 95 75 75 Q 85 90 95 75 Q 105 95 115 75 Q 125 90 135 75 Q 145 95 155 75 Q 165 85 165 75 Z" fill="#ffffff"/>
 
-        <!-- Lit Candles -->
         <rect x="65" y="45" width="8" height="32" rx="3" fill="#ff4d5a"/>
         <line x1="69" y1="45" x2="69" y2="39" stroke="#000" stroke-width="2"/>
         <path id="flame1" class="flame" d="M 69 22 Q 74 32 69 39 Q 64 32 69 22 Z"/>
@@ -767,7 +752,6 @@
     </div>
   </section>
 
-  <!-- STEP 5: TWO COLUMN MUSIC PLAYER SECTION -->
   <section id="step-playlist" class="fullpage-section hidden">
     <div class="music-section-wrapper">
       
@@ -775,7 +759,6 @@
 
       <div id="music-dual-container" class="music-dual-container">
         
-        <!-- Vinyl Player (Left) -->
         <div class="vinyl-player-left">
           <div class="album-display">
             <div class="album-cover"></div>
@@ -824,7 +807,6 @@
           </div>
         </div>
 
-        <!-- Playlist (Right) -->
         <div class="playlist-right">
           <div class="playlist-title">
             <i class="fa-solid fa-compact-disc"></i> Pick Your Poison
@@ -1090,11 +1072,9 @@
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           lightsStrip.classList.add('scrolled-hidden');
-          // Trigger slide in animation every time scrolled into view
           musicContainer.classList.add('revealed');
         } else {
           lightsStrip.classList.remove('scrolled-hidden');
-          // Reset slide position when scrolled out of view so it replays smoothly
           musicContainer.classList.remove('revealed');
         }
       });
