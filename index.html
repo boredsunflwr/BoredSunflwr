@@ -184,18 +184,19 @@
       min-height: 280px;
     }
 
-    .fixed-greeting {
+    .hb-glow-text {
       font-family: 'Playfair Display', serif;
-      font-size: 2.5rem;
+      font-size: 2.8rem;
       font-weight: 700;
       color: #ffffff;
-      text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+      text-shadow: 0 0 15px rgba(255, 255, 255, 0.9);
       margin-bottom: 0.5rem;
+      min-height: 70px;
     }
 
-    .name-glow-text {
+    .fixed-name {
       font-family: 'Playfair Display', serif;
-      font-size: 4rem;
+      font-size: 4.2rem;
       font-weight: 900;
       font-style: italic;
       color: #ffffff;
@@ -205,7 +206,6 @@
         0 0 40px rgba(255, 255, 255, 0.9),
         0 0 80px rgba(255, 77, 77, 0.8);
       margin-bottom: 2rem;
-      min-height: 100px;
       line-height: 1.1;
     }
 
@@ -213,7 +213,7 @@
     .cursor {
       display: inline-block;
       width: 4px;
-      height: 3.5rem;
+      height: 2.4rem;
       background-color: #ffffff;
       margin-left: 6px;
       box-shadow: 0 0 12px #ffffff;
@@ -298,17 +298,17 @@
     <!-- STEP 1: Ask for Name -->
     <div id="step-name" class="input-card">
       <h2>Who is the birthday star? 👑</h2>
-      <input type="text" id="user-name-input" placeholder="Enter name here..." autocomplete="off">
+      <input type="text" id="user-name-input" placeholder="Enter name here..." autocomplete="off" onkeydown="handleKeyPress(event)">
       <br>
       <button class="btn-glow" onclick="startGreeting()">Celebrate 🎉</button>
     </div>
 
-    <!-- STEP 2: Typewriter Multi-Language Name Greeting -->
+    <!-- STEP 2: Typewriter Multi-Language Happy Birthday Greeting -->
     <div id="step-greeting" class="greeting-container hidden">
-      <h2 class="fixed-greeting">Happy Birthday,</h2>
-      <h1 class="name-glow-text">
+      <h2 class="hb-glow-text">
         <span id="typewriter-text"></span><span class="cursor"></span>
-      </h1>
+      </h2>
+      <h1 id="user-name-display" class="fixed-name"></h1>
       <button class="btn-glow" onclick="openMainSite()">Open Surprise 🎁</button>
     </div>
 
@@ -362,29 +362,32 @@
 
   <script>
     let userName = "Friend";
-    let nameIndex = 0;
+    let langIndex = 0;
     let charIndex = 0;
     let isDeleting = false;
     let typewriterTimeout = null;
     let candlesBlown = false;
     let currentStep = 1;
 
-    // Multilingual Name Variations / Scripts
-    let translatedNames = [];
+    // Happy Birthday in many different languages
+    const happyBirthdayLanguages = [
+      "Happy Birthday,",       // English
+      "¡Feliz Cumpleaños,",     // Spanish
+      "Joyeux Anniversaire,",  // French
+      "Alles Gute zum Geburtstag,", // German
+      "お誕生日おめでとう,",       // Japanese
+      "जन्मदिन की शुभकामनाएं,",  // Hindi
+      "Buon Compleanno,",      // Italian
+      "생일 축하해요,",           // Korean
+      "Feliz Aniversário,",    // Portuguese
+      "С Днем Рождения,"       // Russian
+    ];
 
-    function generateNameTranslations(baseName) {
-      return [
-        `${baseName}! 🎉`,
-        `¡${baseName}! 🎂`,
-        `${baseName}✨`,
-        `${baseName} 🎈`,
-        `${baseName} 🌟`,
-        `${baseName} 🥳`,
-        `${baseName} 🌸`,
-        `${baseName} 🎁`,
-        `${baseName} 🍰`,
-        `${baseName} 🕯️`
-      ];
+    // Trigger Celebrate when pressing Enter key in input
+    function handleKeyPress(event) {
+      if (event.key === "Enter") {
+        startGreeting();
+      }
     }
 
     function startGreeting() {
@@ -393,12 +396,14 @@
         userName = inputVal;
       }
 
-      translatedNames = generateNameTranslations(userName);
       currentStep = 2;
 
       document.getElementById("step-name").classList.add("hidden");
       document.getElementById("step-greeting").classList.remove("hidden");
       document.getElementById("corner-back-btn").classList.remove("hidden");
+      
+      // Set the fixed user name
+      document.getElementById("user-name-display").innerText = userName;
 
       confetti({
         particleCount: 120,
@@ -406,8 +411,8 @@
         origin: { y: 0.6 }
       });
 
-      // Reset & start typewriter loop for the name only
-      nameIndex = 0;
+      // Reset & start typewriter loop for Happy Birthday phrases
+      langIndex = 0;
       charIndex = 0;
       isDeleting = false;
       clearTimeout(typewriterTimeout);
@@ -415,26 +420,26 @@
     }
 
     function typewriterLoop() {
-      const currentText = translatedNames[nameIndex];
+      const currentPhrase = happyBirthdayLanguages[langIndex];
       const typewriterEl = document.getElementById("typewriter-text");
 
       if (isDeleting) {
-        typewriterEl.textContent = currentText.substring(0, charIndex - 1);
+        typewriterEl.textContent = currentPhrase.substring(0, charIndex - 1);
         charIndex--;
       } else {
-        typewriterEl.textContent = currentText.substring(0, charIndex + 1);
+        typewriterEl.textContent = currentPhrase.substring(0, charIndex + 1);
         charIndex++;
       }
 
-      let typingSpeed = isDeleting ? 50 : 90;
+      let typingSpeed = isDeleting ? 40 : 80;
 
-      if (!isDeleting && charIndex === currentText.length) {
-        typingSpeed = 1400; // Pause at complete name
+      if (!isDeleting && charIndex === currentPhrase.length) {
+        typingSpeed = 1500; // Pause at complete phrase
         isDeleting = true;
       } else if (isDeleting && charIndex === 0) {
         isDeleting = false;
-        nameIndex = (nameIndex + 1) % translatedNames.length;
-        typingSpeed = 300;
+        langIndex = (langIndex + 1) % happyBirthdayLanguages.length;
+        typingSpeed = 300; // Brief delay before typing next language
       }
 
       typewriterTimeout = setTimeout(typewriterLoop, typingSpeed);
@@ -460,7 +465,7 @@
         document.getElementById("step-main").classList.add("hidden");
         document.getElementById("step-greeting").classList.remove("hidden");
         currentStep = 2;
-        nameIndex = 0;
+        langIndex = 0;
         charIndex = 0;
         isDeleting = false;
         clearTimeout(typewriterTimeout);
