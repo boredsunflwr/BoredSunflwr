@@ -5,15 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Happy Birthday!</title>
   
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Outfit:wght@300;400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-  <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- Canvas Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
@@ -33,13 +30,13 @@
       min-height: 100vh;
       overflow-x: hidden;
       overflow-y: auto;
-      background: #000000;
+      background: #020003;
       font-family: 'Outfit', sans-serif;
       color: #ffffff;
       position: relative;
     }
 
-    /* Base Gradient Background Layer */
+    /* Ambient Background Layer */
     .bg-gradient-base {
       position: fixed;
       top: 0;
@@ -49,7 +46,7 @@
       background: linear-gradient(135deg, #090003 0%, #2b020a 35%, #540313 70%, #0d0005 100%);
       background-size: 200% 200%;
       animation: ambientGradient 12s ease infinite;
-      z-index: 1;
+      z-index: 0;
     }
 
     @keyframes ambientGradient {
@@ -58,46 +55,34 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Dynamic Fluid Physics Invert Blob Cursor */
-    .cursor-blob-container {
+    /* Physics Fluid Trails Canvas overlay */
+    #fluid-canvas {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
       pointer-events: none;
-      z-index: 99999;
-      mix-blend-mode: difference;
+      z-index: 5;
     }
 
-    .cursor-blob {
-      position: absolute;
+    /* Classic Cursor Dot Pointer */
+    .custom-cursor-dot {
+      position: fixed;
       top: 0;
       left: 0;
-      width: 36px;
-      height: 36px;
-      background: #ffffff; /* Difference blend mode flips this against gradient & dark/light backgrounds */
-      border-radius: 50%;
-      pointer-events: none;
-      transform-origin: center center;
-      will-change: transform;
-    }
-
-    .cursor-blob-trail {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 20px;
-      height: 20px;
+      width: 10px;
+      height: 10px;
       background: #ffffff;
       border-radius: 50%;
-      opacity: 0.75;
       pointer-events: none;
-      transform-origin: center center;
-      will-change: transform;
+      z-index: 99999;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 10px #ffffff, 0 0 20px #ff3344;
+      transition: transform 0.05s ease-out;
     }
 
-    /* Ambient Spotlight */
+    /* Ambient Spotlight Overlay */
     .ambient-overlay {
       position: fixed;
       top: 0;
@@ -616,20 +601,14 @@
 </head>
 <body>
 
-  <!-- Normal Ambient Gradient Background Layer -->
   <div class="bg-gradient-base"></div>
 
-  <!-- Inverted Fluid Blob Cursor Layer -->
-  <div class="cursor-blob-container">
-    <div id="blob-main" class="cursor-blob"></div>
-    <div id="blob-trail-1" class="cursor-blob-trail"></div>
-    <div id="blob-trail-2" class="cursor-blob-trail"></div>
-  </div>
+  <canvas id="fluid-canvas"></canvas>
 
-  <!-- Ambient Light Overlay -->
+  <div id="dot-cursor" class="custom-cursor-dot"></div>
+
   <div class="ambient-overlay"></div>
 
-  <!-- Festive Lights -->
   <div id="lights-strip" class="lights-wrapper">
     <div class="light-wire-main">
       <div class="bulb-socket"><div class="socket"></div><div class="bulb-gold"></div></div>
@@ -643,19 +622,16 @@
     </div>
   </div>
 
-  <!-- Back Button -->
   <button id="corner-back-btn" class="btn-corner-back hidden" onclick="handleCornerBack()">
     <i class="fa-solid fa-arrow-left"></i> Back
   </button>
 
-  <!-- STEP 1: Enter Name -->
   <section id="step-name" class="fullpage-section">
     <h2>Who is the birthday star? 👑</h2>
     <input type="text" id="user-name-input" class="input-field" placeholder="Enter name..." autocomplete="off" onkeydown="handleKeyPress(event)">
     <button class="btn-glow" onclick="startGreeting()">Celebrate 🎉</button>
   </section>
 
-  <!-- STEP 2: Multilingual Typewriter -->
   <section id="step-greeting" class="fullpage-section hidden">
     <div class="greeting-container">
       <h2 class="hb-glow-text">
@@ -666,7 +642,6 @@
     </div>
   </section>
 
-  <!-- STEP 3: Lights Prompt -->
   <section id="step-lights" class="fullpage-section hidden">
     <h2>Set the Celebration Mood! ✨</h2>
     <p style="color: #ffb3b8; font-size: 1.15rem; margin-bottom: 1.5rem; text-align: center;">
@@ -675,7 +650,6 @@
     <button class="btn-glow" onclick="turnOnLightsAndShowCake()">Turn On Lights ✨</button>
   </section>
 
-  <!-- STEP 4: Interactive Cake Page -->
   <section id="step-main" class="fullpage-section hidden">
     <h2 id="welcome-header" style="font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900; text-shadow: 0 0 25px #ff3344;"></h2>
     <p class="wish-text">Make a wish and blow out the candles! 🕯️</p>
@@ -695,7 +669,6 @@
 
         <path d="M 35 75 Q 45 90 55 75 Q 65 95 75 75 Q 85 90 95 75 Q 105 95 115 75 Q 125 90 135 75 Q 145 95 155 75 Q 165 85 165 75 Z" fill="#ffffff"/>
 
-        <!-- Lit Candles -->
         <rect x="65" y="45" width="8" height="32" rx="3" fill="#ff4d5a"/>
         <line x1="69" y1="45" x2="69" y2="39" stroke="#000" stroke-width="2"/>
         <path id="flame1" class="flame" d="M 69 22 Q 74 32 69 39 Q 64 32 69 22 Z"/>
@@ -717,7 +690,6 @@
     </div>
   </section>
 
-  <!-- STEP 5: TWO COLUMN MUSIC PLAYER SECTION -->
   <section id="step-playlist" class="fullpage-section hidden">
     <div class="music-section-wrapper">
       
@@ -725,7 +697,6 @@
 
       <div id="music-dual-container" class="music-dual-container">
         
-        <!-- Vinyl Player (Left) -->
         <div class="vinyl-player-left">
           <div class="album-display">
             <div class="album-cover"></div>
@@ -774,7 +745,6 @@
           </div>
         </div>
 
-        <!-- Playlist -->
         <div class="playlist-right">
           <div class="playlist-title">
             <i class="fa-solid fa-compact-disc"></i> Pick Your Poison
@@ -832,56 +802,130 @@
   </section>
 
   <script>
-    /* Dynamic Fluid Physics Invert Blob Cursor */
-    const blobMain = document.getElementById('blob-main');
-    const blobTrail1 = document.getElementById('blob-trail-1');
-    const blobTrail2 = document.getElementById('blob-trail-2');
+    /* Canvas Fluid Physics Engine */
+    const canvas = document.getElementById('fluid-canvas');
+    const ctx = canvas.getContext('2d');
+    const dotCursor = document.getElementById('dot-cursor');
 
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-    
-    let mainX = mouseX, mainY = mouseY;
-    let t1X = mouseX, t1Y = mouseY;
-    let t2X = mouseX, t2Y = mouseY;
-    
-    let velX = 0, velY = 0;
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    let mouseX = width / 2;
+    let mouseY = height / 2;
+    let prevMouseX = mouseX;
+    let prevMouseY = mouseY;
+    let particles = [];
 
     window.addEventListener('mousemove', (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
+
+      dotCursor.style.left = `${mouseX}px`;
+      dotCursor.style.top = `${mouseY}px`;
+
+      const dx = mouseX - prevMouseX;
+      const dy = mouseY - prevMouseY;
+      const speed = Math.sqrt(dx * dx + dy * dy);
+
+      // Spawn fluid physics particles based on mouse movement speed
+      if (speed > 1.5) {
+        const count = Math.min(Math.floor(speed * 0.4), 8);
+        for (let i = 0; i < count; i++) {
+          particles.push(new FluidParticle(mouseX, mouseY, dx, dy, speed));
+        }
+      }
+
+      prevMouseX = mouseX;
+      prevMouseY = mouseY;
     });
 
-    function updateBlobPhysics() {
-      const dx = mouseX - mainX;
-      const dy = mouseY - mainY;
+    class FluidParticle {
+      constructor(x, y, dx, dy, speed) {
+        this.x = x + (Math.random() - 0.5) * 10;
+        this.y = y + (Math.random() - 0.5) * 10;
+        const angle = Math.atan2(dy, dx) + (Math.random() - 0.5) * 0.8;
+        const pSpeed = speed * (0.1 + Math.random() * 0.25);
+        this.vx = Math.cos(angle) * pSpeed;
+        this.vy = Math.sin(angle) * pSpeed;
+        
+        this.radius = Math.min(Math.max(speed * 0.4, 8), 35) * (0.8 + Math.random() * 0.5);
+        this.life = 1.0;
+        this.decay = 0.02 + Math.random() * 0.025;
+        this.aspect = 1 + Math.min(speed * 0.05, 2);
+        this.angle = angle;
+      }
 
-      velX = (velX + dx * 0.12) * 0.68;
-      velY = (velY + dy * 0.12) * 0.68;
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vx *= 0.92;
+        this.vy *= 0.92;
+        this.life -= this.decay;
+        this.radius *= 0.97;
+      }
 
-      mainX += velX;
-      mainY += velY;
+      draw(ctx) {
+        if (this.life <= 0 || this.radius <= 1) return;
 
-      t1X += (mainX - t1X) * 0.35;
-      t1Y += (mainY - t1Y) * 0.35;
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
+        ctx.scale(this.aspect, 1 / this.aspect);
 
-      t2X += (t1X - t2X) * 0.25;
-      t2Y += (t1Y - t2Y) * 0.25;
+        // Detect surface color under particle for inversion
+        let isLightSurface = false;
+        const elemUnder = document.elementFromPoint(this.x, this.y);
+        if (elemUnder) {
+          const tag = elemUnder.tagName.toLowerCase();
+          if (tag === 'input' || tag === 'button' || elemUnder.classList.contains('playlist-right') || tag === 'h1' || tag === 'h2') {
+            isLightSurface = true;
+          }
+        }
 
-      const speed = Math.sqrt(velX * velX + velY * velY);
-      const angle = Math.atan2(velY, velX);
+        // Color inversion relative to background position
+        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, this.radius);
+        if (isLightSurface) {
+          // Dark ink fluid on bright/ui elements
+          grad.addColorStop(0, `rgba(15, 0, 5, ${this.life * 0.85})`);
+          grad.addColorStop(0.6, `rgba(60, 0, 15, ${this.life * 0.5})`);
+          grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        } else {
+          // Crimson neon fluid on dark gradient background
+          grad.addColorStop(0, `rgba(255, 40, 70, ${this.life * 0.9})`);
+          grad.addColorStop(0.5, `rgba(180, 0, 35, ${this.life * 0.6})`);
+          grad.addColorStop(1, 'rgba(120, 0, 20, 0)');
+        }
 
-      const stretchX = Math.min(1 + speed * 0.045, 2.3);
-      const stretchY = Math.max(1 - speed * 0.028, 0.35);
-
-      blobMain.style.transform = `translate3d(${mainX - 18}px, ${mainY - 18}px, 0) rotate(${angle}rad) scale(${stretchX}, ${stretchY})`;
-      blobTrail1.style.transform = `translate3d(${t1X - 10}px, ${t1Y - 10}px, 0) scale(${Math.max(1 - speed * 0.015, 0.5)})`;
-      blobTrail2.style.transform = `translate3d(${t2X - 10}px, ${t2Y - 10}px, 0) scale(${Math.max(0.75 - speed * 0.01, 0.3)})`;
-
-      requestAnimationFrame(updateBlobPhysics);
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
     }
-    updateBlobPhysics();
 
-    /* App Logic */
+    function renderFluidCanvas() {
+      ctx.clearRect(0, 0, width, height);
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.update();
+        p.draw(ctx);
+        if (p.life <= 0 || p.radius <= 1) {
+          particles.splice(i, 1);
+        }
+      }
+
+      requestAnimationFrame(renderFluidCanvas);
+    }
+    renderFluidCanvas();
+
+    /* App State & Flow */
     let userName = "Star";
     let langIndex = 0;
     let charIndex = 0;
@@ -1028,7 +1072,7 @@
       confetti({ particleCount: 200, spread: 120, origin: { y: 0.6 } });
     }
 
-    /* Observer for Playlist Section */
+    /* Scroll Observer */
     const musicSection = document.getElementById('step-playlist');
     const lightsStrip = document.getElementById('lights-strip');
     const musicContainer = document.getElementById('music-dual-container');
