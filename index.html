@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Happy Birthday!</title>
   
-  <!-- Google Fonts: Outfit -->
+  <!-- Google Fonts: Playfair Display -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700;1,900&family=Outfit:wght@400;600&display=swap" rel="stylesheet">
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -92,26 +92,29 @@
       display: none !important;
     }
 
-    /* --- BACK BUTTON STYLES --- */
-    .btn-back {
-      position: absolute;
-      top: -45px;
-      left: 0;
-      background: rgba(255, 255, 255, 0.15);
+    /* --- TOP CORNER FIXED BACK BUTTON --- */
+    .btn-corner-back {
+      position: fixed;
+      top: 25px;
+      left: 25px;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.12);
       border: 1px solid rgba(255, 255, 255, 0.3);
       color: #ffffff;
-      padding: 6px 16px;
-      border-radius: 20px;
+      padding: 8px 18px;
+      border-radius: 25px;
       cursor: pointer;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       font-weight: 600;
-      backdrop-filter: blur(5px);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
       transition: all 0.3s ease;
     }
 
-    .btn-back:hover {
+    .btn-corner-back:hover {
       background: rgba(255, 255, 255, 0.3);
       transform: translateX(-3px);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
     }
 
     /* --- STEP 1: NAME INPUT CARD --- */
@@ -172,9 +175,8 @@
       box-shadow: 0 0 25px rgba(255, 255, 255, 1), 0 0 45px rgba(255, 77, 77, 0.8);
     }
 
-    /* --- STEP 2: TYPEWRITER WHITE GLOW GREETING --- */
+    /* --- STEP 2: MULTI-LANGUAGE GREETING WITH PLAYFAIR DISPLAY --- */
     .greeting-container {
-      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -182,28 +184,39 @@
       min-height: 280px;
     }
 
-    .white-glow-text {
-      font-size: 2.8rem;
-      font-weight: 800;
+    .fixed-greeting {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #ffffff;
+      text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+      margin-bottom: 0.5rem;
+    }
+
+    .name-glow-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 4rem;
+      font-weight: 900;
+      font-style: italic;
       color: #ffffff;
       text-shadow: 
         0 0 10px #ffffff,
         0 0 20px #ffffff,
         0 0 40px rgba(255, 255, 255, 0.9),
-        0 0 80px rgba(255, 77, 77, 0.7);
+        0 0 80px rgba(255, 77, 77, 0.8);
       margin-bottom: 2rem;
-      line-height: 1.2;
       min-height: 100px;
+      line-height: 1.1;
     }
 
     /* Typewriter Cursor */
     .cursor {
       display: inline-block;
       width: 4px;
-      height: 2.6rem;
+      height: 3.5rem;
       background-color: #ffffff;
-      margin-left: 5px;
-      box-shadow: 0 0 10px #ffffff;
+      margin-left: 6px;
+      box-shadow: 0 0 12px #ffffff;
       animation: blink 0.7s infinite;
       vertical-align: middle;
     }
@@ -215,7 +228,6 @@
 
     /* --- STEP 3: MAIN SITE CONTAINER --- */
     .main-site-content {
-      position: relative;
       background: rgba(20, 0, 0, 0.75);
       border: 1px solid rgba(255, 77, 77, 0.4);
       padding: 2.5rem;
@@ -276,6 +288,11 @@
     <div class="particle"></div>
   </div>
 
+  <!-- FIXED CORNER BACK BUTTON (Hidden on step 1) -->
+  <button id="corner-back-btn" class="btn-corner-back hidden" onclick="handleCornerBack()">
+    <i class="fa-solid fa-arrow-left"></i> Back
+  </button>
+
   <div class="content-wrapper">
 
     <!-- STEP 1: Ask for Name -->
@@ -286,10 +303,10 @@
       <button class="btn-glow" onclick="startGreeting()">Celebrate 🎉</button>
     </div>
 
-    <!-- STEP 2: Typewriter Multi-Language Greeting -->
+    <!-- STEP 2: Typewriter Multi-Language Name Greeting -->
     <div id="step-greeting" class="greeting-container hidden">
-      <button class="btn-back" onclick="goBackToName()"><i class="fa-solid fa-arrow-left"></i> Back</button>
-      <h1 class="white-glow-text">
+      <h2 class="fixed-greeting">Happy Birthday,</h2>
+      <h1 class="name-glow-text">
         <span id="typewriter-text"></span><span class="cursor"></span>
       </h1>
       <button class="btn-glow" onclick="openMainSite()">Open Surprise 🎁</button>
@@ -297,8 +314,7 @@
 
     <!-- STEP 3: Main Website Content (Interactive Birthday Cake) -->
     <div id="step-main" class="main-site-content hidden">
-      <button class="btn-back" onclick="goBackToGreeting()"><i class="fa-solid fa-arrow-left"></i> Back</button>
-      <h2 id="welcome-header" style="font-size: 2.2rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px #ff4d4d; font-weight: 800;"></h2>
+      <h2 id="welcome-header" style="font-family: 'Playfair Display', serif; font-size: 2.8rem; font-style: italic; font-weight: 900; margin-bottom: 0.5rem; text-shadow: 0 0 15px #ff4d4d;"></h2>
       <p class="wish-text">Make a wish and click the cake or candles to blow them out! 🕯️</p>
 
       <!-- Interactive SVG Cake -->
@@ -346,25 +362,30 @@
 
   <script>
     let userName = "Friend";
-    let languageIndex = 0;
+    let nameIndex = 0;
     let charIndex = 0;
     let isDeleting = false;
     let typewriterTimeout = null;
     let candlesBlown = false;
+    let currentStep = 1;
 
-    // Multilingual Happy Birthday templates
-    const greetings = [
-      (name) => `Happy Birthday, ${name}! 🎉`,
-      (name) => `¡Feliz Cumpleaños, ${name}! 🎂`,
-      (name) => `Joyeux Anniversaire, ${name}! ✨`,
-      (name) => `Alles Gute zum Geburtstag, ${name}! 🎈`,
-      (name) => `जन्मदिन की शुभकामनाएं, ${name}! 🌟`,
-      (name) => `Buon Compleanno, ${name}! 🥳`,
-      (name) => `お誕生日おめでとう, ${name}! 🌸`,
-      (name) => `생일 축하해요, ${name}! 🎁`,
-      (name) => `С Днем Рождения, ${name}! 🍰`,
-      (name) => `Feliz Aniversário, ${name}! 🕯️`
-    ];
+    // Multilingual Name Variations / Scripts
+    let translatedNames = [];
+
+    function generateNameTranslations(baseName) {
+      return [
+        `${baseName}! 🎉`,
+        `¡${baseName}! 🎂`,
+        `${baseName}✨`,
+        `${baseName} 🎈`,
+        `${baseName} 🌟`,
+        `${baseName} 🥳`,
+        `${baseName} 🌸`,
+        `${baseName} 🎁`,
+        `${baseName} 🍰`,
+        `${baseName} 🕯️`
+      ];
+    }
 
     function startGreeting() {
       const inputVal = document.getElementById("user-name-input").value.trim();
@@ -372,8 +393,12 @@
         userName = inputVal;
       }
 
+      translatedNames = generateNameTranslations(userName);
+      currentStep = 2;
+
       document.getElementById("step-name").classList.add("hidden");
       document.getElementById("step-greeting").classList.remove("hidden");
+      document.getElementById("corner-back-btn").classList.remove("hidden");
 
       confetti({
         particleCount: 120,
@@ -381,8 +406,8 @@
         origin: { y: 0.6 }
       });
 
-      // Reset and start typewriter
-      languageIndex = 0;
+      // Reset & start typewriter loop for the name only
+      nameIndex = 0;
       charIndex = 0;
       isDeleting = false;
       clearTimeout(typewriterTimeout);
@@ -390,39 +415,34 @@
     }
 
     function typewriterLoop() {
-      const currentFullText = greetings[languageIndex](userName);
+      const currentText = translatedNames[nameIndex];
       const typewriterEl = document.getElementById("typewriter-text");
 
       if (isDeleting) {
-        typewriterEl.textContent = currentFullText.substring(0, charIndex - 1);
+        typewriterEl.textContent = currentText.substring(0, charIndex - 1);
         charIndex--;
       } else {
-        typewriterEl.textContent = currentFullText.substring(0, charIndex + 1);
+        typewriterEl.textContent = currentText.substring(0, charIndex + 1);
         charIndex++;
       }
 
-      let typingSpeed = isDeleting ? 40 : 80;
+      let typingSpeed = isDeleting ? 50 : 90;
 
-      if (!isDeleting && charIndex === currentFullText.length) {
-        typingSpeed = 1500; // Pause at full text
+      if (!isDeleting && charIndex === currentText.length) {
+        typingSpeed = 1400; // Pause at complete name
         isDeleting = true;
       } else if (isDeleting && charIndex === 0) {
         isDeleting = false;
-        languageIndex = (languageIndex + 1) % greetings.length;
-        typingSpeed = 300; // Pause before typing next language
+        nameIndex = (nameIndex + 1) % translatedNames.length;
+        typingSpeed = 300;
       }
 
       typewriterTimeout = setTimeout(typewriterLoop, typingSpeed);
     }
 
-    function goBackToName() {
-      clearTimeout(typewriterTimeout);
-      document.getElementById("step-greeting").classList.add("hidden");
-      document.getElementById("step-name").classList.remove("hidden");
-    }
-
     function openMainSite() {
       clearTimeout(typewriterTimeout);
+      currentStep = 3;
       document.getElementById("step-greeting").classList.add("hidden");
       document.getElementById("step-main").classList.remove("hidden");
       document.getElementById("welcome-header").innerText = `Happy Birthday, ${userName}! ❤️`;
@@ -434,10 +454,25 @@
       });
     }
 
-    function goBackToGreeting() {
-      document.getElementById("step-main").classList.add("hidden");
-      document.getElementById("step-greeting").classList.remove("hidden");
-      startGreeting();
+    function handleCornerBack() {
+      if (currentStep === 3) {
+        // Go back from Cake screen to Greeting screen
+        document.getElementById("step-main").classList.add("hidden");
+        document.getElementById("step-greeting").classList.remove("hidden");
+        currentStep = 2;
+        nameIndex = 0;
+        charIndex = 0;
+        isDeleting = false;
+        clearTimeout(typewriterTimeout);
+        typewriterLoop();
+      } else if (currentStep === 2) {
+        // Go back from Greeting screen to Name Input screen
+        clearTimeout(typewriterTimeout);
+        document.getElementById("step-greeting").classList.add("hidden");
+        document.getElementById("corner-back-btn").classList.add("hidden");
+        document.getElementById("step-name").classList.remove("hidden");
+        currentStep = 1;
+      }
     }
 
     function blowCandles() {
