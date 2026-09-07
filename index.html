@@ -8,7 +8,7 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700;1,900&family=Outfit:wght@300;400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Outfit:wght@300;400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -33,26 +33,23 @@
       min-height: 100vh;
       overflow-x: hidden;
       overflow-y: auto;
-      background: linear-gradient(135deg, #050000 0%, #2b0003 40%, #4d0008 70%, #100002 100%);
-      background-size: 300% 300%;
-      animation: ambientGradient 16s ease infinite;
+      background: #050000;
       font-family: 'Outfit', sans-serif;
       color: #ffffff;
       position: relative;
     }
 
-    /* Grain / Texture Noise Overlay */
-    body::before {
-      content: "";
+    /* Ambient Dark Red Gradient Background */
+    .bg-gradient-base {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.07'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 999;
-      opacity: 0.9;
+      background: linear-gradient(135deg, #050000 0%, #2b0003 40%, #4d0008 70%, #100002 100%);
+      background-size: 200% 200%;
+      animation: ambientGradient 18s ease infinite;
+      z-index: 0;
     }
 
     @keyframes ambientGradient {
@@ -61,35 +58,74 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Custom Juicy Blob Cursor */
+    /* Fluid Ripple Texture Background Overlay */
+    .fluid-texture-overlay {
+      position: fixed;
+      top: -10%;
+      left: -10%;
+      width: 120vw;
+      height: 120vh;
+      /* Embedded liquid distortion image provided */
+      background-image: url('3307399722587723.jpg');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.12;
+      mix-blend-mode: screen;
+      pointer-events: none;
+      z-index: 1;
+      filter: blur(2px) contrast(130%);
+      animation: fluidMotion 25s ease-in-out infinite alternate;
+    }
+
+    @keyframes fluidMotion {
+      0% {
+        transform: scale(1) translate(0px, 0px) rotate(0deg);
+      }
+      50% {
+        transform: scale(1.08) translate(-20px, 15px) rotate(2deg);
+      }
+      100% {
+        transform: scale(1.03) translate(15px, -20px) rotate(-1deg);
+      }
+    }
+
+    /* Fine Grain Noise Filter Overlay */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.06'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    /* High-Physics Juicy Blob Cursor */
     .cursor-blob {
       position: fixed;
       top: 0;
       left: 0;
-      width: 24px;
-      height: 24px;
+      width: 26px;
+      height: 26px;
       background: #000000;
-      border: 1px solid rgba(255, 77, 77, 0.6);
+      border: 1px solid rgba(255, 77, 77, 0.7);
       border-radius: 50%;
       pointer-events: none;
       z-index: 9999;
-      transform: translate(-50%, -50%);
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 25px rgba(180, 0, 20, 0.4);
-      transition: width 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
-                  height 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
-                  background 0.3s ease, 
-                  border 0.3s ease;
+      transform-origin: center center;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 25px rgba(180, 0, 20, 0.5);
+      transition: background 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
     }
 
     .cursor-blob.hovered {
-      width: 48px;
-      height: 48px;
       background: rgba(180, 0, 20, 0.85);
       border: 1.5px solid #ff4d5a;
-      box-shadow: 0 0 30px rgba(255, 77, 90, 0.8);
+      box-shadow: 0 0 35px rgba(255, 77, 90, 0.9);
     }
 
-    /* Floating background embers */
+    /* Floating Embers */
     .particle-container {
       position: fixed;
       top: 0;
@@ -97,7 +133,7 @@
       width: 100%;
       height: 100%;
       pointer-events: none;
-      z-index: 1;
+      z-index: 2;
     }
 
     .particle {
@@ -139,7 +175,7 @@
       opacity: 1;
     }
 
-    /* Festoon String Lights */
+    /* String Lights */
     .lights-wrapper {
       position: fixed;
       top: 0;
@@ -214,7 +250,7 @@
       border-color: #ff4d4d;
     }
 
-    /* Full Page Scroll Section Container */
+    /* Full Page Sections */
     .fullpage-section {
       width: 100vw;
       min-height: 100vh;
@@ -231,10 +267,11 @@
       display: none !important;
     }
 
-    /* Typography & Buttons */
+    /* Typography - Non-italic Happy Birthday text */
     h2 {
       font-size: 2.2rem;
       font-weight: 600;
+      font-style: normal; /* Strictly non-italic */
       margin-bottom: 1.5rem;
       text-align: center;
       text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
@@ -281,7 +318,7 @@
       box-shadow: 0 0 25px rgba(255, 50, 70, 0.8);
     }
 
-    /* Step 2 Typewriter */
+    /* Multilingual Text (Non-italic) */
     .greeting-container {
       text-align: center;
     }
@@ -290,6 +327,7 @@
       font-family: 'Playfair Display', serif;
       font-size: 3rem;
       font-weight: 700;
+      font-style: normal; /* Non-italic */
       color: #ffffff;
       text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
       min-height: 80px;
@@ -299,7 +337,6 @@
       font-family: 'Playfair Display', serif;
       font-size: 4.8rem;
       font-weight: 900;
-      font-style: italic;
       color: #ffffff;
       text-shadow: 0 0 20px #ff3344, 0 0 50px rgba(255, 0, 40, 0.8);
       margin-bottom: 2.5rem;
@@ -321,7 +358,7 @@
       50% { opacity: 0; }
     }
 
-    /* Cake SVG Container */
+    /* Cake Container */
     .cake-container {
       position: relative;
       width: 260px;
@@ -356,11 +393,11 @@
       font-size: 1.2rem;
       color: #ffb3b8;
       margin-top: 10px;
-      font-style: italic;
+      font-style: normal;
       text-align: center;
     }
 
-    /* --- BEACH HOUSE VINYL PLAYER (DEPRESSION CHERRY STYLE) --- */
+    /* --- VINYL PLAYER SECTION --- */
     .vinyl-player-section {
       width: 100%;
       max-width: 850px;
@@ -368,6 +405,17 @@
       flex-direction: column;
       align-items: center;
       gap: 2rem;
+    }
+
+    .music-taste-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      font-style: normal;
+      color: #ffffff;
+      text-align: center;
+      text-shadow: 0 0 20px rgba(255, 77, 90, 0.6);
+      margin-bottom: 0.5rem;
     }
 
     .album-display {
@@ -379,32 +427,21 @@
       justify-content: flex-start;
     }
 
-    /* Depression Cherry Velvet-Style Jacket Cover */
+    /* Clean Red Velvet Jacket (NO TEXT) */
     .album-cover {
       width: 300px;
       height: 300px;
-      background: radial-gradient(circle at 30% 30%, #8a0b14, #420005);
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9), inset 0 0 30px rgba(0, 0, 0, 0.5);
+      background: radial-gradient(circle at 35% 35%, #8a0b14, #380004);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9), inset 0 0 30px rgba(0, 0, 0, 0.6);
       border-radius: 4px;
       position: absolute;
       left: 0;
       top: 10px;
       z-index: 3;
-      padding: 25px;
-      display: flex;
-      justify-content: space-between;
       border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    .cover-text {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.85rem;
-      letter-spacing: 1.5px;
-      color: rgba(255, 220, 220, 0.85);
-      text-transform: lowercase;
-    }
-
-    /* Floral Painted Vinyl Record */
+    /* Painted Floral Vinyl Record */
     .vinyl-record {
       width: 290px;
       height: 290px;
@@ -421,7 +458,6 @@
       justify-content: center;
     }
 
-    /* SVG Floral Disc Paint Artwork */
     .vinyl-svg {
       width: 100%;
       height: 100%;
@@ -439,7 +475,7 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* Vinyl Controls & Bar */
+    /* Audio Controls */
     .audio-player-controls {
       width: 100%;
       max-width: 420px;
@@ -466,7 +502,7 @@
     }
 
     .progress-bar-fill {
-      width: 30%;
+      width: 35%;
       height: 100%;
       background: #ff4d5a;
       box-shadow: 0 0 10px #ff4d5a;
@@ -525,13 +561,17 @@
 </head>
 <body>
 
-  <!-- Juicy Following Blob Cursor -->
+  <!-- Dynamic Fluid Background Overlay -->
+  <div class="bg-gradient-base"></div>
+  <div class="fluid-texture-overlay"></div>
+
+  <!-- Physics Spring Cursor -->
   <div id="blob-cursor" class="cursor-blob"></div>
 
   <!-- Ambient Darkening Overlay -->
   <div class="ambient-overlay"></div>
 
-  <!-- FESTOON CELEBRATION LIGHT STRIPS -->
+  <!-- String Lights -->
   <div id="lights-strip" class="lights-wrapper">
     <div class="light-wire-main">
       <div class="bulb-socket"><div class="socket"></div><div class="bulb-gold"></div></div>
@@ -545,7 +585,7 @@
     </div>
   </div>
 
-  <!-- Background Particles -->
+  <!-- Floating Embers -->
   <div class="particle-container">
     <div class="particle"></div>
     <div class="particle"></div>
@@ -577,7 +617,7 @@
     </div>
   </section>
 
-  <!-- STEP 3: Lights Turn On Prompt -->
+  <!-- STEP 3: Lights Prompt -->
   <section id="step-lights" class="fullpage-section hidden">
     <h2>Set the Celebration Mood! ✨</h2>
     <p style="color: #ffb3b8; font-size: 1.15rem; margin-bottom: 1.5rem; text-align: center;">
@@ -588,10 +628,9 @@
 
   <!-- STEP 4: Interactive Cake Page -->
   <section id="step-main" class="fullpage-section hidden">
-    <h2 id="welcome-header" style="font-family: 'Playfair Display', serif; font-size: 3rem; font-style: italic; font-weight: 900; text-shadow: 0 0 25px #ff3344;"></h2>
+    <h2 id="welcome-header" style="font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900; text-shadow: 0 0 25px #ff3344;"></h2>
     <p class="wish-text">Make a wish and blow out the candles! 🕯️</p>
 
-    <!-- SVG Cake with ALL 3 CANDLES LIT -->
     <div class="cake-container" onclick="blowCandles()">
       <svg class="cake" viewBox="0 0 200 200">
         <ellipse cx="100" cy="170" rx="85" ry="18" fill="#1f0305" stroke="#4a0008" stroke-width="2"/>
@@ -607,17 +646,15 @@
 
         <path d="M 35 75 Q 45 90 55 75 Q 65 95 75 75 Q 85 90 95 75 Q 105 95 115 75 Q 125 90 135 75 Q 145 95 155 75 Q 165 85 165 75 Z" fill="#ffffff"/>
 
-        <!-- Candle 1 -->
+        <!-- Candles -->
         <rect x="65" y="45" width="8" height="32" rx="3" fill="#ff4d5a"/>
         <line x1="69" y1="45" x2="69" y2="39" stroke="#000" stroke-width="2"/>
         <path id="flame1" class="flame" d="M 69 22 Q 74 32 69 39 Q 64 32 69 22 Z"/>
 
-        <!-- Candle 2 -->
         <rect x="96" y="40" width="8" height="35" rx="3" fill="#ffffff"/>
         <line x1="100" y1="40" x2="100" y2="34" stroke="#000" stroke-width="2"/>
         <path id="flame2" class="flame" d="M 100 17 Q 105 27 100 34 Q 95 27 100 17 Z"/>
 
-        <!-- Candle 3 -->
         <rect x="127" y="45" width="8" height="32" rx="3" fill="#ff4d5a"/>
         <line x1="131" y1="45" x2="131" y2="39" stroke="#000" stroke-width="2"/>
         <path id="flame3" class="flame" d="M 131 22 Q 136 32 131 39 Q 126 32 131 22 Z"/>
@@ -627,33 +664,31 @@
     <button id="blow-btn" class="btn-glow" onclick="blowCandles()">Blow Out Candles 🎂</button>
   </section>
 
-  <!-- STEP 5: BEACH HOUSE DEPRESSION CHERRY VINYL PLAYER SECTION -->
+  <!-- STEP 5: MUSIC PLAYER SECTION WITH USER TASTE TITLE -->
   <section id="step-playlist" class="fullpage-section hidden">
     <div class="vinyl-player-section">
       
-      <!-- Beach House Jacket + Painted Floral Record -->
-      <div class="album-display">
-        <!-- Depression Cherry Sleeve Jacket -->
-        <div class="album-cover">
-          <span class="cover-text">beach house</span>
-          <span class="cover-text">depression cherry</span>
-        </div>
+      <!-- Personalized Music Title Header -->
+      <div id="music-taste-header" class="music-taste-title">User's Sound Track</div>
 
-        <!-- Hand Painted Floral Vinyl Disc -->
+      <!-- Velvet Jacket Cover + Painted Floral Vinyl -->
+      <div class="album-display">
+        <!-- Clean Velvet Cover (No Text) -->
+        <div class="album-cover"></div>
+
+        <!-- Painted Floral Vinyl Disc -->
         <div id="vinyl-disc" class="vinyl-record">
           <svg class="vinyl-svg" viewBox="0 0 300 300">
-            <!-- Vinyl Grooves Base -->
             <circle cx="150" cy="150" r="145" fill="#0c0a0c" stroke="#1f1a1f" stroke-width="2"/>
             <circle cx="150" cy="150" r="130" fill="none" stroke="#161316" stroke-width="3"/>
             <circle cx="150" cy="150" r="115" fill="none" stroke="#1a161a" stroke-width="2"/>
             <circle cx="150" cy="150" r="100" fill="none" stroke="#141114" stroke-width="3"/>
             <circle cx="150" cy="150" r="85" fill="none" stroke="#1c181c" stroke-width="2"/>
 
-            <!-- Floral Paint Vines & Blossoms artwork -->
+            <!-- Floral Paint Vines & Artwork -->
             <path d="M 40 150 Q 80 60 150 40 Q 220 30 250 110" fill="none" stroke="#4d7c0f" stroke-width="3.5" stroke-linecap="round"/>
             <path d="M 70 210 Q 140 260 220 220" fill="none" stroke="#3f6212" stroke-width="3" stroke-linecap="round"/>
             
-            <!-- Painted Flowers -->
             <circle cx="80" cy="80" r="8" fill="#f43f5e"/>
             <circle cx="95" cy="70" r="6" fill="#fb7185"/>
             <circle cx="150" cy="40" r="9" fill="#c084fc"/>
@@ -662,14 +697,13 @@
             <circle cx="100" cy="230" r="8" fill="#fbbf24"/>
             <circle cx="180" cy="240" r="10" fill="#e879f9"/>
 
-            <!-- Center Purple Hallmark Label -->
+            <!-- Center Purple Label -->
             <circle cx="150" cy="150" r="42" fill="#581c87" stroke="#3b0764" stroke-width="2"/>
             <circle cx="150" cy="150" r="38" fill="none" stroke="#a855f7" stroke-width="1" stroke-dasharray="3,3"/>
             
             <text x="150" y="145" font-family="Space Mono, monospace" font-size="7" fill="#f3e8ff" text-anchor="middle">BIRTHDAY MIX</text>
             <text x="150" y="156" font-family="Space Mono, monospace" font-size="5" fill="#d8b4fe" text-anchor="middle">STEREO</text>
             
-            <!-- Spindle Hole -->
             <circle cx="150" cy="150" r="5" fill="#000000" stroke="#d4d4d8" stroke-width="1"/>
           </svg>
         </div>
@@ -680,7 +714,7 @@
         <div class="track-title" id="track-name">Space Song - Beach House</div>
         
         <div class="progress-bar-wrap">
-          <div class="progress-bar-fill" id="progress-fill"></div>
+          <div class="progress-bar-fill"></div>
         </div>
 
         <div class="controls-row">
@@ -694,34 +728,58 @@
   </section>
 
   <script>
-    /* Dynamic Smooth Cursor Physics */
+    /* JUICY SPRING PHYSICS CURSOR */
     const cursor = document.getElementById('blob-cursor');
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
-    let cursorX = mouseX;
-    let cursorY = mouseY;
+    let blobX = mouseX;
+    let blobY = mouseY;
+    let velX = 0;
+    let velY = 0;
 
     window.addEventListener('mousemove', (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
     });
 
-    function animateCursor() {
-      // Smooth lerp follow
-      cursorX += (mouseX - cursorX) * 0.18;
-      cursorY += (mouseY - cursorY) * 0.18;
-      cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
-      requestAnimationFrame(animateCursor);
-    }
-    animateCursor();
+    function updateCursorPhysics() {
+      // Spring Damper Physics
+      const stiffness = 0.08;
+      const damping = 0.72;
 
-    // Hover effect on buttons/inputs
+      const dx = mouseX - blobX;
+      const dy = mouseY - blobY;
+
+      const ax = dx * stiffness;
+      const ay = dy * stiffness;
+
+      velX = (velX + ax) * damping;
+      velY = (velY + ay) * damping;
+
+      blobX += velX;
+      blobY += velY;
+
+      // Elastic squash & stretch calculation based on speed
+      const speed = Math.sqrt(velX * velX + velY * velY);
+      const angle = Math.atan2(velY, velX);
+      const stretch = Math.min(speed * 0.035, 0.45);
+
+      const scaleX = 1 + stretch;
+      const scaleY = 1 - stretch;
+
+      cursor.style.transform = `translate3d(${blobX}px, ${blobY}px, 0) translate(-50%, -50%) rotate(${angle}rad) scale(${scaleX}, ${scaleY})`;
+
+      requestAnimationFrame(updateCursorPhysics);
+    }
+    updateCursorPhysics();
+
+    // Hover effect
     document.querySelectorAll('button, input, .cake-container, .album-display').forEach(element => {
       element.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
       element.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
     });
 
-    /* App Logic */
+    /* Core App Logic */
     let userName = "Star";
     let langIndex = 0;
     let charIndex = 0;
@@ -763,6 +821,9 @@
       document.getElementById("step-greeting").classList.remove("hidden");
       document.getElementById("corner-back-btn").classList.remove("hidden");
       document.getElementById("user-name-display").innerText = userName;
+
+      // Personalize Music Header
+      document.getElementById("music-taste-header").innerText = `${userName}'s Music Taste ✨`;
 
       confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
 
@@ -863,7 +924,7 @@
       confetti({ particleCount: 200, spread: 120, origin: { y: 0.6 } });
     }
 
-    /* Vinyl Music Control */
+    /* Vinyl Controls */
     function togglePlay() {
       isPlaying = !isPlaying;
       const vinyl = document.getElementById("vinyl-disc");
