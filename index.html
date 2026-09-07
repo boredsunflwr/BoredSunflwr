@@ -61,7 +61,7 @@
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.95);
     }
 
-    /* LAYER 1: Underneath Oppositional Gradient (Red Top-Left -> Black Bottom-Right) */
+    /* LAYER 1: Underneath Oppositional Gradient */
     .bg-gradient-underneath {
       position: fixed;
       top: 0;
@@ -72,7 +72,7 @@
       z-index: 0;
     }
 
-    /* LAYER 2: Canvas Mask Top Gradient (Black Top-Left -> Red Bottom-Right) */
+    /* LAYER 2: Canvas Mask Top Gradient */
     #fluid-mask-canvas {
       position: fixed;
       top: 0;
@@ -99,6 +99,58 @@
 
     body.lights-active .ambient-overlay {
       opacity: 1;
+    }
+
+    /* BLOOMING SUNFLOWERS CONTAINER FOR STEP 1 */
+    .sunflowers-bloom-wrapper {
+      width: 100%;
+      max-width: 500px;
+      height: 90px;
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 18px;
+      position: relative;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    .sunflowers-bloom-wrapper.fade-out {
+      opacity: 0;
+    }
+
+    /* Aesthetic Mini Sunflower Element */
+    .mini-sunflower {
+      width: 42px;
+      height: 42px;
+      opacity: 0;
+      transform: scale(0) rotate(-45deg);
+      animation: bloomIn 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      filter: drop-shadow(0 0 10px rgba(255, 191, 0, 0.6));
+    }
+
+    /* Staggered Blooming Timing */
+    .mini-sunflower:nth-child(1) { animation-delay: 0.2s; }
+    .mini-sunflower:nth-child(2) { animation-delay: 0.4s; }
+    .mini-sunflower:nth-child(3) { animation-delay: 0.6s; }
+    .mini-sunflower:nth-child(4) { animation-delay: 0.8s; }
+    .mini-sunflower:nth-child(5) { animation-delay: 1.0s; }
+    .mini-sunflower:nth-child(6) { animation-delay: 1.2s; }
+
+    @keyframes bloomIn {
+      0% {
+        opacity: 0;
+        transform: scale(0) rotate(-60deg);
+      }
+      70% {
+        opacity: 1;
+        transform: scale(1.15) rotate(10deg);
+      }
+      100% {
+        opacity: 0.95;
+        transform: scale(1) rotate(0deg);
+      }
     }
 
     /* Festoon String Lights */
@@ -633,10 +685,93 @@
     <i class="fa-solid fa-arrow-left"></i> Back
   </button>
 
-  <!-- STEP 1: Enter Name -->
+  <!-- STEP 1: Enter Name & Blooming Sunflowers -->
   <section id="step-name" class="fullpage-section">
     <h2>Who is the birthday star? 👑</h2>
     <input type="text" id="user-name-input" class="input-field" placeholder="Enter name..." autocomplete="off" onkeydown="handleKeyPress(event)">
+    
+    <!-- Blooming Aesthetic Sunflowers -->
+    <div id="sunflowers-garden" class="sunflowers-bloom-wrapper">
+      <svg class="mini-sunflower" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="16" fill="#3b1d0e"/>
+        <g fill="#ffc107">
+          <ellipse cx="50" cy="18" rx="7" ry="16"/>
+          <ellipse cx="50" cy="82" rx="7" ry="16"/>
+          <ellipse cx="18" cy="50" rx="16" ry="7"/>
+          <ellipse cx="82" cy="50" rx="16" ry="7"/>
+          <ellipse cx="27" cy="27" rx="7" ry="16" transform="rotate(-45 27 27)"/>
+          <ellipse cx="73" cy="73" rx="7" ry="16" transform="rotate(-45 73 73)"/>
+          <ellipse cx="27" cy="73" rx="7" ry="16" transform="rotate(45 27 73)"/>
+          <ellipse cx="73" cy="27" rx="7" ry="16" transform="rotate(45 73 27)"/>
+        </g>
+      </svg>
+      <svg class="mini-sunflower" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="16" fill="#3b1d0e"/>
+        <g fill="#ffb300">
+          <ellipse cx="50" cy="18" rx="7" ry="16"/>
+          <ellipse cx="50" cy="82" rx="7" ry="16"/>
+          <ellipse cx="18" cy="50" rx="16" ry="7"/>
+          <ellipse cx="82" cy="50" rx="16" ry="7"/>
+          <ellipse cx="27" cy="27" rx="7" ry="16" transform="rotate(-45 27 27)"/>
+          <ellipse cx="73" cy="73" rx="7" ry="16" transform="rotate(-45 73 73)"/>
+          <ellipse cx="27" cy="73" rx="7" ry="16" transform="rotate(45 27 73)"/>
+          <ellipse cx="73" cy="27" rx="7" ry="16" transform="rotate(45 73 27)"/>
+        </g>
+      </svg>
+      <svg class="mini-sunflower" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="16" fill="#3b1d0e"/>
+        <g fill="#ffc107">
+          <ellipse cx="50" cy="18" rx="7" ry="16"/>
+          <ellipse cx="50" cy="82" rx="7" ry="16"/>
+          <ellipse cx="18" cy="50" rx="16" ry="7"/>
+          <ellipse cx="82" cy="50" rx="16" ry="7"/>
+          <ellipse cx="27" cy="27" rx="7" ry="16" transform="rotate(-45 27 27)"/>
+          <ellipse cx="73" cy="73" rx="7" ry="16" transform="rotate(-45 73 73)"/>
+          <ellipse cx="27" cy="73" rx="7" ry="16" transform="rotate(45 27 73)"/>
+          <ellipse cx="73" cy="27" rx="7" ry="16" transform="rotate(45 73 27)"/>
+        </g>
+      </svg>
+      <svg class="mini-sunflower" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="16" fill="#3b1d0e"/>
+        <g fill="#ffb300">
+          <ellipse cx="50" cy="18" rx="7" ry="16"/>
+          <ellipse cx="50" cy="82" rx="7" ry="16"/>
+          <ellipse cx="18" cy="50" rx="16" ry="7"/>
+          <ellipse cx="82" cy="50" rx="16" ry="7"/>
+          <ellipse cx="27" cy="27" rx="7" ry="16" transform="rotate(-45 27 27)"/>
+          <ellipse cx="73" cy="73" rx="7" ry="16" transform="rotate(-45 73 73)"/>
+          <ellipse cx="27" cy="73" rx="7" ry="16" transform="rotate(45 27 73)"/>
+          <ellipse cx="73" cy="27" rx="7" ry="16" transform="rotate(45 73 27)"/>
+        </g>
+      </svg>
+      <svg class="mini-sunflower" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="16" fill="#3b1d0e"/>
+        <g fill="#ffc107">
+          <ellipse cx="50" cy="18" rx="7" ry="16"/>
+          <ellipse cx="50" cy="82" rx="7" ry="16"/>
+          <ellipse cx="18" cy="50" rx="16" ry="7"/>
+          <ellipse cx="82" cy="50" rx="16" ry="7"/>
+          <ellipse cx="27" cy="27" rx="7" ry="16" transform="rotate(-45 27 27)"/>
+          <ellipse cx="73" cy="73" rx="7" ry="16" transform="rotate(-45 73 73)"/>
+          <ellipse cx="27" cy="73" rx="7" ry="16" transform="rotate(45 27 73)"/>
+          <ellipse cx="73" cy="27" rx="7" ry="16" transform="rotate(45 73 27)"/>
+        </g>
+      </svg>
+      <svg class="mini-sunflower" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="16" fill="#3b1d0e"/>
+        <g fill="#ffb300">
+          <ellipse cx="50" cy="18" rx="7" ry="16"/>
+          <ellipse cx="50" cy="82" rx="7" ry="16"/>
+          <ellipse cx="18" cy="50" rx="16" ry="7"/>
+          <ellipse cx="82" cy="50" rx="16" ry="7"/>
+          <ellipse cx="27" cy="27" rx="7" ry="16" transform="rotate(-45 27 27)"/>
+          <ellipse cx="73" cy="73" rx="7" ry="16" transform="rotate(-45 73 73)"/>
+          <ellipse cx="27" cy="73" rx="7" ry="16" transform="rotate(45 27 73)"/>
+          <ellipse cx="73" cy="27" rx="7" ry="16" transform="rotate(45 73 27)"/>
+        </g>
+      </svg>
+    </div>
+
     <button class="btn-glow" onclick="startGreeting()">Celebrate 🎉</button>
   </section>
 
@@ -828,7 +963,6 @@
       mouseX = e.clientX;
       mouseY = e.clientY;
 
-      // Color Dynamic Inversion check
       const elem = document.elementFromPoint(e.clientX, e.clientY);
       if (elem) {
         const tag = elem.tagName.toLowerCase();
@@ -840,7 +974,6 @@
       }
     });
 
-    // Sleek Spring Motion for Cursor Core
     function renderCursor() {
       cursorX += (mouseX - cursorX) * 0.22;
       cursorY += (mouseY - cursorY) * 0.22;
@@ -860,7 +993,6 @@
       drawTopGradientLayer();
     }
 
-    // Top Layer Gradient (Opposite Direction/Colors to Underneath Layer)
     function drawTopGradientLayer() {
       const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
       grad.addColorStop(0, '#000000');
@@ -876,7 +1008,6 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    // Continuous Fluid Mass Nodes
     const NUM_NODES = 12;
     let fluidNodes = [];
     
@@ -892,14 +1023,10 @@
       });
     }
 
-    // Organic Shapeless Liquid Animation Loop
     function renderOrganicLiquidMask() {
       drawTopGradientLayer();
-
-      // Mask composite mode cuts transparent liquid shape through top gradient layer
       ctx.globalCompositeOperation = 'destination-out';
 
-      // Update node physics: Head node tracks mouse, subsequent nodes follow organically
       fluidNodes[0].x += (mouseX - fluidNodes[0].x) * 0.18;
       fluidNodes[0].y += (mouseY - fluidNodes[0].y) * 0.18;
 
@@ -907,19 +1034,16 @@
         const prev = fluidNodes[i - 1];
         const current = fluidNodes[i];
         
-        // Dynamic viscous spring attraction
         current.x += (prev.x - current.x) * (0.28 - i * 0.015);
         current.y += (prev.y - current.y) * (0.28 - i * 0.015);
         current.phase += current.wobbleSpeed;
       }
 
-      // Render amorphous shapeless fluid contour
       ctx.save();
       ctx.shadowBlur = 45;
       ctx.shadowColor = 'rgba(0, 0, 0, 1)';
       ctx.fillStyle = 'rgba(0, 0, 0, 1)';
 
-      // 1. Draw interconnected juicy blobs
       for (let i = 0; i < NUM_NODES; i++) {
         const node = fluidNodes[i];
         const dynamicRadius = node.radius + Math.sin(node.phase) * 12;
@@ -929,7 +1053,6 @@
         ctx.fill();
       }
 
-      // 2. Draw seamless morphing liquid bridge across nodes
       ctx.beginPath();
       ctx.moveTo(fluidNodes[0].x, fluidNodes[0].y);
       for (let i = 0; i < NUM_NODES - 1; i++) {
@@ -989,21 +1112,27 @@
       const inputVal = document.getElementById("user-name-input").value.trim();
       if (inputVal !== "") userName = inputVal;
 
-      currentStep = 2;
-      document.getElementById("step-name").classList.add("hidden");
-      document.getElementById("step-greeting").classList.remove("hidden");
-      document.getElementById("corner-back-btn").classList.remove("hidden");
-      document.getElementById("user-name-display").innerText = userName;
+      // Fade out sunflowers garden smoothly before changing page
+      const sunflowers = document.getElementById("sunflowers-garden");
+      sunflowers.classList.add("fade-out");
 
-      document.getElementById("music-taste-header").innerText = `${userName}'s Sound Track ✨`;
+      setTimeout(() => {
+        currentStep = 2;
+        document.getElementById("step-name").classList.add("hidden");
+        document.getElementById("step-greeting").classList.remove("hidden");
+        document.getElementById("corner-back-btn").classList.remove("hidden");
+        document.getElementById("user-name-display").innerText = userName;
 
-      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        document.getElementById("music-taste-header").innerText = `${userName}'s Sound Track ✨`;
 
-      langIndex = 0;
-      charIndex = 0;
-      isDeleting = false;
-      clearTimeout(typewriterTimeout);
-      typewriterLoop();
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+
+        langIndex = 0;
+        charIndex = 0;
+        isDeleting = false;
+        clearTimeout(typewriterTimeout);
+        typewriterLoop();
+      }, 400);
     }
 
     function typewriterLoop() {
@@ -1077,6 +1206,11 @@
         clearTimeout(typewriterTimeout);
         document.getElementById("step-greeting").classList.add("hidden");
         document.getElementById("corner-back-btn").classList.add("hidden");
+        
+        // Reset sunflowers bloom garden on return to step 1
+        const sunflowers = document.getElementById("sunflowers-garden");
+        sunflowers.classList.remove("fade-out");
+        
         document.getElementById("step-name").classList.remove("hidden");
         currentStep = 1;
       }
