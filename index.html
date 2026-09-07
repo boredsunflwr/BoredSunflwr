@@ -39,14 +39,14 @@
       position: relative;
     }
 
-    /* Ambient Base Gradient */
+    /* Base Ambient Background Gradient */
     .bg-gradient-base {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: linear-gradient(135deg, #050000 0%, #2a0004 40%, #4a0008 70%, #0a0002 100%);
+      background: linear-gradient(135deg, #050102 0%, #1f0208 40%, #3b010c 70%, #080003 100%);
       background-size: 200% 200%;
       animation: ambientGradient 18s ease infinite;
       z-index: 0;
@@ -58,37 +58,60 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Animated Halftone Liquid Texture Background Overlay */
-    .fluid-texture-overlay {
+    /* Metallic Silk Wave Overlay (Inspired by Reference Image) */
+    .silk-glow-overlay {
       position: fixed;
-      top: -15%;
-      left: -15%;
-      width: 130vw;
-      height: 130vh;
-      background-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.25) 1px, transparent 1.5px),
-                        radial-gradient(circle at center, rgba(0, 0, 0, 0.9) 2px, transparent 2.5px);
-      background-size: 8px 8px, 12px 12px;
-      mix-blend-mode: overlay;
-      opacity: 0.35;
+      top: -20%;
+      left: -20%;
+      width: 140vw;
+      height: 140vh;
+      background: 
+        radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.22) 0%, rgba(255, 180, 150, 0.12) 30%, transparent 65%),
+        radial-gradient(ellipse at 70% 80%, rgba(255, 220, 190, 0.18) 0%, rgba(255, 120, 80, 0.08) 40%, transparent 70%),
+        radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+      mix-blend-mode: screen;
+      opacity: 0.32;
       pointer-events: none;
       z-index: 1;
-      filter: url('#fluid-halftone-filter') contrast(180%);
-      animation: waveFluidMotion 18s ease-in-out infinite alternate;
+      filter: blur(35px) url('#fluid-halftone-filter') contrast(140%);
+      animation: liquidSilkFlow 16s ease-in-out infinite alternate;
     }
 
-    @keyframes waveFluidMotion {
+    @keyframes liquidSilkFlow {
       0% {
-        transform: scale(1) translate(0px, 0px) rotate(0deg);
+        transform: scale(1) rotate(0deg) translate(0px, 0px);
+        opacity: 0.28;
       }
       50% {
-        transform: scale(1.12) translate(-30px, 20px) rotate(3deg);
+        transform: scale(1.15) rotate(4deg) translate(-35px, 25px);
+        opacity: 0.38;
       }
       100% {
-        transform: scale(1.05) translate(25px, -25px) rotate(-2deg);
+        transform: scale(1.05) rotate(-3deg) translate(30px, -20px);
+        opacity: 0.28;
       }
     }
 
-    /* High-Physics Blob Cursor */
+    /* Subtle White Liquid Glow Lines */
+    .white-highlight-stream {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.22;
+      background: radial-gradient(circle at 45% 35%, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 55%);
+      animation: softGlowPulse 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes softGlowPulse {
+      0% { opacity: 0.15; transform: scale(0.95); }
+      100% { opacity: 0.28; transform: scale(1.05); }
+    }
+
+    /* Physics Spring Blob Cursor */
     .cursor-blob {
       position: fixed;
       top: 0;
@@ -147,7 +170,6 @@
       transform: translateY(0);
     }
 
-    /* Dynamic fade out when scrolling down to music */
     .lights-wrapper.scrolled-hidden {
       opacity: 0 !important;
       transform: translateY(-20px) !important;
@@ -355,7 +377,7 @@
       transform-origin: center bottom;
       animation: flicker 0.6s ease-in-out infinite alternate;
       transition: opacity 0.5s ease;
-      opacity: 1; /* Explicitly lit */
+      opacity: 1;
     }
 
     @keyframes flicker {
@@ -376,7 +398,7 @@
       text-align: center;
     }
 
-    /* --- TWO COLUMN MUSIC LAYOUT WITH SMOOTH JUICY REVEAL --- */
+    /* TWO COLUMN MUSIC LAYOUT WITH REPLAYABLE SCROLL REVEAL */
     .music-section-wrapper {
       width: 100%;
       max-width: 1100px;
@@ -405,15 +427,15 @@
       margin-top: 1rem;
     }
 
-    /* Left Side: Vinyl Player */
+    /* Vinyl Player (Left) */
     .vinyl-player-left {
       flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
-      transform: translateX(-60px);
+      transform: translateX(-70px);
       opacity: 0;
-      transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 1s ease;
+      transition: transform 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.9s ease;
     }
 
     .album-display {
@@ -435,7 +457,7 @@
       left: 0;
       top: 10px;
       z-index: 3;
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .vinyl-record {
@@ -535,7 +557,7 @@
       box-shadow: 0 0 20px rgba(255, 77, 90, 0.6);
     }
 
-    /* Right Side: Pick Your Poison Playlist */
+    /* Playlist (Right) */
     .playlist-right {
       flex: 1;
       display: flex;
@@ -547,9 +569,9 @@
       padding: 30px;
       backdrop-filter: blur(12px);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      transform: translateX(60px);
+      transform: translateX(70px);
       opacity: 0;
-      transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 1s ease;
+      transition: transform 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.9s ease;
     }
 
     .playlist-title {
@@ -612,7 +634,7 @@
       font-size: 0.9rem;
     }
 
-    /* Active Animation States when Scrolled into View */
+    /* REPLAYABLE ACTIVE STATES WHEN IN VIEW */
     .music-dual-container.revealed .vinyl-player-left {
       transform: translateX(0);
       opacity: 1;
@@ -636,27 +658,28 @@
 </head>
 <body>
 
-  <!-- SVG Filter for Liquid Halftone Effect -->
+  <!-- SVG Distortion Filter for Liquid Waves -->
   <svg style="display: none;">
     <defs>
       <filter id="fluid-halftone-filter">
-        <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" result="noise" />
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="40" xChannelSelector="R" yChannelSelector="G" />
+        <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="3" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="55" xChannelSelector="R" yChannelSelector="G" />
       </filter>
     </defs>
   </svg>
 
-  <!-- Background Layer -->
+  <!-- Animated Background Layer -->
   <div class="bg-gradient-base"></div>
-  <div class="fluid-texture-overlay"></div>
+  <div class="silk-glow-overlay"></div>
+  <div class="white-highlight-stream"></div>
 
   <!-- Physics Spring Cursor -->
   <div id="blob-cursor" class="cursor-blob"></div>
 
-  <!-- Ambient Darkening Overlay -->
+  <!-- Ambient Light Overlay -->
   <div class="ambient-overlay"></div>
 
-  <!-- String Lights -->
+  <!-- Festive Lights -->
   <div id="lights-strip" class="lights-wrapper">
     <div class="light-wire-main">
       <div class="bulb-socket"><div class="socket"></div><div class="bulb-gold"></div></div>
@@ -707,7 +730,6 @@
     <h2 id="welcome-header" style="font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900; text-shadow: 0 0 25px #ff3344;"></h2>
     <p class="wish-text">Make a wish and blow out the candles! 🕯️</p>
 
-    <!-- Cake SVG with FLAMES FULLY LIT BY DEFAULT -->
     <div class="cake-container" onclick="blowCandles()">
       <svg class="cake" viewBox="0 0 200 200">
         <ellipse cx="100" cy="170" rx="85" ry="18" fill="#1f0305" stroke="#4a0008" stroke-width="2"/>
@@ -723,7 +745,7 @@
 
         <path d="M 35 75 Q 45 90 55 75 Q 65 95 75 75 Q 85 90 95 75 Q 105 95 115 75 Q 125 90 135 75 Q 145 95 155 75 Q 165 85 165 75 Z" fill="#ffffff"/>
 
-        <!-- Candles with lit flames -->
+        <!-- Lit Candles -->
         <rect x="65" y="45" width="8" height="32" rx="3" fill="#ff4d5a"/>
         <line x1="69" y1="45" x2="69" y2="39" stroke="#000" stroke-width="2"/>
         <path id="flame1" class="flame" d="M 69 22 Q 74 32 69 39 Q 64 32 69 22 Z"/>
@@ -740,9 +762,8 @@
 
     <button id="blow-btn" class="btn-glow" onclick="blowCandles()">Blow Out Candles 🎂</button>
 
-    <!-- Scroll Down Prompt -->
     <div class="scroll-hint-prompt">
-      <span>Scroll down for your birthday tracks</span> <i class="fa-solid fa-chevron-down"></i>
+      <span>Scroll down to explore your tracks</span> <i class="fa-solid fa-chevron-down"></i>
     </div>
   </section>
 
@@ -754,7 +775,7 @@
 
       <div id="music-dual-container" class="music-dual-container">
         
-        <!-- Left: Vinyl Player -->
+        <!-- Vinyl Player (Left) -->
         <div class="vinyl-player-left">
           <div class="album-display">
             <div class="album-cover"></div>
@@ -766,7 +787,6 @@
                 <circle cx="150" cy="150" r="100" fill="none" stroke="#141114" stroke-width="3"/>
                 <circle cx="150" cy="150" r="85" fill="none" stroke="#1c181c" stroke-width="2"/>
 
-                <!-- Floral Paint Vines -->
                 <path d="M 40 150 Q 80 60 150 40 Q 220 30 250 110" fill="none" stroke="#4d7c0f" stroke-width="3.5" stroke-linecap="round"/>
                 <path d="M 70 210 Q 140 260 220 220" fill="none" stroke="#3f6212" stroke-width="3" stroke-linecap="round"/>
                 
@@ -804,7 +824,7 @@
           </div>
         </div>
 
-        <!-- Right: Pick Your Poison List -->
+        <!-- Playlist (Right) -->
         <div class="playlist-right">
           <div class="playlist-title">
             <i class="fa-solid fa-compact-disc"></i> Pick Your Poison
@@ -862,7 +882,7 @@
   </section>
 
   <script>
-    /* JUICY SPRING PHYSICS CURSOR */
+    /* Cursor Physics */
     const cursor = document.getElementById('blob-cursor');
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
@@ -905,7 +925,6 @@
     }
     updateCursorPhysics();
 
-    // Hover effect
     function addHoverListeners() {
       document.querySelectorAll('button, input, .cake-container, .album-display, .song-item').forEach(element => {
         element.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
@@ -914,7 +933,7 @@
     }
     addHoverListeners();
 
-    /* Core App Logic */
+    /* App State */
     let userName = "Star";
     let langIndex = 0;
     let charIndex = 0;
@@ -1062,7 +1081,7 @@
       confetti({ particleCount: 200, spread: 120, origin: { y: 0.6 } });
     }
 
-    /* Scroll Observer for Light Fade & Juicy Reveal */
+    /* REPLAYABLE INTERSECTION OBSERVER FOR SCROLLING UP/DOWN */
     const musicSection = document.getElementById('step-playlist');
     const lightsStrip = document.getElementById('lights-strip');
     const musicContainer = document.getElementById('music-dual-container');
@@ -1070,19 +1089,20 @@
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          // Fade lights out
           lightsStrip.classList.add('scrolled-hidden');
-          // Slide in left & right elements smoothly
+          // Trigger slide in animation every time scrolled into view
           musicContainer.classList.add('revealed');
         } else {
           lightsStrip.classList.remove('scrolled-hidden');
+          // Reset slide position when scrolled out of view so it replays smoothly
+          musicContainer.classList.remove('revealed');
         }
       });
-    }, { threshold: 0.3 });
+    }, { threshold: 0.25 });
 
     observer.observe(musicSection);
 
-    /* Vinyl Player Controls */
+    /* Music Player Controls */
     function togglePlay() {
       isPlaying = !isPlaying;
       const vinyl = document.getElementById("vinyl-disc");
@@ -1117,7 +1137,6 @@
       const track = playlist[currentTrackIdx];
       document.getElementById("track-name").innerText = `${track.title} - ${track.artist}`;
 
-      // Highlight active song in list
       const items = document.querySelectorAll(".song-item");
       items.forEach((item, index) => {
         if (index === currentTrackIdx) {
