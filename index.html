@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Happy Birthday!</title>
   
+  <!-- Google Fonts: Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
@@ -25,7 +30,7 @@
       background: linear-gradient(-45deg, #000000, #4a0000, #800000, #1a0000);
       background-size: 400% 400%;
       animation: gradientShift 12s ease infinite;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Outfit', sans-serif;
       color: #ffffff;
       display: flex;
       flex-direction: column;
@@ -87,6 +92,28 @@
       display: none !important;
     }
 
+    /* --- BACK BUTTON STYLES --- */
+    .btn-back {
+      position: absolute;
+      top: -45px;
+      left: 0;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #ffffff;
+      padding: 6px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+    }
+
+    .btn-back:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateX(-3px);
+    }
+
     /* --- STEP 1: NAME INPUT CARD --- */
     .input-card {
       background: rgba(20, 0, 0, 0.65);
@@ -99,6 +126,7 @@
 
     .input-card h2 {
       font-size: 1.8rem;
+      font-weight: 600;
       margin-bottom: 1.2rem;
       color: #ffffff;
       text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
@@ -109,6 +137,7 @@
       max-width: 320px;
       padding: 12px 20px;
       font-size: 1.1rem;
+      font-family: inherit;
       border-radius: 30px;
       border: 2px solid rgba(255, 255, 255, 0.4);
       background: rgba(0, 0, 0, 0.5);
@@ -127,7 +156,8 @@
       margin-top: 1.5rem;
       padding: 12px 32px;
       font-size: 1.1rem;
-      font-weight: bold;
+      font-family: inherit;
+      font-weight: 600;
       color: #000;
       background: #ffffff;
       border: none;
@@ -142,8 +172,9 @@
       box-shadow: 0 0 25px rgba(255, 255, 255, 1), 0 0 45px rgba(255, 77, 77, 0.8);
     }
 
-    /* --- STEP 2: FAST FAST-CHANGING WHITE GLOW GREETING --- */
+    /* --- STEP 2: TYPEWRITER WHITE GLOW GREETING --- */
     .greeting-container {
+      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -152,7 +183,7 @@
     }
 
     .white-glow-text {
-      font-size: 3rem;
+      font-size: 2.8rem;
       font-weight: 800;
       color: #ffffff;
       text-shadow: 
@@ -160,29 +191,76 @@
         0 0 20px #ffffff,
         0 0 40px rgba(255, 255, 255, 0.9),
         0 0 80px rgba(255, 77, 77, 0.7);
-      transition: opacity 0.15s ease-in-out, transform 0.15s ease-in-out;
       margin-bottom: 2rem;
       line-height: 1.2;
+      min-height: 100px;
     }
 
-    /* Snappy animation transitions */
-    .pop-out {
-      opacity: 0;
-      transform: scale(0.9);
+    /* Typewriter Cursor */
+    .cursor {
+      display: inline-block;
+      width: 4px;
+      height: 2.6rem;
+      background-color: #ffffff;
+      margin-left: 5px;
+      box-shadow: 0 0 10px #ffffff;
+      animation: blink 0.7s infinite;
+      vertical-align: middle;
     }
 
-    .pop-in {
-      opacity: 1;
-      transform: scale(1);
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
     }
 
     /* --- STEP 3: MAIN SITE CONTAINER --- */
     .main-site-content {
-      background: rgba(20, 0, 0, 0.7);
+      position: relative;
+      background: rgba(20, 0, 0, 0.75);
       border: 1px solid rgba(255, 77, 77, 0.4);
       padding: 2.5rem;
       border-radius: 20px;
       box-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    /* --- CAKE & CANDLE STYLES --- */
+    .cake-container {
+      position: relative;
+      width: 250px;
+      height: 250px;
+      margin: 20px auto;
+      cursor: pointer;
+    }
+
+    .cake {
+      width: 100%;
+      height: 100%;
+    }
+
+    .flame {
+      fill: #ff9d00;
+      filter: drop-shadow(0 0 8px #ff4500) drop-shadow(0 0 15px #ffd700);
+      transform-origin: center bottom;
+      animation: flicker 0.6s ease-in-out infinite alternate;
+      transition: opacity 0.5s ease;
+    }
+
+    @keyframes flicker {
+      0% { transform: scale(1) rotate(-2deg); }
+      100% { transform: scale(1.1) rotate(2deg); }
+    }
+
+    .flame.blown-out {
+      opacity: 0;
+      animation: none;
+    }
+
+    .wish-text {
+      font-size: 1.2rem;
+      color: #ffcccc;
+      margin-top: 10px;
+      font-style: italic;
     }
   </style>
 </head>
@@ -208,16 +286,60 @@
       <button class="btn-glow" onclick="startGreeting()">Celebrate 🎉</button>
     </div>
 
-    <!-- STEP 2: Fast White-Glow Language Rotation -->
+    <!-- STEP 2: Typewriter Multi-Language Greeting -->
     <div id="step-greeting" class="greeting-container hidden">
-      <h1 id="glow-text" class="white-glow-text pop-in">Happy Birthday!</h1>
+      <button class="btn-back" onclick="goBackToName()"><i class="fa-solid fa-arrow-left"></i> Back</button>
+      <h1 class="white-glow-text">
+        <span id="typewriter-text"></span><span class="cursor"></span>
+      </h1>
       <button class="btn-glow" onclick="openMainSite()">Open Surprise 🎁</button>
     </div>
 
-    <!-- STEP 3: Main Website Content -->
+    <!-- STEP 3: Main Website Content (Interactive Birthday Cake) -->
     <div id="step-main" class="main-site-content hidden">
-      <h2 id="welcome-header" style="font-size: 2.2rem; margin-bottom: 1rem;"></h2>
-      <p style="color: #ddd; font-size: 1.1rem;">Main site interactive elements go right here!</p>
+      <button class="btn-back" onclick="goBackToGreeting()"><i class="fa-solid fa-arrow-left"></i> Back</button>
+      <h2 id="welcome-header" style="font-size: 2.2rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px #ff4d4d; font-weight: 800;"></h2>
+      <p class="wish-text">Make a wish and click the cake or candles to blow them out! 🕯️</p>
+
+      <!-- Interactive SVG Cake -->
+      <div class="cake-container" onclick="blowCandles()">
+        <svg class="cake" viewBox="0 0 200 200">
+          <!-- Plate -->
+          <ellipse cx="100" cy="170" rx="85" ry="18" fill="#e0e0e0" stroke="#cccccc" stroke-width="2"/>
+          <ellipse cx="100" cy="168" rx="75" ry="14" fill="#ffffff"/>
+          
+          <!-- Cake Base Layer -->
+          <path d="M 30 120 L 30 155 Q 100 180 170 155 L 170 120 Z" fill="#3a1c14"/>
+          <ellipse cx="100" cy="120" rx="70" ry="15" fill="#5c2c1d"/>
+          
+          <!-- Cake Cream Layer -->
+          <path d="M 30 120 Q 100 135 170 120 Q 170 110 170 100 Q 100 115 30 100 Z" fill="#ff4d4d"/>
+          
+          <!-- Cake Top Layer -->
+          <path d="M 35 75 L 35 105 Q 100 125 165 105 L 165 75 Z" fill="#3a1c14"/>
+          <ellipse cx="100" cy="75" rx="65" ry="14" fill="#ff6b6b"/>
+
+          <!-- Drips -->
+          <path d="M 35 75 Q 45 90 55 75 Q 65 95 75 75 Q 85 90 95 75 Q 105 95 115 75 Q 125 90 135 75 Q 145 95 155 75 Q 165 85 165 75 Z" fill="#ffffff"/>
+
+          <!-- Candle 1 -->
+          <rect x="65" y="45" width="8" height="32" rx="3" fill="#33ffff"/>
+          <line x1="69" y1="45" x2="69" y2="39" stroke="#000" stroke-width="2"/>
+          <path id="flame1" class="flame" d="M 69 22 Q 74 32 69 39 Q 64 32 69 22 Z"/>
+
+          <!-- Candle 2 (Center) -->
+          <rect x="96" y="40" width="8" height="35" rx="3" fill="#ff3399"/>
+          <line x1="100" y1="40" x2="100" y2="34" stroke="#000" stroke-width="2"/>
+          <path id="flame2" class="flame" d="M 100 17 Q 105 27 100 34 Q 95 27 100 17 Z"/>
+
+          <!-- Candle 3 -->
+          <rect x="127" y="45" width="8" height="32" rx="3" fill="#ffff33"/>
+          <line x1="131" y1="45" x2="131" y2="39" stroke="#000" stroke-width="2"/>
+          <path id="flame3" class="flame" d="M 131 22 Q 136 32 131 39 Q 126 32 131 22 Z"/>
+        </svg>
+      </div>
+
+      <button id="blow-btn" class="btn-glow" onclick="blowCandles()">Blow Out Candles 🎂</button>
     </div>
 
   </div>
@@ -225,7 +347,10 @@
   <script>
     let userName = "Friend";
     let languageIndex = 0;
-    let intervalId = null;
+    let charIndex = 0;
+    let isDeleting = false;
+    let typewriterTimeout = null;
+    let candlesBlown = false;
 
     // Multilingual Happy Birthday templates
     const greetings = [
@@ -238,9 +363,7 @@
       (name) => `お誕生日おめでとう, ${name}! 🌸`,
       (name) => `생일 축하해요, ${name}! 🎁`,
       (name) => `С Днем Рождения, ${name}! 🍰`,
-      (name) => `Feliz Aniversário, ${name}! 🕯️`,
-      (name) => `عيد ميلاد سعيد, ${name}! 🎈`,
-      (name) => `Selamat Ulang Tahun, ${name}! ✨`
+      (name) => `Feliz Aniversário, ${name}! 🕯️`
     ];
 
     function startGreeting() {
@@ -249,46 +372,89 @@
         userName = inputVal;
       }
 
-      // Hide input card & show greeting container
       document.getElementById("step-name").classList.add("hidden");
       document.getElementById("step-greeting").classList.remove("hidden");
 
-      // Confetti burst
       confetti({
         particleCount: 120,
         spread: 80,
         origin: { y: 0.6 }
       });
 
-      const glowTextEl = document.getElementById("glow-text");
-      glowTextEl.innerText = greetings[0](userName);
+      // Reset and start typewriter
+      languageIndex = 0;
+      charIndex = 0;
+      isDeleting = false;
+      clearTimeout(typewriterTimeout);
+      typewriterLoop();
+    }
 
-      // Fast rotation every 800ms
-      intervalId = setInterval(() => {
-        glowTextEl.classList.remove("pop-in");
-        glowTextEl.classList.add("pop-out");
+    function typewriterLoop() {
+      const currentFullText = greetings[languageIndex](userName);
+      const typewriterEl = document.getElementById("typewriter-text");
 
-        setTimeout(() => {
-          languageIndex = (languageIndex + 1) % greetings.length;
-          glowTextEl.innerText = greetings[languageIndex](userName);
-          glowTextEl.classList.remove("pop-out");
-          glowTextEl.classList.add("pop-in");
-        }, 150);
+      if (isDeleting) {
+        typewriterEl.textContent = currentFullText.substring(0, charIndex - 1);
+        charIndex--;
+      } else {
+        typewriterEl.textContent = currentFullText.substring(0, charIndex + 1);
+        charIndex++;
+      }
 
-      }, 800);
+      let typingSpeed = isDeleting ? 40 : 80;
+
+      if (!isDeleting && charIndex === currentFullText.length) {
+        typingSpeed = 1500; // Pause at full text
+        isDeleting = true;
+      } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        languageIndex = (languageIndex + 1) % greetings.length;
+        typingSpeed = 300; // Pause before typing next language
+      }
+
+      typewriterTimeout = setTimeout(typewriterLoop, typingSpeed);
+    }
+
+    function goBackToName() {
+      clearTimeout(typewriterTimeout);
+      document.getElementById("step-greeting").classList.add("hidden");
+      document.getElementById("step-name").classList.remove("hidden");
     }
 
     function openMainSite() {
-      clearInterval(intervalId); // Stop text loop
+      clearTimeout(typewriterTimeout);
       document.getElementById("step-greeting").classList.add("hidden");
       document.getElementById("step-main").classList.remove("hidden");
-      document.getElementById("welcome-header").innerText = `For ${userName} ❤️`;
+      document.getElementById("welcome-header").innerText = `Happy Birthday, ${userName}! ❤️`;
 
-      // Celebration confetti burst
       confetti({
         particleCount: 150,
         spread: 100,
         origin: { y: 0.5 }
+      });
+    }
+
+    function goBackToGreeting() {
+      document.getElementById("step-main").classList.add("hidden");
+      document.getElementById("step-greeting").classList.remove("hidden");
+      startGreeting();
+    }
+
+    function blowCandles() {
+      if (candlesBlown) return;
+      candlesBlown = true;
+
+      document.getElementById("flame1").classList.add("blown-out");
+      document.getElementById("flame2").classList.add("blown-out");
+      document.getElementById("flame3").classList.add("blown-out");
+
+      document.querySelector(".wish-text").innerText = "Your wish has been made! ✨";
+      document.getElementById("blow-btn").innerText = "Wish Made! 🎉";
+
+      confetti({
+        particleCount: 200,
+        spread: 120,
+        origin: { y: 0.6 }
       });
     }
   </script>
