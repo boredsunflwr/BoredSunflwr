@@ -1,1 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday!</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
+    body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: linear-gradient(-45deg, #000000, #4a0000, #800000, #1a0000);
+      background-size: 400% 400%;
+      animation: gradientShift 12s ease infinite;
+    }
+
+    /* Smooth black and red background movement */
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Floating particles styling */
+    .particle-container {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      bottom: -20px;
+      background: rgba(255, 77, 77, 0.5);
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+      border-radius: 50%;
+      animation: floatUp 8s linear infinite;
+    }
+
+    .particle:nth-child(1) { left: 10%; width: 14px; height: 14px; animation-duration: 7s; }
+    .particle:nth-child(2) { left: 30%; width: 22px; height: 22px; animation-duration: 10s; animation-delay: 1s; }
+    .particle:nth-child(3) { left: 50%; width: 10px; height: 10px; animation-duration: 6s; animation-delay: 2s; }
+    .particle:nth-child(4) { left: 70%; width: 18px; height: 18px; animation-duration: 9s; animation-delay: 0.5s; }
+    .particle:nth-child(5) { left: 85%; width: 12px; height: 12px; animation-duration: 8s; animation-delay: 3s; }
+    .particle:nth-child(6) { left: 95%; width: 16px; height: 16px; animation-duration: 11s; animation-delay: 1.5s; }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) scale(0.8);
+        opacity: 0;
+      }
+      20% {
+        opacity: 0.9;
+      }
+      100% {
+        transform: translateY(-105vh) scale(1.2);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating background particles -->
+  <div class="particle-container">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
+</body>
+</html>
