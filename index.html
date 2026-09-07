@@ -38,14 +38,13 @@
       justify-content: center;
     }
 
-    /* Background animation */
     @keyframes gradientShift {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
 
-    /* Floating particles */
+    /* Floating background particles */
     .particle-container {
       position: fixed;
       top: 0;
@@ -78,7 +77,81 @@
       100% { transform: translateY(-105vh) scale(1.2); opacity: 0; }
     }
 
-    /* Main Container */
+    /* --- TOP GOLDEN CELEBRATION LIGHT STRIPS --- */
+    .lights-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 1.2s ease-in-out;
+    }
+
+    .lights-wrapper.on {
+      opacity: 1;
+    }
+
+    .light-wire {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      border-top: 2px solid rgba(255, 215, 0, 0.4);
+      padding-top: 5px;
+    }
+
+    .light-wire.swag {
+      margin-top: -10px;
+    }
+
+    .bulb {
+      width: 14px;
+      height: 22px;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      background: #ffd700;
+      box-shadow: 0 0 15px #ffd700, 0 0 30px #ffaa00, 0 0 45px #ffaa00;
+      animation: glowGlow 1.2s infinite alternate ease-in-out;
+      position: relative;
+    }
+
+    .bulb::before {
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: 3px;
+      width: 8px;
+      height: 4px;
+      background: #888;
+      border-radius: 2px;
+    }
+
+    .bulb:nth-child(even) {
+      animation-delay: 0.4s;
+      background: #fff0a6;
+      box-shadow: 0 0 15px #fff0a6, 0 0 30px #ffd700, 0 0 45px #ffd700;
+    }
+
+    .bulb:nth-child(3n) {
+      animation-delay: 0.8s;
+      background: #ffae00;
+      box-shadow: 0 0 15px #ffae00, 0 0 30px #ff7700, 0 0 45px #ff7700;
+    }
+
+    @keyframes glowGlow {
+      0% {
+        opacity: 0.4;
+        transform: scale(0.9);
+        box-shadow: 0 0 5px #ffd700;
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1.1);
+        box-shadow: 0 0 20px #ffd700, 0 0 35px #ffaa00, 0 0 50px #ffaa00;
+      }
+    }
+
+    /* Content Layout */
     .content-wrapper {
       position: relative;
       z-index: 2;
@@ -92,12 +165,12 @@
       display: none !important;
     }
 
-    /* --- TOP CORNER FIXED BACK BUTTON --- */
+    /* Top Left Fixed Back Button */
     .btn-corner-back {
       position: fixed;
       top: 25px;
       left: 25px;
-      z-index: 10;
+      z-index: 110;
       background: rgba(255, 255, 255, 0.12);
       border: 1px solid rgba(255, 255, 255, 0.3);
       color: #ffffff;
@@ -117,7 +190,7 @@
       box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
     }
 
-    /* --- STEP 1: NAME INPUT CARD --- */
+    /* STEP 1: Name Input */
     .input-card {
       background: rgba(20, 0, 0, 0.65);
       border: 1px solid rgba(255, 0, 0, 0.3);
@@ -175,7 +248,7 @@
       box-shadow: 0 0 25px rgba(255, 255, 255, 1), 0 0 45px rgba(255, 77, 77, 0.8);
     }
 
-    /* --- STEP 2: MULTI-LANGUAGE GREETING WITH PLAYFAIR DISPLAY --- */
+    /* STEP 2: Multilingual Greetings */
     .greeting-container {
       display: flex;
       flex-direction: column;
@@ -209,7 +282,6 @@
       line-height: 1.1;
     }
 
-    /* Typewriter Cursor */
     .cursor {
       display: inline-block;
       width: 4px;
@@ -226,7 +298,30 @@
       50% { opacity: 0; }
     }
 
-    /* --- STEP 3: MAIN SITE CONTAINER --- */
+    /* STEP 3: Turn On Lights Prompt */
+    .lights-prompt-card {
+      background: rgba(20, 0, 0, 0.75);
+      border: 1px solid rgba(255, 215, 0, 0.4);
+      padding: 3rem 2rem;
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+      backdrop-filter: blur(10px);
+    }
+
+    .lights-prompt-card h2 {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+      color: #fff;
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+    }
+
+    .lights-prompt-card p {
+      font-size: 1.2rem;
+      color: #ffd700;
+      margin-bottom: 1.5rem;
+    }
+
+    /* STEP 4: Main Cake Content */
     .main-site-content {
       background: rgba(20, 0, 0, 0.75);
       border: 1px solid rgba(255, 77, 77, 0.4);
@@ -236,7 +331,7 @@
       backdrop-filter: blur(10px);
     }
 
-    /* --- CAKE & CANDLE STYLES --- */
+    /* Interactive Cake */
     .cake-container {
       position: relative;
       width: 250px;
@@ -278,7 +373,23 @@
 </head>
 <body>
 
-  <!-- Animated Particles Background -->
+  <!-- Golden Celebration Lights Strips (Fixed on top) -->
+  <div id="lights-strip" class="lights-wrapper">
+    <div class="light-wire">
+      <div class="bulb"></div><div class="bulb"></div><div class="bulb"></div>
+      <div class="bulb"></div><div class="bulb"></div><div class="bulb"></div>
+      <div class="bulb"></div><div class="bulb"></div><div class="bulb"></div>
+      <div class="bulb"></div><div class="bulb"></div><div class="bulb"></div>
+    </div>
+    <div class="light-wire swag">
+      <div class="bulb"></div><div class="bulb"></div><div class="bulb"></div>
+      <div class="bulb"></div><div class="bulb"></div><div class="bulb"></div>
+      <div class="bulb"></div><div class="bulb"></div><div class="bulb"></div>
+      <div class="bulb"></div><div class="bulb"></div><div class="bulb"></div>
+    </div>
+  </div>
+
+  <!-- Background Animated Particles -->
   <div class="particle-container">
     <div class="particle"></div>
     <div class="particle"></div>
@@ -288,7 +399,7 @@
     <div class="particle"></div>
   </div>
 
-  <!-- FIXED CORNER BACK BUTTON (Hidden on step 1) -->
+  <!-- FIXED CORNER BACK BUTTON -->
   <button id="corner-back-btn" class="btn-corner-back hidden" onclick="handleCornerBack()">
     <i class="fa-solid fa-arrow-left"></i> Back
   </button>
@@ -303,39 +414,41 @@
       <button class="btn-glow" onclick="startGreeting()">Celebrate 🎉</button>
     </div>
 
-    <!-- STEP 2: Typewriter Multi-Language Happy Birthday Greeting -->
+    <!-- STEP 2: Multilingual Typewriter Greeting -->
     <div id="step-greeting" class="greeting-container hidden">
       <h2 class="hb-glow-text">
         <span id="typewriter-text"></span><span class="cursor"></span>
       </h2>
       <h1 id="user-name-display" class="fixed-name"></h1>
-      <button class="btn-glow" onclick="openMainSite()">Open Surprise 🎁</button>
+      <button class="btn-glow" onclick="goToLightsStep()">Open Surprise 🎁</button>
     </div>
 
-    <!-- STEP 3: Main Website Content (Interactive Birthday Cake) -->
+    <!-- STEP 3: Turn On Lights Prompt -->
+    <div id="step-lights" class="lights-prompt-card hidden">
+      <h2>Set the Celebration Mood! ✨</h2>
+      <p>Tap below to illuminate the party lights before your cake arrives!</p>
+      <button class="btn-glow" onclick="turnOnLightsAndShowCake()">Turn On Lights ✨</button>
+    </div>
+
+    <!-- STEP 4: Interactive Birthday Cake -->
     <div id="step-main" class="main-site-content hidden">
       <h2 id="welcome-header" style="font-family: 'Playfair Display', serif; font-size: 2.8rem; font-style: italic; font-weight: 900; margin-bottom: 0.5rem; text-shadow: 0 0 15px #ff4d4d;"></h2>
       <p class="wish-text">Make a wish and click the cake or candles to blow them out! 🕯️</p>
 
-      <!-- Interactive SVG Cake -->
+      <!-- SVG Cake -->
       <div class="cake-container" onclick="blowCandles()">
         <svg class="cake" viewBox="0 0 200 200">
-          <!-- Plate -->
           <ellipse cx="100" cy="170" rx="85" ry="18" fill="#e0e0e0" stroke="#cccccc" stroke-width="2"/>
           <ellipse cx="100" cy="168" rx="75" ry="14" fill="#ffffff"/>
           
-          <!-- Cake Base Layer -->
           <path d="M 30 120 L 30 155 Q 100 180 170 155 L 170 120 Z" fill="#3a1c14"/>
           <ellipse cx="100" cy="120" rx="70" ry="15" fill="#5c2c1d"/>
           
-          <!-- Cake Cream Layer -->
           <path d="M 30 120 Q 100 135 170 120 Q 170 110 170 100 Q 100 115 30 100 Z" fill="#ff4d4d"/>
           
-          <!-- Cake Top Layer -->
           <path d="M 35 75 L 35 105 Q 100 125 165 105 L 165 75 Z" fill="#3a1c14"/>
           <ellipse cx="100" cy="75" rx="65" ry="14" fill="#ff6b6b"/>
 
-          <!-- Drips -->
           <path d="M 35 75 Q 45 90 55 75 Q 65 95 75 75 Q 85 90 95 75 Q 105 95 115 75 Q 125 90 135 75 Q 145 95 155 75 Q 165 85 165 75 Z" fill="#ffffff"/>
 
           <!-- Candle 1 -->
@@ -343,7 +456,7 @@
           <line x1="69" y1="45" x2="69" y2="39" stroke="#000" stroke-width="2"/>
           <path id="flame1" class="flame" d="M 69 22 Q 74 32 69 39 Q 64 32 69 22 Z"/>
 
-          <!-- Candle 2 (Center) -->
+          <!-- Candle 2 -->
           <rect x="96" y="40" width="8" height="35" rx="3" fill="#ff3399"/>
           <line x1="100" y1="40" x2="100" y2="34" stroke="#000" stroke-width="2"/>
           <path id="flame2" class="flame" d="M 100 17 Q 105 27 100 34 Q 95 27 100 17 Z"/>
@@ -351,7 +464,7 @@
           <!-- Candle 3 -->
           <rect x="127" y="45" width="8" height="32" rx="3" fill="#ffff33"/>
           <line x1="131" y1="45" x2="131" y2="39" stroke="#000" stroke-width="2"/>
-          <path id="flame3" class="flame" d="M 131 22 Q 136 32 131 39 Q 126 32 131 22 Z"/>
+          <path id="flame3" class="flame" d="M 131 22 Q 136 32 131 22 Z"/>
         </svg>
       </div>
 
@@ -369,7 +482,6 @@
     let candlesBlown = false;
     let currentStep = 1;
 
-    // Happy Birthday in many different languages
     const happyBirthdayLanguages = [
       "Happy Birthday,",       // English
       "¡Feliz Cumpleaños,",     // Spanish
@@ -383,7 +495,6 @@
       "С Днем Рождения,"       // Russian
     ];
 
-    // Trigger Celebrate when pressing Enter key in input
     function handleKeyPress(event) {
       if (event.key === "Enter") {
         startGreeting();
@@ -402,7 +513,6 @@
       document.getElementById("step-greeting").classList.remove("hidden");
       document.getElementById("corner-back-btn").classList.remove("hidden");
       
-      // Set the fixed user name
       document.getElementById("user-name-display").innerText = userName;
 
       confetti({
@@ -411,7 +521,6 @@
         origin: { y: 0.6 }
       });
 
-      // Reset & start typewriter loop for Happy Birthday phrases
       langIndex = 0;
       charIndex = 0;
       isDeleting = false;
@@ -434,35 +543,59 @@
       let typingSpeed = isDeleting ? 40 : 80;
 
       if (!isDeleting && charIndex === currentPhrase.length) {
-        typingSpeed = 1500; // Pause at complete phrase
+        typingSpeed = 1500;
         isDeleting = true;
       } else if (isDeleting && charIndex === 0) {
         isDeleting = false;
         langIndex = (langIndex + 1) % happyBirthdayLanguages.length;
-        typingSpeed = 300; // Brief delay before typing next language
+        typingSpeed = 300;
       }
 
       typewriterTimeout = setTimeout(typewriterLoop, typingSpeed);
     }
 
-    function openMainSite() {
+    function goToLightsStep() {
       clearTimeout(typewriterTimeout);
       currentStep = 3;
       document.getElementById("step-greeting").classList.add("hidden");
-      document.getElementById("step-main").classList.remove("hidden");
-      document.getElementById("welcome-header").innerText = `Happy Birthday, ${userName}! ❤️`;
+      document.getElementById("step-lights").classList.remove("hidden");
+    }
+
+    function turnOnLightsAndShowCake() {
+      // Turn on top golden light strip
+      document.getElementById("lights-strip").classList.add("on");
 
       confetti({
-        particleCount: 150,
-        spread: 100,
-        origin: { y: 0.5 }
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.2 }
       });
+
+      // Show Cake step after short delay
+      setTimeout(() => {
+        currentStep = 4;
+        document.getElementById("step-lights").classList.add("hidden");
+        document.getElementById("step-main").classList.remove("hidden");
+        document.getElementById("welcome-header").innerText = `Happy Birthday, ${userName}! 🎉`;
+
+        confetti({
+          particleCount: 150,
+          spread: 100,
+          origin: { y: 0.5 }
+        });
+      }, 600);
     }
 
     function handleCornerBack() {
-      if (currentStep === 3) {
-        // Go back from Cake screen to Greeting screen
+      if (currentStep === 4) {
+        // Back from Cake to Lights Prompt
         document.getElementById("step-main").classList.add("hidden");
+        document.getElementById("step-lights").classList.remove("hidden");
+        document.getElementById("lights-strip").classList.remove("on");
+        currentStep = 3;
+      } else if (currentStep === 3) {
+        // Back from Lights Prompt to Greeting Screen
+        document.getElementById("step-lights").classList.add("hidden");
         document.getElementById("step-greeting").classList.remove("hidden");
         currentStep = 2;
         langIndex = 0;
@@ -471,7 +604,7 @@
         clearTimeout(typewriterTimeout);
         typewriterLoop();
       } else if (currentStep === 2) {
-        // Go back from Greeting screen to Name Input screen
+        // Back from Greeting Screen to Name Input
         clearTimeout(typewriterTimeout);
         document.getElementById("step-greeting").classList.add("hidden");
         document.getElementById("corner-back-btn").classList.add("hidden");
