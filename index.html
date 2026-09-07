@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Happy Birthday!</title>
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
   <style>
     * {
       margin: 0;
@@ -13,26 +20,35 @@
 
     body {
       width: 100vw;
-      height: 100vh;
-      overflow: hidden;
+      min-height: 100vh;
+      overflow-x: hidden;
       background: linear-gradient(-45deg, #000000, #4a0000, #800000, #1a0000);
       background-size: 400% 400%;
       animation: gradientShift 12s ease infinite;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
-    /* Smooth black and red background movement */
+    /* Background animation */
     @keyframes gradientShift {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
 
-    /* Floating particles styling */
+    /* Floating particles */
     .particle-container {
-      position: absolute;
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
       pointer-events: none;
+      z-index: 1;
     }
 
     .particle {
@@ -52,23 +68,126 @@
     .particle:nth-child(6) { left: 95%; width: 16px; height: 16px; animation-duration: 11s; animation-delay: 1.5s; }
 
     @keyframes floatUp {
-      0% {
-        transform: translateY(0) scale(0.8);
-        opacity: 0;
-      }
-      20% {
-        opacity: 0.9;
-      }
-      100% {
-        transform: translateY(-105vh) scale(1.2);
-        opacity: 0;
-      }
+      0% { transform: translateY(0) scale(0.8); opacity: 0; }
+      20% { opacity: 0.9; }
+      100% { transform: translateY(-105vh) scale(1.2); opacity: 0; }
+    }
+
+    /* Main Container */
+    .content-wrapper {
+      position: relative;
+      z-index: 2;
+      width: 90%;
+      max-width: 700px;
+      margin: 20px auto;
+      text-align: center;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* --- STEP 1: NAME INPUT CARD --- */
+    .input-card {
+      background: rgba(20, 0, 0, 0.65);
+      border: 1px solid rgba(255, 0, 0, 0.3);
+      box-shadow: 0 0 25px rgba(255, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+      padding: 2.5rem;
+      border-radius: 20px;
+    }
+
+    .input-card h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1.2rem;
+      color: #ffffff;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    }
+
+    .input-card input {
+      width: 80%;
+      max-width: 320px;
+      padding: 12px 20px;
+      font-size: 1.1rem;
+      border-radius: 30px;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      background: rgba(0, 0, 0, 0.5);
+      color: #ffffff;
+      text-align: center;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .input-card input:focus {
+      border-color: #ffffff;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.9);
+    }
+
+    .btn-glow {
+      margin-top: 1.5rem;
+      padding: 12px 32px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #000;
+      background: #ffffff;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.4);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-glow:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(255, 255, 255, 1), 0 0 45px rgba(255, 77, 77, 0.8);
+    }
+
+    /* --- STEP 2: WHITE GLOW MULTI-LANGUAGE GREETING --- */
+    .greeting-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 250px;
+    }
+
+    .white-glow-text {
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: #ffffff;
+      text-shadow: 
+        0 0 10px #ffffff,
+        0 0 20px #ffffff,
+        0 0 40px rgba(255, 255, 255, 0.8),
+        0 0 80px rgba(255, 77, 77, 0.6);
+      transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+      margin-bottom: 2rem;
+      line-height: 1.3;
+    }
+
+    .fade-out {
+      opacity: 0;
+      transform: translateY(-10px) scale(0.95);
+    }
+
+    .fade-in {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* --- STEP 3: MAIN WEBSITE PLACEHOLDER --- */
+    .main-site-content {
+      background: rgba(20, 0, 0, 0.7);
+      border: 1px solid rgba(255, 77, 77, 0.4);
+      padding: 2.5rem;
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
     }
   </style>
 </head>
 <body>
 
-  <!-- Floating background particles -->
+  <!-- Animated Particles Background -->
   <div class="particle-container">
     <div class="particle"></div>
     <div class="particle"></div>
@@ -78,5 +197,95 @@
     <div class="particle"></div>
   </div>
 
+  <div class="content-wrapper">
+
+    <!-- STEP 1: Ask for Name -->
+    <div id="step-name" class="input-card">
+      <h2>Who is the birthday star? 👑</h2>
+      <input type="text" id="user-name-input" placeholder="Enter name here..." autocomplete="off">
+      <br>
+      <button class="btn-glow" onclick="startGreeting()">Celebrate 🎉</button>
+    </div>
+
+    <!-- STEP 2: Multi-Language White Glow Greeting -->
+    <div id="step-greeting" class="greeting-container hidden">
+      <h1 id="glow-text" class="white-glow-text fade-in">Happy Birthday!</h1>
+      <button class="btn-glow" onclick="openMainSite()">Open Surprise 🎁</button>
+    </div>
+
+    <!-- STEP 3: Main Website Content (Cake, Photos, Notes will go here) -->
+    <div id="step-main" class="main-site-content hidden">
+      <h2 id="welcome-header" style="font-size: 2.2rem; margin-bottom: 1rem;"></h2>
+      <p style="color: #ddd; font-size: 1.1rem;">Your main website sections (Cake, Polaroid Photos, Messages) go right here!</p>
+    </div>
+
+  </div>
+
+  <script>
+    let userName = "Friend";
+    let languageIndex = 0;
+    let intervalId = null;
+
+    // Multilingual Happy Birthday templates
+    const greetings = [
+      (name) => `Happy Birthday, ${name}! 🎉`,
+      (name) => `¡Feliz Cumpleaños, ${name}! 🎂`,
+      (name) => `Joyeux Anniversaire, ${name}! ✨`,
+      (name) => `Alles Gute zum Geburtstag, ${name}! 🎈`,
+      (name) => `जन्मदिन की शुभकामनाएं, ${name}! 🌟`,
+      (name) => `Buon Compleanno, ${name}! 🥳`,
+      (name) => `お誕生日おめでとう, ${name}! 🌸`,
+      (name) => `생일 축하해요, ${name}! 🎁`,
+      (name) => `Happy Birthday, ${name}! 🎉`
+    ];
+
+    function startGreeting() {
+      const inputVal = document.getElementById("user-name-input").value.trim();
+      if (inputVal !== "") {
+        userName = inputVal;
+      }
+
+      // Hide input step & show greeting step
+      document.getElementById("step-name").classList.add("hidden");
+      document.getElementById("step-greeting").classList.remove("hidden");
+
+      // Trigger Confetti explosion
+      confetti({
+        particleCount: 120,
+        spread: 80,
+        origin: { y: 0.6 }
+      });
+
+      // Start looping through languages
+      const glowTextEl = document.getElementById("glow-text");
+      glowTextEl.innerText = greetings[0](userName);
+
+      intervalId = setInterval(() => {
+        glowTextEl.classList.add("fade-out");
+
+        setTimeout(() => {
+          languageIndex = (languageIndex + 1) % greetings.length;
+          glowTextEl.innerText = greetings[languageIndex](userName);
+          glowTextEl.classList.remove("fade-out");
+          glowTextEl.classList.add("fade-in");
+        }, 500);
+
+      }, 2500);
+    }
+
+    function openMainSite() {
+      clearInterval(intervalId); // Stop text rotation
+      document.getElementById("step-greeting").classList.add("hidden");
+      document.getElementById("step-main").classList.remove("hidden");
+      document.getElementById("welcome-header").innerText = `For ${userName} ❤️`;
+
+      // Trigger final confetti
+      confetti({
+        particleCount: 150,
+        spread: 100,
+        origin: { y: 0.5 }
+      });
+    }
+  </script>
 </body>
 </html>
