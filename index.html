@@ -21,7 +21,7 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      cursor: none !important; /* Custom blob cursor used */
+      cursor: none !important;
     }
 
     html {
@@ -39,14 +39,14 @@
       position: relative;
     }
 
-    /* Ambient Dark Red Gradient Background */
+    /* Ambient Base Gradient */
     .bg-gradient-base {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: linear-gradient(135deg, #050000 0%, #2b0003 40%, #4d0008 70%, #100002 100%);
+      background: linear-gradient(135deg, #050000 0%, #2a0004 40%, #4a0008 70%, #0a0002 100%);
       background-size: 200% 200%;
       animation: ambientGradient 18s ease infinite;
       z-index: 0;
@@ -58,51 +58,37 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Fluid Ripple Texture Background Overlay */
+    /* Animated Halftone Liquid Texture Background Overlay */
     .fluid-texture-overlay {
       position: fixed;
-      top: -10%;
-      left: -10%;
-      width: 120vw;
-      height: 120vh;
-      /* Embedded liquid distortion image provided */
-      background-image: url('3307399722587723.jpg');
-      background-size: cover;
-      background-position: center;
-      opacity: 0.12;
-      mix-blend-mode: screen;
+      top: -15%;
+      left: -15%;
+      width: 130vw;
+      height: 130vh;
+      background-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.25) 1px, transparent 1.5px),
+                        radial-gradient(circle at center, rgba(0, 0, 0, 0.9) 2px, transparent 2.5px);
+      background-size: 8px 8px, 12px 12px;
+      mix-blend-mode: overlay;
+      opacity: 0.35;
       pointer-events: none;
       z-index: 1;
-      filter: blur(2px) contrast(130%);
-      animation: fluidMotion 25s ease-in-out infinite alternate;
+      filter: url('#fluid-halftone-filter') contrast(180%);
+      animation: waveFluidMotion 18s ease-in-out infinite alternate;
     }
 
-    @keyframes fluidMotion {
+    @keyframes waveFluidMotion {
       0% {
         transform: scale(1) translate(0px, 0px) rotate(0deg);
       }
       50% {
-        transform: scale(1.08) translate(-20px, 15px) rotate(2deg);
+        transform: scale(1.12) translate(-30px, 20px) rotate(3deg);
       }
       100% {
-        transform: scale(1.03) translate(15px, -20px) rotate(-1deg);
+        transform: scale(1.05) translate(25px, -25px) rotate(-2deg);
       }
     }
 
-    /* Fine Grain Noise Filter Overlay */
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.06'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 999;
-    }
-
-    /* High-Physics Juicy Blob Cursor */
+    /* High-Physics Blob Cursor */
     .cursor-blob {
       position: fixed;
       top: 0;
@@ -110,7 +96,7 @@
       width: 26px;
       height: 26px;
       background: #000000;
-      border: 1px solid rgba(255, 77, 77, 0.7);
+      border: 1.5px solid rgba(255, 77, 77, 0.8);
       border-radius: 50%;
       pointer-events: none;
       z-index: 9999;
@@ -123,38 +109,6 @@
       background: rgba(180, 0, 20, 0.85);
       border: 1.5px solid #ff4d5a;
       box-shadow: 0 0 35px rgba(255, 77, 90, 0.9);
-    }
-
-    /* Floating Embers */
-    .particle-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 2;
-    }
-
-    .particle {
-      position: absolute;
-      bottom: -20px;
-      background: rgba(255, 50, 60, 0.4);
-      box-shadow: 0 0 12px rgba(255, 0, 20, 0.6);
-      border-radius: 50%;
-      animation: floatUp 9s linear infinite;
-    }
-
-    .particle:nth-child(1) { left: 12%; width: 12px; height: 12px; animation-duration: 8s; }
-    .particle:nth-child(2) { left: 35%; width: 18px; height: 18px; animation-duration: 11s; animation-delay: 1s; }
-    .particle:nth-child(3) { left: 58%; width: 8px; height: 8px; animation-duration: 7s; animation-delay: 2s; }
-    .particle:nth-child(4) { left: 78%; width: 15px; height: 15px; animation-duration: 10s; animation-delay: 0.5s; }
-    .particle:nth-child(5) { left: 90%; width: 10px; height: 10px; animation-duration: 9s; animation-delay: 3s; }
-
-    @keyframes floatUp {
-      0% { transform: translateY(0) scale(0.8); opacity: 0; }
-      20% { opacity: 0.8; }
-      100% { transform: translateY(-105vh) scale(1.2); opacity: 0; }
     }
 
     /* Ambient Spotlight */
@@ -175,7 +129,7 @@
       opacity: 1;
     }
 
-    /* String Lights */
+    /* Festoon String Lights */
     .lights-wrapper {
       position: fixed;
       top: 0;
@@ -185,12 +139,18 @@
       pointer-events: none;
       opacity: 0;
       transform: translateY(-10px);
-      transition: opacity 1.5s ease, transform 1.2s ease-out;
+      transition: opacity 0.8s ease, transform 0.8s ease;
     }
 
     .lights-wrapper.on {
       opacity: 1;
       transform: translateY(0);
+    }
+
+    /* Dynamic fade out when scrolling down to music */
+    .lights-wrapper.scrolled-hidden {
+      opacity: 0 !important;
+      transform: translateY(-20px) !important;
     }
 
     .light-wire-main {
@@ -267,11 +227,29 @@
       display: none !important;
     }
 
-    /* Typography - Non-italic Happy Birthday text */
+    /* Scroll Prompt Indicator */
+    .scroll-hint-prompt {
+      margin-top: 2rem;
+      font-size: 0.95rem;
+      color: #ffb3b8;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: bouncePrompt 2s infinite ease-in-out;
+      opacity: 0.85;
+    }
+
+    @keyframes bouncePrompt {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+
+    /* Typography */
     h2 {
       font-size: 2.2rem;
       font-weight: 600;
-      font-style: normal; /* Strictly non-italic */
+      font-style: normal;
       margin-bottom: 1.5rem;
       text-align: center;
       text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
@@ -318,7 +296,6 @@
       box-shadow: 0 0 25px rgba(255, 50, 70, 0.8);
     }
 
-    /* Multilingual Text (Non-italic) */
     .greeting-container {
       text-align: center;
     }
@@ -327,7 +304,7 @@
       font-family: 'Playfair Display', serif;
       font-size: 3rem;
       font-weight: 700;
-      font-style: normal; /* Non-italic */
+      font-style: normal;
       color: #ffffff;
       text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
       min-height: 80px;
@@ -371,12 +348,14 @@
       height: 100%;
     }
 
+    /* Candle Flames LIT by Default */
     .flame {
       fill: #ff9d00;
       filter: drop-shadow(0 0 8px #ff4500) drop-shadow(0 0 15px #ffd700);
       transform-origin: center bottom;
       animation: flicker 0.6s ease-in-out infinite alternate;
       transition: opacity 0.5s ease;
+      opacity: 1; /* Explicitly lit */
     }
 
     @keyframes flicker {
@@ -385,8 +364,8 @@
     }
 
     .flame.blown-out {
-      opacity: 0;
-      animation: none;
+      opacity: 0 !important;
+      animation: none !important;
     }
 
     .wish-text {
@@ -397,10 +376,10 @@
       text-align: center;
     }
 
-    /* --- VINYL PLAYER SECTION --- */
-    .vinyl-player-section {
+    /* --- TWO COLUMN MUSIC LAYOUT WITH SMOOTH JUICY REVEAL --- */
+    .music-section-wrapper {
       width: 100%;
-      max-width: 850px;
+      max-width: 1100px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -409,28 +388,46 @@
 
     .music-taste-title {
       font-family: 'Playfair Display', serif;
-      font-size: 2.2rem;
+      font-size: 2.4rem;
       font-weight: 700;
       font-style: normal;
       color: #ffffff;
       text-align: center;
       text-shadow: 0 0 20px rgba(255, 77, 90, 0.6);
-      margin-bottom: 0.5rem;
+    }
+
+    .music-dual-container {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+      margin-top: 1rem;
+    }
+
+    /* Left Side: Vinyl Player */
+    .vinyl-player-left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transform: translateX(-60px);
+      opacity: 0;
+      transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 1s ease;
     }
 
     .album-display {
       position: relative;
-      width: 320px;
-      height: 320px;
+      width: 300px;
+      height: 300px;
       display: flex;
       align-items: center;
       justify-content: flex-start;
     }
 
-    /* Clean Red Velvet Jacket (NO TEXT) */
     .album-cover {
-      width: 300px;
-      height: 300px;
+      width: 280px;
+      height: 280px;
       background: radial-gradient(circle at 35% 35%, #8a0b14, #380004);
       box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9), inset 0 0 30px rgba(0, 0, 0, 0.6);
       border-radius: 4px;
@@ -441,12 +438,11 @@
       border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    /* Painted Floral Vinyl Record */
     .vinyl-record {
-      width: 290px;
-      height: 290px;
+      width: 270px;
+      height: 270px;
       position: absolute;
-      right: -80px;
+      right: -70px;
       top: 15px;
       z-index: 2;
       border-radius: 50%;
@@ -464,10 +460,9 @@
       border-radius: 50%;
     }
 
-    /* Spin Animation */
     .vinyl-record.spinning {
       animation: spinVinyl 4s linear infinite;
-      right: -100px;
+      right: -90px;
     }
 
     @keyframes spinVinyl {
@@ -475,10 +470,10 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* Audio Controls */
     .audio-player-controls {
       width: 100%;
-      max-width: 420px;
+      max-width: 380px;
+      margin-top: 1.5rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -487,7 +482,7 @@
 
     .track-title {
       font-family: 'Space Mono', monospace;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       color: #ffb3b8;
       letter-spacing: 1px;
     }
@@ -498,7 +493,6 @@
       background: rgba(255, 255, 255, 0.15);
       border-radius: 2px;
       overflow: hidden;
-      cursor: pointer;
     }
 
     .progress-bar-fill {
@@ -512,7 +506,7 @@
       display: flex;
       align-items: center;
       gap: 24px;
-      margin-top: 8px;
+      margin-top: 6px;
     }
 
     .player-btn {
@@ -529,39 +523,130 @@
     }
 
     .player-btn.play-btn-large {
-      width: 52px;
-      height: 52px;
+      width: 50px;
+      height: 50px;
       background: #ff4d5a;
       color: #ffffff;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       box-shadow: 0 0 20px rgba(255, 77, 90, 0.6);
     }
 
-    .player-btn.play-btn-large:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 30px rgba(255, 77, 90, 0.9);
+    /* Right Side: Pick Your Poison Playlist */
+    .playlist-right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      background: rgba(20, 0, 4, 0.5);
+      border: 1px solid rgba(255, 77, 90, 0.2);
+      border-radius: 20px;
+      padding: 30px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      transform: translateX(60px);
+      opacity: 0;
+      transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 1s ease;
     }
 
-    @media (max-width: 600px) {
-      .album-display {
-        transform: scale(0.85);
+    .playlist-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #ff4d5a;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .song-list {
+      width: 100%;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .song-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    .song-item:hover, .song-item.active-song {
+      background: rgba(255, 77, 90, 0.15);
+      border-color: rgba(255, 77, 90, 0.5);
+      transform: translateX(6px);
+    }
+
+    .song-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .song-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #ffffff;
+    }
+
+    .song-artist {
+      font-size: 0.8rem;
+      color: #ffb3b8;
+    }
+
+    .play-icon-small {
+      color: #ff4d5a;
+      font-size: 0.9rem;
+    }
+
+    /* Active Animation States when Scrolled into View */
+    .music-dual-container.revealed .vinyl-player-left {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    .music-dual-container.revealed .playlist-right {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 850px) {
+      .music-dual-container {
+        flex-direction: column;
+        align-items: center;
       }
-      .fixed-name {
-        font-size: 3.2rem;
-      }
-      .hb-glow-text {
-        font-size: 2.1rem;
+      .playlist-right {
+        width: 100%;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- Dynamic Fluid Background Overlay -->
+  <!-- SVG Filter for Liquid Halftone Effect -->
+  <svg style="display: none;">
+    <defs>
+      <filter id="fluid-halftone-filter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="40" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Background Layer -->
   <div class="bg-gradient-base"></div>
   <div class="fluid-texture-overlay"></div>
 
@@ -583,15 +668,6 @@
       <div class="bulb-socket"><div class="socket"></div><div class="bulb-gold"></div></div>
       <div class="bulb-socket"><div class="socket"></div><div class="bulb-gold"></div></div>
     </div>
-  </div>
-
-  <!-- Floating Embers -->
-  <div class="particle-container">
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
   </div>
 
   <!-- Back Button -->
@@ -631,6 +707,7 @@
     <h2 id="welcome-header" style="font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900; text-shadow: 0 0 25px #ff3344;"></h2>
     <p class="wish-text">Make a wish and blow out the candles! 🕯️</p>
 
+    <!-- Cake SVG with FLAMES FULLY LIT BY DEFAULT -->
     <div class="cake-container" onclick="blowCandles()">
       <svg class="cake" viewBox="0 0 200 200">
         <ellipse cx="100" cy="170" rx="85" ry="18" fill="#1f0305" stroke="#4a0008" stroke-width="2"/>
@@ -646,7 +723,7 @@
 
         <path d="M 35 75 Q 45 90 55 75 Q 65 95 75 75 Q 85 90 95 75 Q 105 95 115 75 Q 125 90 135 75 Q 145 95 155 75 Q 165 85 165 75 Z" fill="#ffffff"/>
 
-        <!-- Candles -->
+        <!-- Candles with lit flames -->
         <rect x="65" y="45" width="8" height="32" rx="3" fill="#ff4d5a"/>
         <line x1="69" y1="45" x2="69" y2="39" stroke="#000" stroke-width="2"/>
         <path id="flame1" class="flame" d="M 69 22 Q 74 32 69 39 Q 64 32 69 22 Z"/>
@@ -662,66 +739,123 @@
     </div>
 
     <button id="blow-btn" class="btn-glow" onclick="blowCandles()">Blow Out Candles 🎂</button>
+
+    <!-- Scroll Down Prompt -->
+    <div class="scroll-hint-prompt">
+      <span>Scroll down for your birthday tracks</span> <i class="fa-solid fa-chevron-down"></i>
+    </div>
   </section>
 
-  <!-- STEP 5: MUSIC PLAYER SECTION WITH USER TASTE TITLE -->
+  <!-- STEP 5: TWO COLUMN MUSIC PLAYER SECTION -->
   <section id="step-playlist" class="fullpage-section hidden">
-    <div class="vinyl-player-section">
+    <div class="music-section-wrapper">
       
-      <!-- Personalized Music Title Header -->
       <div id="music-taste-header" class="music-taste-title">User's Sound Track</div>
 
-      <!-- Velvet Jacket Cover + Painted Floral Vinyl -->
-      <div class="album-display">
-        <!-- Clean Velvet Cover (No Text) -->
-        <div class="album-cover"></div>
-
-        <!-- Painted Floral Vinyl Disc -->
-        <div id="vinyl-disc" class="vinyl-record">
-          <svg class="vinyl-svg" viewBox="0 0 300 300">
-            <circle cx="150" cy="150" r="145" fill="#0c0a0c" stroke="#1f1a1f" stroke-width="2"/>
-            <circle cx="150" cy="150" r="130" fill="none" stroke="#161316" stroke-width="3"/>
-            <circle cx="150" cy="150" r="115" fill="none" stroke="#1a161a" stroke-width="2"/>
-            <circle cx="150" cy="150" r="100" fill="none" stroke="#141114" stroke-width="3"/>
-            <circle cx="150" cy="150" r="85" fill="none" stroke="#1c181c" stroke-width="2"/>
-
-            <!-- Floral Paint Vines & Artwork -->
-            <path d="M 40 150 Q 80 60 150 40 Q 220 30 250 110" fill="none" stroke="#4d7c0f" stroke-width="3.5" stroke-linecap="round"/>
-            <path d="M 70 210 Q 140 260 220 220" fill="none" stroke="#3f6212" stroke-width="3" stroke-linecap="round"/>
-            
-            <circle cx="80" cy="80" r="8" fill="#f43f5e"/>
-            <circle cx="95" cy="70" r="6" fill="#fb7185"/>
-            <circle cx="150" cy="40" r="9" fill="#c084fc"/>
-            <circle cx="210" cy="65" r="7" fill="#38bdf8"/>
-            <circle cx="245" cy="110" r="9" fill="#f43f5e"/>
-            <circle cx="100" cy="230" r="8" fill="#fbbf24"/>
-            <circle cx="180" cy="240" r="10" fill="#e879f9"/>
-
-            <!-- Center Purple Label -->
-            <circle cx="150" cy="150" r="42" fill="#581c87" stroke="#3b0764" stroke-width="2"/>
-            <circle cx="150" cy="150" r="38" fill="none" stroke="#a855f7" stroke-width="1" stroke-dasharray="3,3"/>
-            
-            <text x="150" y="145" font-family="Space Mono, monospace" font-size="7" fill="#f3e8ff" text-anchor="middle">BIRTHDAY MIX</text>
-            <text x="150" y="156" font-family="Space Mono, monospace" font-size="5" fill="#d8b4fe" text-anchor="middle">STEREO</text>
-            
-            <circle cx="150" cy="150" r="5" fill="#000000" stroke="#d4d4d8" stroke-width="1"/>
-          </svg>
-        </div>
-      </div>
-
-      <!-- Controls -->
-      <div class="audio-player-controls">
-        <div class="track-title" id="track-name">Space Song - Beach House</div>
+      <div id="music-dual-container" class="music-dual-container">
         
-        <div class="progress-bar-wrap">
-          <div class="progress-bar-fill"></div>
+        <!-- Left: Vinyl Player -->
+        <div class="vinyl-player-left">
+          <div class="album-display">
+            <div class="album-cover"></div>
+            <div id="vinyl-disc" class="vinyl-record">
+              <svg class="vinyl-svg" viewBox="0 0 300 300">
+                <circle cx="150" cy="150" r="145" fill="#0c0a0c" stroke="#1f1a1f" stroke-width="2"/>
+                <circle cx="150" cy="150" r="130" fill="none" stroke="#161316" stroke-width="3"/>
+                <circle cx="150" cy="150" r="115" fill="none" stroke="#1a161a" stroke-width="2"/>
+                <circle cx="150" cy="150" r="100" fill="none" stroke="#141114" stroke-width="3"/>
+                <circle cx="150" cy="150" r="85" fill="none" stroke="#1c181c" stroke-width="2"/>
+
+                <!-- Floral Paint Vines -->
+                <path d="M 40 150 Q 80 60 150 40 Q 220 30 250 110" fill="none" stroke="#4d7c0f" stroke-width="3.5" stroke-linecap="round"/>
+                <path d="M 70 210 Q 140 260 220 220" fill="none" stroke="#3f6212" stroke-width="3" stroke-linecap="round"/>
+                
+                <circle cx="80" cy="80" r="8" fill="#f43f5e"/>
+                <circle cx="95" cy="70" r="6" fill="#fb7185"/>
+                <circle cx="150" cy="40" r="9" fill="#c084fc"/>
+                <circle cx="210" cy="65" r="7" fill="#38bdf8"/>
+                <circle cx="245" cy="110" r="9" fill="#f43f5e"/>
+                <circle cx="100" cy="230" r="8" fill="#fbbf24"/>
+                <circle cx="180" cy="240" r="10" fill="#e879f9"/>
+
+                <circle cx="150" cy="150" r="42" fill="#581c87" stroke="#3b0764" stroke-width="2"/>
+                <circle cx="150" cy="150" r="38" fill="none" stroke="#a855f7" stroke-width="1" stroke-dasharray="3,3"/>
+                
+                <text x="150" y="145" font-family="Space Mono, monospace" font-size="7" fill="#f3e8ff" text-anchor="middle">BIRTHDAY MIX</text>
+                <text x="150" y="156" font-family="Space Mono, monospace" font-size="5" fill="#d8b4fe" text-anchor="middle">STEREO</text>
+                
+                <circle cx="150" cy="150" r="5" fill="#000000" stroke="#d4d4d8" stroke-width="1"/>
+              </svg>
+            </div>
+          </div>
+
+          <div class="audio-player-controls">
+            <div class="track-title" id="track-name">Space Song - Beach House</div>
+            
+            <div class="progress-bar-wrap">
+              <div class="progress-bar-fill"></div>
+            </div>
+
+            <div class="controls-row">
+              <button class="player-btn" onclick="prevTrack()"><i class="fa-solid fa-backward-step"></i></button>
+              <button class="player-btn play-btn-large" id="play-toggle-btn" onclick="togglePlay()"><i class="fa-solid fa-play"></i></button>
+              <button class="player-btn" onclick="nextTrack()"><i class="fa-solid fa-forward-step"></i></button>
+            </div>
+          </div>
         </div>
 
-        <div class="controls-row">
-          <button class="player-btn" onclick="prevTrack()"><i class="fa-solid fa-backward-step"></i></button>
-          <button class="player-btn play-btn-large" id="play-toggle-btn" onclick="togglePlay()"><i class="fa-solid fa-play"></i></button>
-          <button class="player-btn" onclick="nextTrack()"><i class="fa-solid fa-forward-step"></i></button>
+        <!-- Right: Pick Your Poison List -->
+        <div class="playlist-right">
+          <div class="playlist-title">
+            <i class="fa-solid fa-compact-disc"></i> Pick Your Poison
+          </div>
+
+          <ul class="song-list" id="song-list-items">
+            <li class="song-item active-song" onclick="selectTrack(0)">
+              <div class="song-info">
+                <span class="song-name">Space Song</span>
+                <span class="song-artist">Beach House</span>
+              </div>
+              <i class="fa-solid fa-play play-icon-small"></i>
+            </li>
+            <li class="song-item" onclick="selectTrack(1)">
+              <div class="song-info">
+                <span class="song-name">PPP</span>
+                <span class="song-artist">Beach House</span>
+              </div>
+              <i class="fa-solid fa-play play-icon-small"></i>
+            </li>
+            <li class="song-item" onclick="selectTrack(2)">
+              <div class="song-info">
+                <span class="song-name">Levitation</span>
+                <span class="song-artist">Beach House</span>
+              </div>
+              <i class="fa-solid fa-play play-icon-small"></i>
+            </li>
+            <li class="song-item" onclick="selectTrack(3)">
+              <div class="song-info">
+                <span class="song-name">Cigarette Daydreams</span>
+                <span class="song-artist">Cage The Elephant</span>
+              </div>
+              <i class="fa-solid fa-play play-icon-small"></i>
+            </li>
+            <li class="song-item" onclick="selectTrack(4)">
+              <div class="song-info">
+                <span class="song-name">Chamber Of Reflection</span>
+                <span class="song-artist">Mac DeMarco</span>
+              </div>
+              <i class="fa-solid fa-play play-icon-small"></i>
+            </li>
+            <li class="song-item" onclick="selectTrack(5)">
+              <div class="song-info">
+                <span class="song-name">505</span>
+                <span class="song-artist">Arctic Monkeys</span>
+              </div>
+              <i class="fa-solid fa-play play-icon-small"></i>
+            </li>
+          </ul>
         </div>
+
       </div>
 
     </div>
@@ -743,7 +877,6 @@
     });
 
     function updateCursorPhysics() {
-      // Spring Damper Physics
       const stiffness = 0.08;
       const damping = 0.72;
 
@@ -759,7 +892,6 @@
       blobX += velX;
       blobY += velY;
 
-      // Elastic squash & stretch calculation based on speed
       const speed = Math.sqrt(velX * velX + velY * velY);
       const angle = Math.atan2(velY, velX);
       const stretch = Math.min(speed * 0.035, 0.45);
@@ -774,10 +906,13 @@
     updateCursorPhysics();
 
     // Hover effect
-    document.querySelectorAll('button, input, .cake-container, .album-display').forEach(element => {
-      element.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
-      element.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
-    });
+    function addHoverListeners() {
+      document.querySelectorAll('button, input, .cake-container, .album-display, .song-item').forEach(element => {
+        element.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+        element.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+      });
+    }
+    addHoverListeners();
 
     /* Core App Logic */
     let userName = "Star";
@@ -791,9 +926,12 @@
     let currentTrackIdx = 0;
 
     const playlist = [
-      "Space Song - Beach House",
-      "PPP - Beach House",
-      "Levitation - Beach House"
+      { title: "Space Song", artist: "Beach House" },
+      { title: "PPP", artist: "Beach House" },
+      { title: "Levitation", artist: "Beach House" },
+      { title: "Cigarette Daydreams", artist: "Cage The Elephant" },
+      { title: "Chamber Of Reflection", artist: "Mac DeMarco" },
+      { title: "505", artist: "Arctic Monkeys" }
     ];
 
     const happyBirthdayLanguages = [
@@ -822,7 +960,6 @@
       document.getElementById("corner-back-btn").classList.remove("hidden");
       document.getElementById("user-name-display").innerText = userName;
 
-      // Personalize Music Header
       document.getElementById("music-taste-header").innerText = `${userName}'s Music Taste ✨`;
 
       confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
@@ -881,6 +1018,7 @@
         document.getElementById("welcome-header").innerText = `Happy Birthday, ${userName}! 🎉`;
 
         confetti({ particleCount: 140, spread: 100, origin: { y: 0.5 } });
+        addHoverListeners();
       }, 700);
     }
 
@@ -924,7 +1062,27 @@
       confetti({ particleCount: 200, spread: 120, origin: { y: 0.6 } });
     }
 
-    /* Vinyl Controls */
+    /* Scroll Observer for Light Fade & Juicy Reveal */
+    const musicSection = document.getElementById('step-playlist');
+    const lightsStrip = document.getElementById('lights-strip');
+    const musicContainer = document.getElementById('music-dual-container');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Fade lights out
+          lightsStrip.classList.add('scrolled-hidden');
+          // Slide in left & right elements smoothly
+          musicContainer.classList.add('revealed');
+        } else {
+          lightsStrip.classList.remove('scrolled-hidden');
+        }
+      });
+    }, { threshold: 0.3 });
+
+    observer.observe(musicSection);
+
+    /* Vinyl Player Controls */
     function togglePlay() {
       isPlaying = !isPlaying;
       const vinyl = document.getElementById("vinyl-disc");
@@ -939,6 +1097,12 @@
       }
     }
 
+    function selectTrack(idx) {
+      currentTrackIdx = idx;
+      updateTrackDisplay();
+      if (!isPlaying) togglePlay();
+    }
+
     function nextTrack() {
       currentTrackIdx = (currentTrackIdx + 1) % playlist.length;
       updateTrackDisplay();
@@ -950,7 +1114,18 @@
     }
 
     function updateTrackDisplay() {
-      document.getElementById("track-name").innerText = playlist[currentTrackIdx];
+      const track = playlist[currentTrackIdx];
+      document.getElementById("track-name").innerText = `${track.title} - ${track.artist}`;
+
+      // Highlight active song in list
+      const items = document.querySelectorAll(".song-item");
+      items.forEach((item, index) => {
+        if (index === currentTrackIdx) {
+          item.classList.add("active-song");
+        } else {
+          item.classList.remove("active-song");
+        }
+      });
     }
   </script>
 </body>
