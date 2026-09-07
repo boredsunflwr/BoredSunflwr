@@ -39,7 +39,7 @@
       position: relative;
     }
 
-    /* Slick Inverting Custom Cursor Core (Slightly Larger: 28px) */
+    /* Dynamic Sleek Cursor Dot (28px) */
     .custom-cursor-dot {
       position: fixed;
       top: 0;
@@ -61,8 +61,7 @@
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.95);
     }
 
-    /* DUAL LAYER GRADIENT STACK */
-    /* Underneath Layer: Red at Top-Left -> Black at Bottom-Right */
+    /* LAYER 1: Underneath Oppositional Gradient (Red Top-Left -> Black Bottom-Right) */
     .bg-gradient-underneath {
       position: fixed;
       top: 0;
@@ -73,7 +72,7 @@
       z-index: 0;
     }
 
-    /* Top Mask Canvas Container Layer: Black at Top-Left -> Red at Bottom-Right */
+    /* LAYER 2: Canvas Mask Top Gradient (Black Top-Left -> Red Bottom-Right) */
     #fluid-mask-canvas {
       position: fixed;
       top: 0;
@@ -84,7 +83,7 @@
       z-index: 1;
     }
 
-    /* Ambient Spotlight Overlay */
+    /* Ambient Overlay */
     .ambient-overlay {
       position: fixed;
       top: 0;
@@ -160,7 +159,7 @@
       100% { opacity: 1; transform: scale(1.1); box-shadow: 0 0 28px #ffe066, 0 0 50px #ff8800; }
     }
 
-    /* Back Button */
+    /* Navigation Button */
     .btn-corner-back {
       position: fixed;
       top: 25px;
@@ -182,7 +181,7 @@
       border-color: #ff4d4d;
     }
 
-    /* Full Page Sections */
+    /* Page Sections */
     .fullpage-section {
       width: 100vw;
       min-height: 100vh;
@@ -217,7 +216,7 @@
       50% { transform: translateY(8px); }
     }
 
-    /* Typography */
+    /* Typography & Inputs */
     h2 {
       font-size: 2.2rem;
       font-weight: 600;
@@ -305,7 +304,7 @@
       50% { opacity: 0; }
     }
 
-    /* Cake Container */
+    /* Cake Elements */
     .cake-container {
       position: relative;
       width: 260px;
@@ -344,7 +343,7 @@
       text-align: center;
     }
 
-    /* Music Section Layout */
+    /* Music Player Layout */
     .music-section-wrapper {
       width: 100%;
       max-width: 1100px;
@@ -502,7 +501,7 @@
       box-shadow: 0 0 25px rgba(255, 77, 90, 0.8);
     }
 
-    /* Playlist */
+    /* Playlist Container */
     .playlist-right {
       flex: 1;
       display: flex;
@@ -615,7 +614,7 @@
   <!-- Ambient Light Overlay -->
   <div class="ambient-overlay"></div>
 
-  <!-- Festive Lights -->
+  <!-- Festive String Lights -->
   <div id="lights-strip" class="lights-wrapper">
     <div class="light-wire-main">
       <div class="bulb-socket"><div class="socket"></div><div class="bulb-gold"></div></div>
@@ -818,7 +817,7 @@
   </section>
 
   <script>
-    /* SLEEK CURSOR DOT WITH DYNAMIC INVERSION & INTERACTIVE HOVER */
+    /* CURSOR DOT SETUP */
     const dotCursor = document.getElementById('dot-cursor');
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
@@ -839,9 +838,6 @@
           dotCursor.classList.remove('dark-mode');
         }
       }
-
-      // Add viscous liquid blob particle on move
-      addFluidBlob(e.clientX, e.clientY);
     });
 
     // Sleek Spring Motion for Cursor Core
@@ -854,10 +850,9 @@
     }
     renderCursor();
 
-    /* JUICY FLUID MASK CANVAS ENGINE */
+    /* SHAPELESS FLOWING ORGANIC LIQUID MASK ENGINE */
     const canvas = document.getElementById('fluid-mask-canvas');
     const ctx = canvas.getContext('2d');
-    let blobs = [];
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
@@ -865,7 +860,7 @@
       drawTopGradientLayer();
     }
 
-    // Draws the Inverted Top Gradient Layer onto Canvas
+    // Top Layer Gradient (Opposite Direction/Colors to Underneath Layer)
     function drawTopGradientLayer() {
       const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
       grad.addColorStop(0, '#000000');
@@ -881,68 +876,78 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    // Spawns Thick Organic Blob Trails
-    function addFluidBlob(x, y) {
-      const radius = 38 + Math.random() * 28;
-      blobs.push({
-        x: x,
-        y: y,
-        radius: radius,
-        maxRadius: radius + 25,
-        alpha: 1.0,
-        wobblePhase: Math.random() * Math.PI * 2,
-        wobbleSpeed: 0.05 + Math.random() * 0.05
+    // Continuous Fluid Mass Nodes
+    const NUM_NODES = 12;
+    let fluidNodes = [];
+    
+    for (let i = 0; i < NUM_NODES; i++) {
+      fluidNodes.push({
+        x: window.innerWidth / 2,
+        y: window.innerHeight / 2,
+        vx: 0,
+        vy: 0,
+        radius: 45 + Math.random() * 35,
+        phase: Math.random() * Math.PI * 2,
+        wobbleSpeed: 0.03 + Math.random() * 0.04
       });
     }
 
-    // Fluid Physics Loop
-    function renderFluidMask() {
+    // Organic Shapeless Liquid Animation Loop
+    function renderOrganicLiquidMask() {
       drawTopGradientLayer();
 
-      // Mask composite mode cuts transparent holes through top gradient to expose layer underneath
+      // Mask composite mode cuts transparent liquid shape through top gradient layer
       ctx.globalCompositeOperation = 'destination-out';
 
-      for (let i = blobs.length - 1; i >= 0; i--) {
-        const b = blobs[i];
+      // Update node physics: Head node tracks mouse, subsequent nodes follow organically
+      fluidNodes[0].x += (mouseX - fluidNodes[0].x) * 0.18;
+      fluidNodes[0].y += (mouseY - fluidNodes[0].y) * 0.18;
 
-        // Organic Wobble Physics
-        b.wobblePhase += b.wobbleSpeed;
-        const currentR = b.radius + Math.sin(b.wobblePhase) * 6;
-
-        ctx.save();
-        ctx.beginPath();
-
-        // Draw organic thick fluid shape
-        const numPoints = 8;
-        for (let p = 0; p < numPoints; p++) {
-          const angle = (p / numPoints) * Math.PI * 2;
-          const offset = Math.sin(b.wobblePhase + p) * 5;
-          const px = b.x + Math.cos(angle) * (currentR + offset);
-          const py = b.y + Math.sin(angle) * (currentR + offset);
-
-          if (p === 0) ctx.moveTo(px, py);
-          else ctx.lineTo(px, py);
-        }
-
-        ctx.closePath();
-        ctx.fillStyle = `rgba(0, 0, 0, ${b.alpha})`;
-        ctx.shadowBlur = 30;
-        ctx.shadowColor = 'rgba(0, 0, 0, 1)';
-        ctx.fill();
-        ctx.restore();
-
-        // Slow dissipation viscosity
-        b.alpha -= 0.012;
-        b.radius += 0.25;
-
-        if (b.alpha <= 0) {
-          blobs.splice(i, 1);
-        }
+      for (let i = 1; i < NUM_NODES; i++) {
+        const prev = fluidNodes[i - 1];
+        const current = fluidNodes[i];
+        
+        // Dynamic viscous spring attraction
+        current.x += (prev.x - current.x) * (0.28 - i * 0.015);
+        current.y += (prev.y - current.y) * (0.28 - i * 0.015);
+        current.phase += current.wobbleSpeed;
       }
 
-      requestAnimationFrame(renderFluidMask);
+      // Render amorphous shapeless fluid contour
+      ctx.save();
+      ctx.shadowBlur = 45;
+      ctx.shadowColor = 'rgba(0, 0, 0, 1)';
+      ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+
+      // 1. Draw interconnected juicy blobs
+      for (let i = 0; i < NUM_NODES; i++) {
+        const node = fluidNodes[i];
+        const dynamicRadius = node.radius + Math.sin(node.phase) * 12;
+        
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, Math.max(10, dynamicRadius - i * 2.5), 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // 2. Draw seamless morphing liquid bridge across nodes
+      ctx.beginPath();
+      ctx.moveTo(fluidNodes[0].x, fluidNodes[0].y);
+      for (let i = 0; i < NUM_NODES - 1; i++) {
+        const xc = (fluidNodes[i].x + fluidNodes[i + 1].x) / 2;
+        const yc = (fluidNodes[i].y + fluidNodes[i + 1].y) / 2;
+        ctx.quadraticCurveTo(fluidNodes[i].x, fluidNodes[i].y, xc, yc);
+      }
+      ctx.lineWidth = 75;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = 'rgba(0, 0, 0, 1)';
+      ctx.stroke();
+
+      ctx.restore();
+
+      requestAnimationFrame(renderOrganicLiquidMask);
     }
-    renderFluidMask();
+    renderOrganicLiquidMask();
 
     /* APP FLOW LOGIC */
     let userName = "Star";
