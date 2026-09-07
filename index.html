@@ -5,12 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Happy Birthday!</title>
   
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Outfit:wght@300;400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
+  <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
+  <!-- Canvas Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
@@ -30,85 +33,55 @@
       min-height: 100vh;
       overflow-x: hidden;
       overflow-y: auto;
-      background: #020003;
+      background: #000000;
       font-family: 'Outfit', sans-serif;
       color: #ffffff;
       position: relative;
     }
 
-    /* Solid Dynamic Single-Color Cursor */
+    /* Slick Inverting Custom Cursor Core (Slightly Larger: 28px) */
     .custom-cursor-dot {
       position: fixed;
       top: 0;
       left: 0;
-      width: 18px;
-      height: 18px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       pointer-events: none;
       z-index: 999999;
       transform: translate(-50%, -50%);
       background: #ff3344;
-      box-shadow: 0 0 14px rgba(255, 51, 68, 0.85);
-      transition: background 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 0 20px rgba(255, 51, 68, 0.9);
+      transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease-out;
+      will-change: transform, left, top;
     }
 
     .custom-cursor-dot.dark-mode {
       background: #000000;
-      box-shadow: 0 0 14px rgba(0, 0, 0, 0.9);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.95);
     }
 
-    /* Container for Image Trail Items */
-    #image-trail-container {
+    /* DUAL LAYER GRADIENT STACK */
+    /* Underneath Layer: Red at Top-Left -> Black at Bottom-Right */
+    .bg-gradient-underneath {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      pointer-events: none;
-      z-index: 99999;
-      overflow: hidden;
-    }
-
-    /* Spawns Transparent PNG Trail Elements */
-    .trail-image {
-      position: absolute;
-      width: 75px;
-      height: 75px;
-      object-fit: contain;
-      pointer-events: none;
-      will-change: transform, opacity;
-      transform: translate(-50%, -50%) scale(0) rotate(0deg);
-      opacity: 0;
-      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.35s ease;
-    }
-
-    .trail-image.active {
-      opacity: 0.9;
-    }
-
-    .trail-image.fade-out {
-      opacity: 0;
-      transform: translate(-50%, -50%) scale(0.3) rotate(15deg) !important;
-      transition: transform 0.4s ease, opacity 0.4s ease;
-    }
-
-    /* Ambient Background Layer */
-    .bg-gradient-base {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: linear-gradient(135deg, #090003 0%, #2b020a 35%, #540313 70%, #0d0005 100%);
-      background-size: 200% 200%;
-      animation: ambientGradient 12s ease infinite;
+      background: linear-gradient(135deg, #e60026 0%, #7a0010 40%, #200004 70%, #000000 100%);
       z-index: 0;
     }
 
-    @keyframes ambientGradient {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    /* Top Mask Canvas Container Layer: Black at Top-Left -> Red at Bottom-Right */
+    #fluid-mask-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1;
     }
 
     /* Ambient Spotlight Overlay */
@@ -118,7 +91,7 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: radial-gradient(circle at 50% 20%, rgba(255, 120, 50, 0.25) 0%, rgba(0, 0, 0, 0.85) 85%);
+      background: radial-gradient(circle at 50% 20%, rgba(255, 120, 50, 0.2) 0%, rgba(0, 0, 0, 0.85) 85%);
       pointer-events: none;
       z-index: 2;
       opacity: 0;
@@ -630,14 +603,19 @@
 </head>
 <body>
 
-  <div id="image-trail-container"></div>
+  <!-- LAYER 1: Underneath Oppositional Gradient -->
+  <div class="bg-gradient-underneath"></div>
 
+  <!-- LAYER 2: Canvas Mask Top Gradient Layer -->
+  <canvas id="fluid-mask-canvas"></canvas>
+
+  <!-- Dynamic Red / Ink Black Cursor Dot -->
   <div id="dot-cursor" class="custom-cursor-dot"></div>
 
-  <div class="bg-gradient-base"></div>
-
+  <!-- Ambient Light Overlay -->
   <div class="ambient-overlay"></div>
 
+  <!-- Festive Lights -->
   <div id="lights-strip" class="lights-wrapper">
     <div class="light-wire-main">
       <div class="bulb-socket"><div class="socket"></div><div class="bulb-gold"></div></div>
@@ -651,16 +629,19 @@
     </div>
   </div>
 
+  <!-- Back Button -->
   <button id="corner-back-btn" class="btn-corner-back hidden" onclick="handleCornerBack()">
     <i class="fa-solid fa-arrow-left"></i> Back
   </button>
 
+  <!-- STEP 1: Enter Name -->
   <section id="step-name" class="fullpage-section">
     <h2>Who is the birthday star? 👑</h2>
     <input type="text" id="user-name-input" class="input-field" placeholder="Enter name..." autocomplete="off" onkeydown="handleKeyPress(event)">
     <button class="btn-glow" onclick="startGreeting()">Celebrate 🎉</button>
   </section>
 
+  <!-- STEP 2: Multilingual Typewriter -->
   <section id="step-greeting" class="fullpage-section hidden">
     <div class="greeting-container">
       <h2 class="hb-glow-text">
@@ -671,6 +652,7 @@
     </div>
   </section>
 
+  <!-- STEP 3: Lights Prompt -->
   <section id="step-lights" class="fullpage-section hidden">
     <h2>Set the Celebration Mood! ✨</h2>
     <p style="color: #ffb3b8; font-size: 1.15rem; margin-bottom: 1.5rem; text-align: center;">
@@ -679,6 +661,7 @@
     <button class="btn-glow" onclick="turnOnLightsAndShowCake()">Turn On Lights ✨</button>
   </section>
 
+  <!-- STEP 4: Interactive Cake Page -->
   <section id="step-main" class="fullpage-section hidden">
     <h2 id="welcome-header" style="font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900; text-shadow: 0 0 25px #ff3344;"></h2>
     <p class="wish-text">Make a wish and blow out the candles! 🕯️</p>
@@ -698,6 +681,7 @@
 
         <path d="M 35 75 Q 45 90 55 75 Q 65 95 75 75 Q 85 90 95 75 Q 105 95 115 75 Q 125 90 135 75 Q 145 95 155 75 Q 165 85 165 75 Z" fill="#ffffff"/>
 
+        <!-- Lit Candles -->
         <rect x="65" y="45" width="8" height="32" rx="3" fill="#ff4d5a"/>
         <line x1="69" y1="45" x2="69" y2="39" stroke="#000" stroke-width="2"/>
         <path id="flame1" class="flame" d="M 69 22 Q 74 32 69 39 Q 64 32 69 22 Z"/>
@@ -719,6 +703,7 @@
     </div>
   </section>
 
+  <!-- STEP 5: TWO COLUMN MUSIC PLAYER SECTION -->
   <section id="step-playlist" class="fullpage-section hidden">
     <div class="music-section-wrapper">
       
@@ -726,6 +711,7 @@
 
       <div id="music-dual-container" class="music-dual-container">
         
+        <!-- Vinyl Player (Left) -->
         <div class="vinyl-player-left">
           <div class="album-display">
             <div class="album-cover"></div>
@@ -774,6 +760,7 @@
           </div>
         </div>
 
+        <!-- Playlist -->
         <div class="playlist-right">
           <div class="playlist-title">
             <i class="fa-solid fa-compact-disc"></i> Pick Your Poison
@@ -831,14 +818,18 @@
   </section>
 
   <script>
-    /* SOLID DYNAMIC SINGLE-COLOR CURSOR */
+    /* SLEEK CURSOR DOT WITH DYNAMIC INVERSION & INTERACTIVE HOVER */
     const dotCursor = document.getElementById('dot-cursor');
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let cursorX = mouseX;
+    let cursorY = mouseY;
 
     window.addEventListener('mousemove', (e) => {
-      dotCursor.style.left = `${e.clientX}px`;
-      dotCursor.style.top = `${e.clientY}px`;
+      mouseX = e.clientX;
+      mouseY = e.clientY;
 
-      // Check background surface under cursor position
+      // Color Dynamic Inversion check
       const elem = document.elementFromPoint(e.clientX, e.clientY);
       if (elem) {
         const tag = elem.tagName.toLowerCase();
@@ -849,68 +840,111 @@
         }
       }
 
-      // Trigger transparent image trail creation on mouse move
-      handleTrailSpawn(e.clientX, e.clientY);
+      // Add viscous liquid blob particle on move
+      addFluidBlob(e.clientX, e.clientY);
     });
 
-    /* CURSOR IMAGE TRAIL SYSTEM */
-    const trailContainer = document.getElementById('image-trail-container');
+    // Sleek Spring Motion for Cursor Core
+    function renderCursor() {
+      cursorX += (mouseX - cursorX) * 0.22;
+      cursorY += (mouseY - cursorY) * 0.22;
+      dotCursor.style.left = `${cursorX}px`;
+      dotCursor.style.top = `${cursorY}px`;
+      requestAnimationFrame(renderCursor);
+    }
+    renderCursor();
 
-    // High-quality transparent celebration PNG assets
-    const trailImages = [
-      'https://cdn-icons-png.flaticon.com/512/3132/3132736.png', // Sparkles
-      'https://cdn-icons-png.flaticon.com/512/2488/2488749.png', // Star
-      'https://cdn-icons-png.flaticon.com/512/1152/1152921.png', // Confetti Popper
-      'https://cdn-icons-png.flaticon.com/512/3132/3132693.png', // Cake
-      'https://cdn-icons-png.flaticon.com/512/1046/1046857.png'  // Heart / Ribbon
-    ];
+    /* JUICY FLUID MASK CANVAS ENGINE */
+    const canvas = document.getElementById('fluid-mask-canvas');
+    const ctx = canvas.getContext('2d');
+    let blobs = [];
 
-    let lastX = 0;
-    let lastY = 0;
-    let imageIndex = 0;
-    const MIN_DISTANCE = 45; // Minimum mouse movement distance (px) before spawning next image
-
-    function handleTrailSpawn(x, y) {
-      const dist = Math.hypot(x - lastX, y - lastY);
-
-      if (dist >= MIN_DISTANCE) {
-        spawnTrailImage(x, y);
-        lastX = x;
-        lastY = y;
-      }
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      drawTopGradientLayer();
     }
 
-    function spawnTrailImage(x, y) {
-      const img = document.createElement('img');
-      img.className = 'trail-image';
-      img.src = trailImages[imageIndex % trailImages.length];
-      imageIndex++;
+    // Draws the Inverted Top Gradient Layer onto Canvas
+    function drawTopGradientLayer() {
+      const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      grad.addColorStop(0, '#000000');
+      grad.addColorStop(0.3, '#1f0004');
+      grad.addColorStop(0.7, '#6b000d');
+      grad.addColorStop(1, '#e60026');
 
-      img.style.left = `${x}px`;
-      img.style.top = `${y}px`;
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
 
-      // Random rotation angle (-18 deg to +18 deg)
-      const randomRotation = (Math.random() - 0.5) * 36;
-      const targetScale = 0.8 + Math.random() * 0.4;
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
 
-      trailContainer.appendChild(img);
-
-      // Trigger entrance scaling & rotation via rAF
-      requestAnimationFrame(() => {
-        img.classList.add('active');
-        img.style.transform = `translate(-50%, -50%) scale(${targetScale}) rotate(${randomRotation}deg)`;
+    // Spawns Thick Organic Blob Trails
+    function addFluidBlob(x, y) {
+      const radius = 38 + Math.random() * 28;
+      blobs.push({
+        x: x,
+        y: y,
+        radius: radius,
+        maxRadius: radius + 25,
+        alpha: 1.0,
+        wobblePhase: Math.random() * Math.PI * 2,
+        wobbleSpeed: 0.05 + Math.random() * 0.05
       });
-
-      // Fade out and automatic DOM cleanup
-      setTimeout(() => {
-        img.classList.add('fade-out');
-        setTimeout(() => {
-          if (img.parentNode) img.parentNode.removeChild(img);
-        }, 400);
-      }, 550);
     }
 
-    /* App State & Flow */
+    // Fluid Physics Loop
+    function renderFluidMask() {
+      drawTopGradientLayer();
+
+      // Mask composite mode cuts transparent holes through top gradient to expose layer underneath
+      ctx.globalCompositeOperation = 'destination-out';
+
+      for (let i = blobs.length - 1; i >= 0; i--) {
+        const b = blobs[i];
+
+        // Organic Wobble Physics
+        b.wobblePhase += b.wobbleSpeed;
+        const currentR = b.radius + Math.sin(b.wobblePhase) * 6;
+
+        ctx.save();
+        ctx.beginPath();
+
+        // Draw organic thick fluid shape
+        const numPoints = 8;
+        for (let p = 0; p < numPoints; p++) {
+          const angle = (p / numPoints) * Math.PI * 2;
+          const offset = Math.sin(b.wobblePhase + p) * 5;
+          const px = b.x + Math.cos(angle) * (currentR + offset);
+          const py = b.y + Math.sin(angle) * (currentR + offset);
+
+          if (p === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+
+        ctx.closePath();
+        ctx.fillStyle = `rgba(0, 0, 0, ${b.alpha})`;
+        ctx.shadowBlur = 30;
+        ctx.shadowColor = 'rgba(0, 0, 0, 1)';
+        ctx.fill();
+        ctx.restore();
+
+        // Slow dissipation viscosity
+        b.alpha -= 0.012;
+        b.radius += 0.25;
+
+        if (b.alpha <= 0) {
+          blobs.splice(i, 1);
+        }
+      }
+
+      requestAnimationFrame(renderFluidMask);
+    }
+    renderFluidMask();
+
+    /* APP FLOW LOGIC */
     let userName = "Star";
     let langIndex = 0;
     let charIndex = 0;
