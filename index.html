@@ -411,6 +411,14 @@
       justify-content: space-between;
       gap: 40px;
       margin-top: 1rem;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 1s ease, transform 1s ease;
+    }
+
+    .music-dual-container.revealed {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     /* Vinyl Player */
@@ -419,9 +427,6 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      transform: translateX(-70px);
-      opacity: 0;
-      transition: transform 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.9s ease;
     }
 
     .album-display {
@@ -496,21 +501,39 @@
       text-align: center;
     }
 
+    /* Celestial White Glow Particle Progress Bar */
     .progress-bar-wrap {
+      position: relative;
       width: 100%;
-      height: 6px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 3px;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
       overflow: hidden;
       cursor: pointer !important;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
     }
 
     .progress-bar-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 0%;
       height: 100%;
-      background: #ff4d5a;
-      box-shadow: 0 0 12px #ff4d5a;
+      background: #ffffff;
+      box-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff, 0 0 35px #ffffff;
+      border-radius: 6px;
       transition: width 0.1s linear;
+      pointer-events: none;
+    }
+
+    .particle-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 4;
     }
 
     .time-indicators {
@@ -520,7 +543,7 @@
       font-family: 'Space Mono', monospace;
       font-size: 0.75rem;
       color: rgba(255, 255, 255, 0.6);
-      margin-top: -6px;
+      margin-top: -2px;
     }
 
     .controls-row {
@@ -531,67 +554,67 @@
     }
 
     .player-btn {
-      background: transparent;
-      border: none;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.25);
       color: #ffffff;
-      font-size: 1.2rem;
-      transition: all 0.2s ease;
-    }
-
-    .player-btn:hover {
-      color: #ff4d5a;
-      transform: scale(1.15);
-    }
-
-    .player-btn.play-btn-large {
-      width: 50px;
-      height: 50px;
-      background: #ff4d5a;
-      color: #ffffff;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
-      box-shadow: 0 0 25px rgba(255, 77, 90, 0.8);
+      font-size: 1rem;
+      transition: all 0.25s ease;
     }
 
-    /* Playlist Container */
+    .player-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: #ffffff;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    }
+
+    .play-btn-large {
+      width: 56px;
+      height: 56px;
+      font-size: 1.3rem;
+      background: #ffffff;
+      color: #000000;
+      border: none;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+    }
+
+    .play-btn-large:hover {
+      background: #f0f0f0;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 1);
+    }
+
+    /* Playlist Section (Right) */
     .playlist-right {
       flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      background: rgba(25, 0, 5, 0.65);
-      border: 1px solid rgba(255, 77, 90, 0.3);
-      border-radius: 20px;
-      padding: 30px;
-      backdrop-filter: blur(16px);
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-      transform: translateX(70px);
-      opacity: 0;
-      transition: transform 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.9s ease;
+      max-width: 420px;
+      background: rgba(15, 15, 15, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 24px;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
 
     .playlist-title {
-      font-family: 'Space Mono', monospace;
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: #ff4d5a;
-      letter-spacing: 2px;
-      margin-bottom: 20px;
-      text-transform: uppercase;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 16px;
       display: flex;
       align-items: center;
       gap: 10px;
+      color: #ffb3b8;
     }
 
     .song-list {
-      width: 100%;
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
 
     .song-item {
@@ -599,17 +622,21 @@
       align-items: center;
       justify-content: space-between;
       padding: 12px 16px;
+      border-radius: 10px;
       background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      transition: all 0.3s ease;
-      width: 100%;
+      border: 1px solid transparent;
+      transition: all 0.25s ease;
     }
 
-    .song-item:hover, .song-item.active-song {
-      background: rgba(255, 77, 90, 0.22);
-      border-color: rgba(255, 77, 90, 0.6);
-      transform: translateX(6px);
+    .song-item:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .song-item.active-song {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: #ffffff;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
     }
 
     .song-info {
@@ -618,60 +645,42 @@
     }
 
     .song-name {
-      font-weight: 600;
       font-size: 0.95rem;
+      font-weight: 600;
       color: #ffffff;
     }
 
     .song-artist {
       font-size: 0.8rem;
-      color: #ffb3b8;
+      color: rgba(255, 255, 255, 0.6);
     }
 
     .play-icon-small {
-      color: #ff4d5a;
-      font-size: 0.9rem;
-    }
-
-    /* Scroll Reveal State */
-    .music-dual-container.revealed .vinyl-player-left {
-      transform: translateX(0);
-      opacity: 1;
-    }
-
-    .music-dual-container.revealed .playlist-right {
-      transform: translateX(0);
-      opacity: 1;
-    }
-
-    @media (max-width: 850px) {
-      .music-dual-container {
-        flex-direction: column;
-        align-items: center;
-      }
-      .playlist-right {
-        width: 100%;
-      }
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.7);
     }
   </style>
 </head>
 <body>
 
-  <!-- LAYER 1: Underneath Oppositional Gradient -->
-  <div class="bg-gradient-underneath"></div>
-
-  <!-- LAYER 2: Canvas Mask Top Gradient Layer -->
-  <canvas id="fluid-mask-canvas"></canvas>
-
-  <!-- Dynamic Red / Ink Black Cursor Dot -->
+  <!-- Custom Cursor Dot -->
   <div id="dot-cursor" class="custom-cursor-dot"></div>
 
-  <!-- Ambient Light Overlay -->
+  <!-- Background Layers -->
+  <div class="bg-gradient-underneath"></div>
+  <canvas id="fluid-mask-canvas"></canvas>
   <div class="ambient-overlay"></div>
 
-  <!-- Festive String Lights -->
+  <!-- Top Navigation Corner Button -->
+  <button id="corner-back-btn" class="btn-corner-back hidden" onclick="handleCornerBack()">
+    <i class="fa-solid fa-arrow-left"></i> Back
+  </button>
+
+  <!-- Festoon String Lights -->
   <div id="lights-strip" class="lights-wrapper">
     <div class="light-wire-main">
+      <div class="bulb-socket"><div class="socket"></div><div class="bulb-gold"></div></div>
+      <div class="bulb-socket"><div class="socket"></div><div class="bulb-gold"></div></div>
       <div class="bulb-socket"><div class="socket"></div><div class="bulb-gold"></div></div>
       <div class="bulb-socket"><div class="socket"></div><div class="bulb-gold"></div></div>
       <div class="bulb-socket"><div class="socket"></div><div class="bulb-gold"></div></div>
@@ -683,140 +692,50 @@
     </div>
   </div>
 
-  <!-- Back Button -->
-  <button id="corner-back-btn" class="btn-corner-back hidden" onclick="handleCornerBack()">
-    <i class="fa-solid fa-arrow-left"></i> Back
-  </button>
-
-  <!-- STEP 1: Enter Name & Blooming Sunflowers -->
+  <!-- STEP 1: ENTER NAME -->
   <section id="step-name" class="fullpage-section">
-    <h2>Who is the birthday star? 👑</h2>
-    <input type="text" id="user-name-input" class="input-field" placeholder="Enter name..." autocomplete="off" onkeydown="handleKeyPress(event)">
-    
-    <!-- Blooming Aesthetic Sunflowers -->
-    <div id="sunflowers-garden" class="sunflowers-bloom-wrapper">
-      <svg class="mini-sunflower" viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r="16" fill="#3b1d0e"/>
-        <g fill="#ffc107">
-          <ellipse cx="50" cy="18" rx="7" ry="16"/>
-          <ellipse cx="50" cy="82" rx="7" ry="16"/>
-          <ellipse cx="18" cy="50" rx="16" ry="7"/>
-          <ellipse cx="82" cy="50" rx="16" ry="7"/>
-          <ellipse cx="27" cy="27" rx="7" ry="16" transform="rotate(-45 27 27)"/>
-          <ellipse cx="73" cy="73" rx="7" ry="16" transform="rotate(-45 73 73)"/>
-          <ellipse cx="27" cy="73" rx="7" ry="16" transform="rotate(45 27 73)"/>
-          <ellipse cx="73" cy="27" rx="7" ry="16" transform="rotate(45 73 27)"/>
-        </g>
-      </svg>
-      <svg class="mini-sunflower" viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r="16" fill="#3b1d0e"/>
-        <g fill="#ffb300">
-          <ellipse cx="50" cy="18" rx="7" ry="16"/>
-          <ellipse cx="50" cy="82" rx="7" ry="16"/>
-          <ellipse cx="18" cy="50" rx="16" ry="7"/>
-          <ellipse cx="82" cy="50" rx="16" ry="7"/>
-          <ellipse cx="27" cy="27" rx="7" ry="16" transform="rotate(-45 27 27)"/>
-          <ellipse cx="73" cy="73" rx="7" ry="16" transform="rotate(-45 73 73)"/>
-          <ellipse cx="27" cy="73" rx="7" ry="16" transform="rotate(45 27 73)"/>
-          <ellipse cx="73" cy="27" rx="7" ry="16" transform="rotate(45 73 27)"/>
-        </g>
-      </svg>
-      <svg class="mini-sunflower" viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r="16" fill="#3b1d0e"/>
-        <g fill="#ffc107">
-          <ellipse cx="50" cy="18" rx="7" ry="16"/>
-          <ellipse cx="50" cy="82" rx="7" ry="16"/>
-          <ellipse cx="18" cy="50" rx="16" ry="7"/>
-          <ellipse cx="82" cy="50" rx="16" ry="7"/>
-          <ellipse cx="27" cy="27" rx="7" ry="16" transform="rotate(-45 27 27)"/>
-          <ellipse cx="73" cy="73" rx="7" ry="16" transform="rotate(-45 73 73)"/>
-          <ellipse cx="27" cy="73" rx="7" ry="16" transform="rotate(45 27 73)"/>
-          <ellipse cx="73" cy="27" rx="7" ry="16" transform="rotate(45 73 27)"/>
-        </g>
-      </svg>
-      <svg class="mini-sunflower" viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r="16" fill="#3b1d0e"/>
-        <g fill="#ffb300">
-          <ellipse cx="50" cy="18" rx="7" ry="16"/>
-          <ellipse cx="50" cy="82" rx="7" ry="16"/>
-          <ellipse cx="18" cy="50" rx="16" ry="7"/>
-          <ellipse cx="82" cy="50" rx="16" ry="7"/>
-          <ellipse cx="27" cy="27" rx="7" ry="16" transform="rotate(-45 27 27)"/>
-          <ellipse cx="73" cy="73" rx="7" ry="16" transform="rotate(-45 73 73)"/>
-          <ellipse cx="27" cy="73" rx="7" ry="16" transform="rotate(45 27 73)"/>
-          <ellipse cx="73" cy="27" rx="7" ry="16" transform="rotate(45 73 27)"/>
-        </g>
-      </svg>
-      <svg class="mini-sunflower" viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r="16" fill="#3b1d0e"/>
-        <g fill="#ffc107">
-          <ellipse cx="50" cy="18" rx="7" ry="16"/>
-          <ellipse cx="50" cy="82" rx="7" ry="16"/>
-          <ellipse cx="18" cy="50" rx="16" ry="7"/>
-          <ellipse cx="82" cy="50" rx="16" ry="7"/>
-          <ellipse cx="27" cy="27" rx="7" ry="16" transform="rotate(-45 27 27)"/>
-          <ellipse cx="73" cy="73" rx="7" ry="16" transform="rotate(-45 73 73)"/>
-          <ellipse cx="27" cy="73" rx="7" ry="16" transform="rotate(45 27 73)"/>
-          <ellipse cx="73" cy="27" rx="7" ry="16" transform="rotate(45 73 27)"/>
-        </g>
-      </svg>
-      <svg class="mini-sunflower" viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r="16" fill="#3b1d0e"/>
-        <g fill="#ffb300">
-          <ellipse cx="50" cy="18" rx="7" ry="16"/>
-          <ellipse cx="50" cy="82" rx="7" ry="16"/>
-          <ellipse cx="18" cy="50" rx="16" ry="7"/>
-          <ellipse cx="82" cy="50" rx="16" ry="7"/>
-          <ellipse cx="27" cy="27" rx="7" ry="16" transform="rotate(-45 27 27)"/>
-          <ellipse cx="73" cy="73" rx="7" ry="16" transform="rotate(-45 73 73)"/>
-          <ellipse cx="27" cy="73" rx="7" ry="16" transform="rotate(45 27 73)"/>
-          <ellipse cx="73" cy="27" rx="7" ry="16" transform="rotate(45 73 27)"/>
-        </g>
-      </svg>
-    </div>
+    <h2>Enter Your Name</h2>
+    <input type="text" id="user-name-input" class="input-field" placeholder="Type here..." onkeypress="handleKeyPress(event)" />
+    <button class="btn-glow" onclick="startGreeting()">Continue ✨</button>
 
-    <button class="btn-glow" onclick="startGreeting()">Celebrate 🎉</button>
+    <div id="sunflowers-garden" class="sunflowers-bloom-wrapper">
+      <svg class="mini-sunflower" viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#3b1d00"/><path d="M50 10 L55 32 L50 30 L45 32 Z" fill="#ffb700"/><path d="M50 90 L55 68 L50 70 L45 68 Z" fill="#ffb700"/><path d="M10 50 L32 55 L30 50 L32 45 Z" fill="#ffb700"/><path d="M90 50 L68 55 L70 50 L68 45 Z" fill="#ffb700"/><path d="M22 22 L40 38 L36 36 L38 40 Z" fill="#ffa000"/><path d="M78 78 L60 62 L64 64 L62 60 Z" fill="#ffa000"/><path d="M22 78 L38 60 L36 64 L40 62 Z" fill="#ffa000"/><path d="M78 22 L60 38 L64 36 L62 40 Z" fill="#ffa000"/></svg>
+      <svg class="mini-sunflower" viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#3b1d00"/><path d="M50 10 L55 32 L50 30 L45 32 Z" fill="#ffb700"/><path d="M50 90 L55 68 L50 70 L45 68 Z" fill="#ffb700"/><path d="M10 50 L32 55 L30 50 L32 45 Z" fill="#ffb700"/><path d="M90 50 L68 55 L70 50 L68 45 Z" fill="#ffb700"/><path d="M22 22 L40 38 L36 36 L38 40 Z" fill="#ffa000"/><path d="M78 78 L60 62 L64 64 L62 60 Z" fill="#ffa000"/><path d="M22 78 L38 60 L36 64 L40 62 Z" fill="#ffa000"/><path d="M78 22 L60 38 L64 36 L62 40 Z" fill="#ffa000"/></svg>
+      <svg class="mini-sunflower" viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#3b1d00"/><path d="M50 10 L55 32 L50 30 L45 32 Z" fill="#ffb700"/><path d="M50 90 L55 68 L50 70 L45 68 Z" fill="#ffb700"/><path d="M10 50 L32 55 L30 50 L32 45 Z" fill="#ffb700"/><path d="M90 50 L68 55 L70 50 L68 45 Z" fill="#ffb700"/><path d="M22 22 L40 38 L36 36 L38 40 Z" fill="#ffa000"/><path d="M78 78 L60 62 L64 64 L62 60 Z" fill="#ffa000"/><path d="M22 78 L38 60 L36 64 L40 62 Z" fill="#ffa000"/><path d="M78 22 L60 38 L64 36 L62 40 Z" fill="#ffa000"/></svg>
+      <svg class="mini-sunflower" viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#3b1d00"/><path d="M50 10 L55 32 L50 30 L45 32 Z" fill="#ffb700"/><path d="M50 90 L55 68 L50 70 L45 68 Z" fill="#ffb700"/><path d="M10 50 L32 55 L30 50 L32 45 Z" fill="#ffb700"/><path d="M90 50 L68 55 L70 50 L68 45 Z" fill="#ffb700"/><path d="M22 22 L40 38 L36 36 L38 40 Z" fill="#ffa000"/><path d="M78 78 L60 62 L64 64 L62 60 Z" fill="#ffa000"/><path d="M22 78 L38 60 L36 64 L40 62 Z" fill="#ffa000"/><path d="M78 22 L60 38 L64 36 L62 40 Z" fill="#ffa000"/></svg>
+      <svg class="mini-sunflower" viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#3b1d00"/><path d="M50 10 L55 32 L50 30 L45 32 Z" fill="#ffb700"/><path d="M50 90 L55 68 L50 70 L45 68 Z" fill="#ffb700"/><path d="M10 50 L32 55 L30 50 L32 45 Z" fill="#ffb700"/><path d="M90 50 L68 55 L70 50 L68 45 Z" fill="#ffb700"/><path d="M22 22 L40 38 L36 36 L38 40 Z" fill="#ffa000"/><path d="M78 78 L60 62 L64 64 L62 60 Z" fill="#ffa000"/><path d="M22 78 L38 60 L36 64 L40 62 Z" fill="#ffa000"/><path d="M78 22 L60 38 L64 36 L62 40 Z" fill="#ffa000"/></svg>
+      <svg class="mini-sunflower" viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#3b1d00"/><path d="M50 10 L55 32 L50 30 L45 32 Z" fill="#ffb700"/><path d="M50 90 L55 68 L50 70 L45 68 Z" fill="#ffb700"/><path d="M10 50 L32 55 L30 50 L32 45 Z" fill="#ffb700"/><path d="M90 50 L68 55 L70 50 L68 45 Z" fill="#ffb700"/><path d="M22 22 L40 38 L36 36 L38 40 Z" fill="#ffa000"/><path d="M78 78 L60 62 L64 64 L62 60 Z" fill="#ffa000"/><path d="M22 78 L38 60 L36 64 L40 62 Z" fill="#ffa000"/><path d="M78 22 L60 38 L64 36 L62 40 Z" fill="#ffa000"/></svg>
+    </div>
   </section>
 
-  <!-- STEP 2: Multilingual Typewriter -->
+  <!-- STEP 2: MULTILINGUAL GREETING -->
   <section id="step-greeting" class="fullpage-section hidden">
     <div class="greeting-container">
-      <h2 class="hb-glow-text">
-        <span id="typewriter-text"></span><span class="cursor"></span>
-      </h2>
-      <h1 id="user-name-display" class="fixed-name"></h1>
-      <button class="btn-glow" onclick="goToLightsStep()">Open Surprise 🎁</button>
+      <div class="hb-glow-text"><span id="typewriter-text"></span><span class="cursor"></span></div>
+      <div id="user-name-display" class="fixed-name">Star</div>
+      <button class="btn-glow" onclick="goToLightsStep()">Light Up The Party 💡</button>
     </div>
   </section>
 
-  <!-- STEP 3: Lights Prompt -->
+  <!-- STEP 3: LIGHTS STEP -->
   <section id="step-lights" class="fullpage-section hidden">
-    <h2>Set the Celebration Mood! ✨</h2>
-    <p style="color: #ffb3b8; font-size: 1.15rem; margin-bottom: 1.5rem; text-align: center;">
-      Tap below to illuminate the room before your cake arrives!
-    </p>
-    <button class="btn-glow" onclick="turnOnLightsAndShowCake()">Turn On Lights ✨</button>
+    <h2>Ready to celebrate?</h2>
+    <button class="btn-glow" onclick="turnOnLightsAndShowCake()">Turn On Lights & Bring Cake 🎂</button>
   </section>
 
-  <!-- STEP 4: Interactive Cake Page -->
+  <!-- STEP 4: CAKE & WISH -->
   <section id="step-main" class="fullpage-section hidden">
-    <h2 id="welcome-header" style="font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900; text-shadow: 0 0 25px #ff3344;"></h2>
-    <p class="wish-text">Make a wish and blow out the candles! 🕯️</p>
-
-    <div class="cake-container" onclick="blowCandles()">
+    <h2 id="welcome-header">Happy Birthday! 🎉</h2>
+    
+    <div class="cake-container">
       <svg class="cake" viewBox="0 0 200 200">
-        <ellipse cx="100" cy="170" rx="85" ry="18" fill="#1f0305" stroke="#4a0008" stroke-width="2"/>
-        <ellipse cx="100" cy="168" rx="75" ry="14" fill="#380207"/>
+        <!-- Cake Base -->
+        <path d="M 20 160 Q 100 180 180 160 L 180 110 Q 100 130 20 110 Z" fill="#80000d"/>
+        <path d="M 20 110 Q 100 130 180 110 L 180 75 Q 100 95 20 75 Z" fill="#b30012"/>
+        <ellipse cx="100" cy="75" rx="80" ry="20" fill="#e60017"/>
         
-        <path d="M 30 120 L 30 155 Q 100 180 170 155 L 170 120 Z" fill="#2b0005"/>
-        <ellipse cx="100" cy="120" rx="70" ry="15" fill="#4d000a"/>
-        
-        <path d="M 30 120 Q 100 135 170 120 Q 170 110 170 100 Q 100 115 30 100 Z" fill="#ff3344"/>
-        
-        <path d="M 35 75 L 35 105 Q 100 125 165 105 L 165 75 Z" fill="#2b0005"/>
-        <ellipse cx="100" cy="75" rx="65" ry="14" fill="#80000e"/>
-
-        <path d="M 35 75 Q 45 90 55 75 Q 65 95 75 75 Q 85 90 95 75 Q 105 95 115 75 Q 125 90 135 75 Q 145 95 155 75 Q 165 85 165 75 Z" fill="#ffffff"/>
+        <!-- Frosting Drips -->
+        <path d="M 20 75 Q 30 90 40 75 Q 50 95 60 75 Q 70 90 80 75 Q 90 95 100 75 Q 110 90 120 75 Q 130 95 140 75 Q 150 90 160 75 Q 170 95 180 75 Z" fill="#ffffff"/>
 
         <!-- Lit Candles -->
         <rect x="65" y="45" width="8" height="32" rx="3" fill="#ff4d5a"/>
@@ -834,6 +753,7 @@
     </div>
 
     <button id="blow-btn" class="btn-glow" onclick="blowCandles()">Blow Out Candles 🎂</button>
+    <p class="wish-text"></p>
 
     <div class="scroll-hint-prompt">
       <span>Scroll down for more</span> <i class="fa-solid fa-chevron-down"></i>
@@ -883,10 +803,12 @@
           </div>
 
           <div class="audio-player-controls">
-            <div class="track-title" id="track-name">Khat - Navjot Ahuja</div>
+            <div class="track-title" id="track-name">Navjot Ahuja - Khat</div>
             
+            <!-- White Glow & Celestial Particle Timeline -->
             <div class="progress-bar-wrap" id="progress-container" onclick="seekTrack(event)">
               <div class="progress-bar-fill" id="progress-bar-fill"></div>
+              <canvas class="particle-canvas" id="timeline-particle-canvas"></canvas>
             </div>
 
             <div class="time-indicators">
@@ -1053,39 +975,12 @@
     let isPlaying = false;
     let currentTrackIdx = 0;
 
-    // IMPORTANT: Replace 'YOUR_GITHUB_USERNAME' and 'YOUR_REPO_NAME' with your repository info!
-    const GITHUB_AUDIO_BASE = "https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME/main/audio/";
-
+    // Relative path to local GitHub project folder "audio"
     const playlist = [
       { 
         title: "Khat (Official Audio)", 
         artist: "Navjot Ahuja", 
-        src: GITHUB_AUDIO_BASE + "Navjot%20Ahuja%20-%20Khat%20(Official%20Audio)%20.mp3" 
-      },
-      { 
-        title: "Space Song", 
-        artist: "Beach House", 
-        src: "" 
-      },
-      { 
-        title: "PPP", 
-        artist: "Beach House", 
-        src: "" 
-      },
-      { 
-        title: "Cigarette Daydreams", 
-        artist: "Cage The Elephant", 
-        src: "" 
-      },
-      { 
-        title: "Chamber Of Reflection", 
-        artist: "Mac DeMarco", 
-        src: "" 
-      },
-      { 
-        title: "505", 
-        artist: "Arctic Monkeys", 
-        src: "" 
+        src: "audio/Navjot Ahuja - Khat (Official Audio) .mp3" 
       }
     ];
 
@@ -1097,11 +992,11 @@
       "お誕生日おめでとう,",
       "जन्मदिन की शुभकामनाएं,",
       "Buon Compleanno,",
-      "생일 축하해요,",
+      "생일 축हा해요,",
       "Feliz Aniversário,"
     ];
 
-    // Render initial playlist elements dynamically
+    // Render playlist elements dynamically
     function renderPlaylistUI() {
       const listContainer = document.getElementById("song-list-items");
       listContainer.innerHTML = "";
@@ -1116,7 +1011,7 @@
             <span class="song-name">${track.title}</span>
             <span class="song-artist">${track.artist}</span>
           </div>
-          <i class="fa-solid fa-play play-icon-small"></i>
+          <i class="fa-solid fa-${idx === currentTrackIdx && isPlaying ? 'pause' : 'play'} play-icon-small"></i>
         `;
         listContainer.appendChild(li);
       });
@@ -1266,6 +1161,55 @@
 
     observer.observe(musicSection);
 
+    /* CELESTIAL PARTICLE PROGRESS BAR ENGINE */
+    const pCanvas = document.getElementById("timeline-particle-canvas");
+    const pCtx = pCanvas.getContext("2d");
+    const pContainer = document.getElementById("progress-container");
+    let celestialParticles = [];
+
+    function resizeParticleCanvas() {
+      pCanvas.width = pContainer.clientWidth;
+      pCanvas.height = pContainer.clientHeight;
+    }
+    window.addEventListener("resize", resizeParticleCanvas);
+
+    function spawnCelestialParticles(frontX) {
+      for (let i = 0; i < 3; i++) {
+        celestialParticles.push({
+          x: frontX,
+          y: Math.random() * pCanvas.height,
+          vx: (Math.random() - 0.5) * 1.5,
+          vy: (Math.random() - 0.5) * 1.5,
+          size: Math.random() * 2.5 + 1,
+          alpha: 1
+        });
+      }
+    }
+
+    function renderCelestialParticles() {
+      pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+      for (let i = celestialParticles.length - 1; i >= 0; i--) {
+        let p = celestialParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= 0.025;
+
+        if (p.alpha <= 0) {
+          celestialParticles.splice(i, 1);
+          continue;
+        }
+
+        pCtx.beginPath();
+        pCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        pCtx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
+        pCtx.shadowBlur = 8;
+        pCtx.shadowColor = "#ffffff";
+        pCtx.fill();
+      }
+      requestAnimationFrame(renderCelestialParticles);
+    }
+    renderCelestialParticles();
+
     /* AUDIO PLAYER HANDLERS */
     function formatTime(seconds) {
       if (isNaN(seconds)) return "0:00";
@@ -1276,58 +1220,45 @@
 
     function updateTrackDisplay() {
       const track = playlist[currentTrackIdx];
-      document.getElementById("track-name").innerText = `${track.title} - ${track.artist}`;
-
+      document.getElementById("track-name").innerText = `${track.artist} - ${track.title}`;
+      
+      audioPlayer.src = track.src;
+      audioPlayer.load();
       renderPlaylistUI();
-
-      if (track.src && track.src !== "") {
-        audioPlayer.src = track.src;
-        audioPlayer.load();
-      }
     }
 
     function togglePlay() {
-      const track = playlist[currentTrackIdx];
       const vinyl = document.getElementById("vinyl-disc");
       const playBtn = document.getElementById("play-toggle-btn");
 
       if (!isPlaying) {
-        if (track.src && track.src !== "") {
-          if (!audioPlayer.src || audioPlayer.src === "") {
-            audioPlayer.src = track.src;
-          }
-          audioPlayer.play().then(() => {
-            isPlaying = true;
-            vinyl.classList.add("spinning");
-            playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
-          }).catch(err => {
-            console.warn("Audio play prevented or source link missing:", err);
-            // Fallback UI spin mode if audio is blocked
-            isPlaying = true;
-            vinyl.classList.add("spinning");
-            playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
-          });
-        } else {
-          // If demo song has no active audio src
+        if (!audioPlayer.src || audioPlayer.src === "" || audioPlayer.src.endsWith("/")) {
+          audioPlayer.src = playlist[currentTrackIdx].src;
+        }
+        audioPlayer.play().then(() => {
           isPlaying = true;
           vinyl.classList.add("spinning");
           playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
-        }
+          renderPlaylistUI();
+        }).catch(err => {
+          console.warn("Audio play prevented:", err);
+        });
       } else {
         audioPlayer.pause();
         isPlaying = false;
         vinyl.classList.remove("spinning");
         playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+        renderPlaylistUI();
       }
     }
 
     function selectTrack(idx) {
       currentTrackIdx = idx;
       updateTrackDisplay();
-      if (isPlaying) {
-        audioPlayer.play().catch(e => console.warn(e));
-      } else {
+      if (!isPlaying) {
         togglePlay();
+      } else {
+        audioPlayer.play().catch(e => console.warn(e));
       }
     }
 
@@ -1358,10 +1289,16 @@
     /* Audio Progress Updates */
     audioPlayer.addEventListener("timeupdate", () => {
       if (audioPlayer.duration) {
+        if (pCanvas.width === 0) resizeParticleCanvas();
         const pct = (audioPlayer.currentTime / audioPlayer.duration) * 100;
         document.getElementById("progress-bar-fill").style.width = `${pct}%`;
         document.getElementById("time-current").innerText = formatTime(audioPlayer.currentTime);
         document.getElementById("time-duration").innerText = formatTime(audioPlayer.duration);
+
+        if (isPlaying) {
+          const frontX = (pct / 100) * pCanvas.width;
+          spawnCelestialParticles(frontX);
+        }
       }
     });
 
@@ -1369,8 +1306,8 @@
       nextTrack();
     });
 
-    // Initialize playlist on page load
-    renderPlaylistUI();
+    // Initialize initial track and playlist UI
+    updateTrackDisplay();
   </script>
 </body>
 </html>
