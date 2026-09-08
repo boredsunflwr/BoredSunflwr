@@ -1287,16 +1287,41 @@
     artist: "Navjot Ahuja",
     src: "audio/Navjot%20Ahuja%20-%20Khat%20(Official%20Audio)%20.mp3"
   },
+  {
+    title: "PPP",
+    artist: "Beach House",
+    src: "audio/song2.mp3"
+  },
+  {
+    title: "Levitation",
+    artist: "Beach House",
+    src: "audio/song3.mp3"
+  },
+  {
+    title: "Cigarette Daydreams",
+    artist: "Cage The Elephant",
+    src: "audio/song4.mp3"
+  },
+  {
+    title: "Chamber Of Reflection",
+    artist: "Mac DeMarco",
+    src: "audio/song5.mp3"
+  },
+  {
+    title: "505",
+    artist: "Arctic Monkeys",
+    src: "audio/song6.mp3"
+  }
+];
 
-      const items = document.querySelectorAll(".song-item");
-      items.forEach((item, index) => {
-        if (index === currentTrackIdx) {
-          item.classList.add("active-song");
-        } else {
-          item.classList.remove("active-song");
-        }
-      });
-    }
+const items = document.querySelectorAll(".song-item");
+items.forEach((item, index) => {
+  if (index === currentTrackIdx) {
+    item.classList.add("active-song");
+  } else {
+    item.classList.remove("active-song");
+  }
+});
   </script>
 </body>
 </html>
