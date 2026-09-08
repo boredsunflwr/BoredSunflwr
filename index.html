@@ -39,7 +39,7 @@
       position: relative;
     }
 
-    /* Dynamic Sleek Cursor Dot (28px) */
+    /* Custom Red / Ink Black Cursor Dot */
     .custom-cursor-dot {
       position: fixed;
       top: 0;
@@ -130,7 +130,6 @@
       filter: drop-shadow(0 0 10px rgba(255, 191, 0, 0.6));
     }
 
-    /* Staggered Blooming Timing */
     .mini-sunflower:nth-child(1) { animation-delay: 0.2s; }
     .mini-sunflower:nth-child(2) { animation-delay: 0.4s; }
     .mini-sunflower:nth-child(3) { animation-delay: 0.6s; }
@@ -139,18 +138,9 @@
     .mini-sunflower:nth-child(6) { animation-delay: 1.2s; }
 
     @keyframes bloomIn {
-      0% {
-        opacity: 0;
-        transform: scale(0) rotate(-60deg);
-      }
-      70% {
-        opacity: 1;
-        transform: scale(1.15) rotate(10deg);
-      }
-      100% {
-        opacity: 0.95;
-        transform: scale(1) rotate(0deg);
-      }
+      0% { opacity: 0; transform: scale(0) rotate(-60deg); }
+      70% { opacity: 1; transform: scale(1.15) rotate(10deg); }
+      100% { opacity: 0.95; transform: scale(1) rotate(0deg); }
     }
 
     /* Festoon String Lights */
@@ -503,21 +493,73 @@
       font-size: 0.9rem;
       color: #ffb3b8;
       letter-spacing: 1px;
+      text-align: center;
     }
 
+    /* GLOWING TIMELINE & PROGRESS BAR */
     .progress-bar-wrap {
       width: 100%;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 2px;
-      overflow: hidden;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+      position: relative;
+      overflow: visible;
+      cursor: pointer !important;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.8);
     }
 
     .progress-bar-fill {
-      width: 35%;
+      width: 0%;
       height: 100%;
-      background: #ff4d5a;
-      box-shadow: 0 0 12px #ff4d5a;
+      background: linear-gradient(90deg, #ff1a40, #ff5266, #ff7082);
+      border-radius: 4px;
+      position: relative;
+      transition: width 0.1s linear;
+    }
+
+    /* Dynamic Glow effect on playing */
+    .progress-bar-wrap.is-playing .progress-bar-fill {
+      box-shadow: 0 0 12px #ff3344, 0 0 24px rgba(255, 51, 68, 0.8);
+      animation: timelinePulse 1.8s infinite alternate ease-in-out;
+    }
+
+    @keyframes timelinePulse {
+      0% {
+        box-shadow: 0 0 10px #ff1a40, 0 0 20px rgba(255, 26, 64, 0.6);
+      }
+      100% {
+        box-shadow: 0 0 18px #ff4d66, 0 0 35px rgba(255, 77, 102, 0.95);
+      }
+    }
+
+    /* Glow Head Dot at timeline tip */
+    .progress-glow-head {
+      position: absolute;
+      right: -5px;
+      top: 50%;
+      transform: translateY(-50%) scale(0);
+      width: 14px;
+      height: 14px;
+      background: #ffffff;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #ffffff, 0 0 20px #ff3344, 0 0 30px #ff3344;
+      transition: transform 0.2s ease;
+      pointer-events: none;
+    }
+
+    .progress-bar-wrap.is-playing .progress-glow-head {
+      transform: translateY(-50%) scale(1);
+    }
+
+    .time-indicators {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.6);
+      margin-top: -2px;
     }
 
     .controls-row {
@@ -880,10 +922,18 @@
           </div>
 
           <div class="audio-player-controls">
-            <div class="track-title" id="track-name">Space Song - Beach House</div>
+            <div class="track-title" id="track-name">Khat - Navjot Ahuja</div>
             
-            <div class="progress-bar-wrap">
-              <div class="progress-bar-fill"></div>
+            <!-- GLOWING TIMELINE WRAPPER -->
+            <div class="progress-bar-wrap" id="progress-container" onclick="seekTrack(event)">
+              <div class="progress-bar-fill" id="progress-bar-fill">
+                <div class="progress-glow-head"></div>
+              </div>
+            </div>
+
+            <div class="time-indicators">
+              <span id="time-current">0:00</span>
+              <span id="time-duration">0:00</span>
             </div>
 
             <div class="controls-row">
@@ -901,48 +951,7 @@
           </div>
 
           <ul class="song-list" id="song-list-items">
-            <li class="song-item active-song" onclick="selectTrack(0)">
-              <div class="song-info">
-                <span class="song-name">Space Song</span>
-                <span class="song-artist">Beach House</span>
-              </div>
-              <i class="fa-solid fa-play play-icon-small"></i>
-            </li>
-            <li class="song-item" onclick="selectTrack(1)">
-              <div class="song-info">
-                <span class="song-name">PPP</span>
-                <span class="song-artist">Beach House</span>
-              </div>
-              <i class="fa-solid fa-play play-icon-small"></i>
-            </li>
-            <li class="song-item" onclick="selectTrack(2)">
-              <div class="song-info">
-                <span class="song-name">Levitation</span>
-                <span class="song-artist">Beach House</span>
-              </div>
-              <i class="fa-solid fa-play play-icon-small"></i>
-            </li>
-            <li class="song-item" onclick="selectTrack(3)">
-              <div class="song-info">
-                <span class="song-name">Cigarette Daydreams</span>
-                <span class="song-artist">Cage The Elephant</span>
-              </div>
-              <i class="fa-solid fa-play play-icon-small"></i>
-            </li>
-            <li class="song-item" onclick="selectTrack(4)">
-              <div class="song-info">
-                <span class="song-name">Chamber Of Reflection</span>
-                <span class="song-artist">Mac DeMarco</span>
-              </div>
-              <i class="fa-solid fa-play play-icon-small"></i>
-            </li>
-            <li class="song-item" onclick="selectTrack(5)">
-              <div class="song-info">
-                <span class="song-name">505</span>
-                <span class="song-artist">Arctic Monkeys</span>
-              </div>
-              <i class="fa-solid fa-play play-icon-small"></i>
-            </li>
+            <!-- Dynamic items generated via JavaScript -->
           </ul>
         </div>
 
@@ -1010,288 +1019,315 @@
 
     const NUM_NODES = 12;
     let fluidNodes = [];
-    
+
     for (let i = 0; i < NUM_NODES; i++) {
       fluidNodes.push({
-        x: window.innerWidth / 2,
-        y: window.innerHeight / 2,
-        vx: 0,
-        vy: 0,
-        radius: 45 + Math.random() * 35,
-        phase: Math.random() * Math.PI * 2,
-        wobbleSpeed: 0.03 + Math.random() * 0.04
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        vx: (Math.random() - 0.5) * 1.5,
+        vy: (Math.random() - 0.5) * 1.5,
+        radius: Math.random() * 180 + 120,
+        pulse: Math.random() * Math.PI * 2
       });
     }
 
-    function renderOrganicLiquidMask() {
+    function updateFluidMask() {
       drawTopGradientLayer();
+
       ctx.globalCompositeOperation = 'destination-out';
 
-      fluidNodes[0].x += (mouseX - fluidNodes[0].x) * 0.18;
-      fluidNodes[0].y += (mouseY - fluidNodes[0].y) * 0.18;
+      fluidNodes.forEach(node => {
+        node.x += node.vx;
+        node.y += node.vy;
 
-      for (let i = 1; i < NUM_NODES; i++) {
-        const prev = fluidNodes[i - 1];
-        const current = fluidNodes[i];
-        
-        current.x += (prev.x - current.x) * (0.28 - i * 0.015);
-        current.y += (prev.y - current.y) * (0.28 - i * 0.015);
-        current.phase += current.wobbleSpeed;
-      }
+        if (node.x < -100) node.x = window.innerWidth + 100;
+        if (node.x > window.innerWidth + 100) node.x = -100;
+        if (node.y < -100) node.y = window.innerHeight + 100;
+        if (node.y > window.innerHeight + 100) node.y = -100;
 
-      ctx.save();
-      ctx.shadowBlur = 45;
-      ctx.shadowColor = 'rgba(0, 0, 0, 1)';
-      ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+        node.pulse += 0.02;
+        const currentRadius = node.radius + Math.sin(node.pulse) * 35;
 
-      for (let i = 0; i < NUM_NODES; i++) {
-        const node = fluidNodes[i];
-        const dynamicRadius = node.radius + Math.sin(node.phase) * 12;
-        
+        const radialGrad = ctx.createRadialGradient(
+          node.x, node.y, 0,
+          node.x, node.y, currentRadius
+        );
+        radialGrad.addColorStop(0, 'rgba(0,0,0,1)');
+        radialGrad.addColorStop(0.6, 'rgba(0,0,0,0.8)');
+        radialGrad.addColorStop(1, 'rgba(0,0,0,0)');
+
+        ctx.fillStyle = radialGrad;
         ctx.beginPath();
-        ctx.arc(node.x, node.y, Math.max(10, dynamicRadius - i * 2.5), 0, Math.PI * 2);
+        ctx.arc(node.x, node.y, currentRadius, 0, Math.PI * 2);
         ctx.fill();
-      }
+      });
 
-      ctx.beginPath();
-      ctx.moveTo(fluidNodes[0].x, fluidNodes[0].y);
-      for (let i = 0; i < NUM_NODES - 1; i++) {
-        const xc = (fluidNodes[i].x + fluidNodes[i + 1].x) / 2;
-        const yc = (fluidNodes[i].y + fluidNodes[i + 1].y) / 2;
-        ctx.quadraticCurveTo(fluidNodes[i].x, fluidNodes[i].y, xc, yc);
-      }
-      ctx.lineWidth = 75;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.strokeStyle = 'rgba(0, 0, 0, 1)';
-      ctx.stroke();
-
-      ctx.restore();
-
-      requestAnimationFrame(renderOrganicLiquidMask);
+      requestAnimationFrame(updateFluidMask);
     }
-    renderOrganicLiquidMask();
+    updateFluidMask();
 
-    /* APP FLOW LOGIC */
-    let userName = "Star";
-    let langIndex = 0;
-    let charIndex = 0;
-    let isDeleting = false;
-    let typewriterTimeout = null;
-    let candlesBlown = false;
+    /* APP FLOW AND AUDIO PLAYER SYSTEM */
+    let userName = "";
     let currentStep = 1;
+
+    const songs = [
+      { name: "Khat", artist: "Navjot Ahuja", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+      { name: "Night Changes", artist: "One Direction", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+      { name: "Soft Life", artist: "Aesthetic Vibes", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" }
+    ];
+
+    let currentSongIndex = 0;
+    const audioPlayer = new Audio();
     let isPlaying = false;
-    let currentTrackIdx = 0;
 
-    const playlist = [
-      { title: "Space Song", artist: "Beach House" },
-      { title: "PPP", artist: "Beach House" },
-      { title: "Levitation", artist: "Beach House" },
-      { title: "Cigarette Daydreams", artist: "Cage The Elephant" },
-      { title: "Chamber Of Reflection", artist: "Mac DeMarco" },
-      { title: "505", artist: "Arctic Monkeys" }
-    ];
+    // Elements
+    const stepName = document.getElementById('step-name');
+    const stepGreeting = document.getElementById('step-greeting');
+    const stepLights = document.getElementById('step-lights');
+    const stepMain = document.getElementById('step-main');
+    const stepPlaylist = document.getElementById('step-playlist');
+    const cornerBackBtn = document.getElementById('corner-back-btn');
+    const lightsStrip = document.getElementById('lights-strip');
 
-    const happyBirthdayLanguages = [
-      "Happy Birthday,",
-      "¡Feliz Cumpleaños,",
-      "Joyeux Anniversaire,",
-      "Alles Gute zum Geburtstag,",
-      "お誕生日おめでとう,",
-      "जन्मदिन की शुभकामनाएं,",
-      "Buon Compleanno,",
-      "생일 축하해요,",
-      "Feliz Aniversário,"
-    ];
+    const progressBarFill = document.getElementById('progress-bar-fill');
+    const progressContainer = document.getElementById('progress-container');
+    const timeCurrent = document.getElementById('time-current');
+    const timeDuration = document.getElementById('time-duration');
+    const playToggleBtn = document.getElementById('play-toggle-btn');
+    const trackName = document.getElementById('track-name');
+    const vinylDisc = document.getElementById('vinyl-disc');
+    const songListItems = document.getElementById('song-list-items');
 
-    function handleKeyPress(event) {
-      if (event.key === "Enter") startGreeting();
+    function handleKeyPress(e) {
+      if (e.key === 'Enter') startGreeting();
     }
 
-    function startGreeting() {
-      const inputVal = document.getElementById("user-name-input").value.trim();
-      if (inputVal !== "") userName = inputVal;
-
-      // Fade out sunflowers garden smoothly before changing page
-      const sunflowers = document.getElementById("sunflowers-garden");
-      sunflowers.classList.add("fade-out");
-
-      setTimeout(() => {
-        currentStep = 2;
-        document.getElementById("step-name").classList.add("hidden");
-        document.getElementById("step-greeting").classList.remove("hidden");
-        document.getElementById("corner-back-btn").classList.remove("hidden");
-        document.getElementById("user-name-display").innerText = userName;
-
-        document.getElementById("music-taste-header").innerText = `${userName}'s Sound Track ✨`;
-
-        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-
-        langIndex = 0;
-        charIndex = 0;
-        isDeleting = false;
-        clearTimeout(typewriterTimeout);
-        typewriterLoop();
-      }, 400);
-    }
-
-    function typewriterLoop() {
-      const currentPhrase = happyBirthdayLanguages[langIndex];
-      const typewriterEl = document.getElementById("typewriter-text");
-
-      if (isDeleting) {
-        typewriterEl.textContent = currentPhrase.substring(0, charIndex - 1);
-        charIndex--;
+    function updateBackBtnVisibility() {
+      if (currentStep > 1) {
+        cornerBackBtn.classList.remove('hidden');
       } else {
-        typewriterEl.textContent = currentPhrase.substring(0, charIndex + 1);
-        charIndex++;
+        cornerBackBtn.classList.add('hidden');
       }
-
-      let typingSpeed = isDeleting ? 40 : 80;
-
-      if (!isDeleting && charIndex === currentPhrase.length) {
-        typingSpeed = 1500;
-        isDeleting = true;
-      } else if (isDeleting && charIndex === 0) {
-        isDeleting = false;
-        langIndex = (langIndex + 1) % happyBirthdayLanguages.length;
-        typingSpeed = 300;
-      }
-
-      typewriterTimeout = setTimeout(typewriterLoop, typingSpeed);
-    }
-
-    function goToLightsStep() {
-      clearTimeout(typewriterTimeout);
-      currentStep = 3;
-      document.getElementById("step-greeting").classList.add("hidden");
-      document.getElementById("step-lights").classList.remove("hidden");
-    }
-
-    function turnOnLightsAndShowCake() {
-      document.body.classList.add("lights-active");
-      document.getElementById("lights-strip").classList.add("on");
-
-      confetti({ particleCount: 90, spread: 80, origin: { y: 0.2 } });
-
-      setTimeout(() => {
-        currentStep = 4;
-        document.getElementById("step-lights").classList.add("hidden");
-        document.getElementById("step-main").classList.remove("hidden");
-        document.getElementById("step-playlist").classList.remove("hidden");
-        document.getElementById("welcome-header").innerText = `Happy Birthday, ${userName}! 🎉`;
-
-        confetti({ particleCount: 140, spread: 100, origin: { y: 0.5 } });
-      }, 700);
     }
 
     function handleCornerBack() {
-      if (currentStep === 4) {
-        document.getElementById("step-main").classList.add("hidden");
-        document.getElementById("step-playlist").classList.add("hidden");
-        document.getElementById("step-lights").classList.remove("hidden");
-        document.getElementById("lights-strip").classList.remove("on");
-        document.body.classList.remove("lights-active");
-        currentStep = 3;
-      } else if (currentStep === 3) {
-        document.getElementById("step-lights").classList.add("hidden");
-        document.getElementById("step-greeting").classList.remove("hidden");
-        currentStep = 2;
-        langIndex = 0;
-        charIndex = 0;
-        isDeleting = false;
-        clearTimeout(typewriterTimeout);
-        typewriterLoop();
-      } else if (currentStep === 2) {
-        clearTimeout(typewriterTimeout);
-        document.getElementById("step-greeting").classList.add("hidden");
-        document.getElementById("corner-back-btn").classList.add("hidden");
-        
-        // Reset sunflowers bloom garden on return to step 1
-        const sunflowers = document.getElementById("sunflowers-garden");
-        sunflowers.classList.remove("fade-out");
-        
-        document.getElementById("step-name").classList.remove("hidden");
+      if (currentStep === 2) {
+        stepGreeting.classList.add('hidden');
+        stepName.classList.remove('hidden');
         currentStep = 1;
+      } else if (currentStep === 3) {
+        stepLights.classList.add('hidden');
+        stepGreeting.classList.remove('hidden');
+        currentStep = 2;
+      } else if (currentStep === 4) {
+        stepMain.classList.add('hidden');
+        stepLights.classList.remove('hidden');
+        currentStep = 3;
+      }
+      updateBackBtnVisibility();
+    }
+
+    // Step 1 -> 2
+    function startGreeting() {
+      const input = document.getElementById('user-name-input').value.trim();
+      userName = input || "Birthday Star";
+      
+      document.getElementById('user-name-display').textContent = userName;
+      document.getElementById('welcome-header').textContent = `Happy Birthday, ${userName}! 🎉`;
+      document.getElementById('music-taste-header').textContent = `${userName}'s Sound Track`;
+
+      stepName.classList.add('hidden');
+      stepGreeting.classList.remove('hidden');
+      currentStep = 2;
+      updateBackBtnVisibility();
+
+      startMultilingualTypewriter();
+    }
+
+    // Multilingual Typewriter
+    const greetings = ["Happy Birthday", "Jan जन्मदिन Mubarak", "Joyeux Anniversaire", "Feliz Cumpleaños", "Alles Gute zum Geburtstag"];
+    let greetingIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+
+    function startMultilingualTypewriter() {
+      const target = document.getElementById('typewriter-text');
+      const currentGreeting = greetings[greetingIndex];
+
+      if (isDeleting) {
+        target.textContent = currentGreeting.substring(0, charIndex - 1);
+        charIndex--;
+      } else {
+        target.textContent = currentGreeting.substring(0, charIndex + 1);
+        charIndex++;
+      }
+
+      let speed = isDeleting ? 40 : 80;
+
+      if (!isDeleting && charIndex === currentGreeting.length) {
+        speed = 1500;
+        isDeleting = true;
+      } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        greetingIndex = (greetingIndex + 1) % greetings.length;
+        speed = 400;
+      }
+
+      if (currentStep === 2) {
+        setTimeout(startMultilingualTypewriter, speed);
       }
     }
 
-    function blowCandles() {
-      if (candlesBlown) return;
-      candlesBlown = true;
-
-      document.getElementById("flame1").classList.add("blown-out");
-      document.getElementById("flame2").classList.add("blown-out");
-      document.getElementById("flame3").classList.add("blown-out");
-
-      document.querySelector(".wish-text").innerText = "Your wish has been made! ✨";
-      document.getElementById("blow-btn").innerText = "Wish Made! 🎉";
-
-      confetti({ particleCount: 200, spread: 120, origin: { y: 0.6 } });
+    // Step 2 -> 3
+    function goToLightsStep() {
+      stepGreeting.classList.add('hidden');
+      stepLights.classList.remove('hidden');
+      currentStep = 3;
+      updateBackBtnVisibility();
     }
 
-    /* Scroll Observer for Music reveal */
-    const musicSection = document.getElementById('step-playlist');
-    const lightsStrip = document.getElementById('lights-strip');
-    const musicContainer = document.getElementById('music-dual-container');
+    // Step 3 -> 4
+    function turnOnLightsAndShowCake() {
+      lightsStrip.classList.add('on');
+      document.body.classList.add('lights-active');
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          lightsStrip.classList.add('scrolled-hidden');
-          musicContainer.classList.add('revealed');
-        } else {
-          lightsStrip.classList.remove('scrolled-hidden');
-          musicContainer.classList.remove('revealed');
-        }
+      stepLights.classList.add('hidden');
+      stepMain.classList.remove('hidden');
+      stepPlaylist.classList.remove('hidden');
+      currentStep = 4;
+      updateBackBtnVisibility();
+
+      initPlaylist();
+      loadTrack(0);
+    }
+
+    // Candle Blowing Logic
+    function blowCandles() {
+      document.querySelectorAll('.flame').forEach(f => f.classList.add('blown-out'));
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
       });
-    }, { threshold: 0.25 });
+    }
 
-    observer.observe(musicSection);
+    // Scroll reveal music section animation
+    window.addEventListener('scroll', () => {
+      const dualContainer = document.getElementById('music-dual-container');
+      if (!dualContainer) return;
 
-    /* Audio Player Controls */
+      const rect = dualContainer.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.85) {
+        dualContainer.classList.add('revealed');
+      }
+
+      if (window.scrollY > 100) {
+        lightsStrip.classList.add('scrolled-hidden');
+      } else {
+        lightsStrip.classList.remove('scrolled-hidden');
+      }
+    });
+
+    /* AUDIO ENGINE INTEGRATION */
+    function formatTime(seconds) {
+      if (isNaN(seconds)) return "0:00";
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60).toString().padStart(2, '0');
+      return `${mins}:${secs}`;
+    }
+
+    function initPlaylist() {
+      songListItems.innerHTML = "";
+      songs.forEach((song, idx) => {
+        const li = document.createElement('li');
+        li.className = `song-item ${idx === currentSongIndex ? 'active-song' : ''}`;
+        li.onclick = () => selectSong(idx);
+        li.innerHTML = `
+          <div class="song-info">
+            <span class="song-name">${song.name}</span>
+            <span class="song-artist">${song.artist}</span>
+          </div>
+          <i class="fa-solid ${idx === currentSongIndex && isPlaying ? 'fa-pause' : 'fa-play'} play-icon-small"></i>
+        `;
+        songListItems.appendChild(li);
+      });
+    }
+
+    function loadTrack(index) {
+      currentSongIndex = index;
+      const song = songs[index];
+      trackName.textContent = `${song.name} - ${song.artist}`;
+      audioPlayer.src = song.src;
+      initPlaylist();
+    }
+
     function togglePlay() {
-      isPlaying = !isPlaying;
-      const vinyl = document.getElementById("vinyl-disc");
-      const playBtn = document.getElementById("play-toggle-btn");
+      if (!audioPlayer.src) loadTrack(currentSongIndex);
 
       if (isPlaying) {
-        vinyl.classList.add("spinning");
-        playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+        audioPlayer.pause();
       } else {
-        vinyl.classList.remove("spinning");
-        playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+        audioPlayer.play();
       }
     }
 
-    function selectTrack(idx) {
-      currentTrackIdx = idx;
-      updateTrackDisplay();
-      if (!isPlaying) togglePlay();
-    }
+    audioPlayer.addEventListener('play', () => {
+      isPlaying = true;
+      playToggleBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+      vinylDisc.classList.add('spinning');
+      progressContainer.classList.add('is-playing');
+      initPlaylist();
+    });
 
-    function nextTrack() {
-      currentTrackIdx = (currentTrackIdx + 1) % playlist.length;
-      updateTrackDisplay();
+    audioPlayer.addEventListener('pause', () => {
+      isPlaying = false;
+      playToggleBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+      vinylDisc.classList.remove('spinning');
+      progressContainer.classList.remove('is-playing');
+      initPlaylist();
+    });
+
+    audioPlayer.addEventListener('timeupdate', () => {
+      if (audioPlayer.duration) {
+        const pct = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+        progressBarFill.style.width = `${pct}%`;
+        timeCurrent.textContent = formatTime(audioPlayer.currentTime);
+        timeDuration.textContent = formatTime(audioPlayer.duration);
+      }
+    });
+
+    audioPlayer.addEventListener('ended', () => {
+      nextTrack();
+    });
+
+    function seekTrack(e) {
+      const rect = progressContainer.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const width = rect.width;
+      if (audioPlayer.duration) {
+        audioPlayer.currentTime = (clickX / width) * audioPlayer.duration;
+      }
     }
 
     function prevTrack() {
-      currentTrackIdx = (currentTrackIdx - 1 + playlist.length) % playlist.length;
-      updateTrackDisplay();
+      currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+      loadTrack(currentSongIndex);
+      audioPlayer.play();
     }
 
-    function updateTrackDisplay() {
-      const track = playlist[currentTrackIdx];
-      document.getElementById("track-name").innerText = `${track.title} - ${track.artist}`;
+    function nextTrack() {
+      currentSongIndex = (currentSongIndex + 1) % songs.length;
+      loadTrack(currentSongIndex);
+      audioPlayer.play();
+    }
 
-      const items = document.querySelectorAll(".song-item");
-      items.forEach((item, index) => {
-        if (index === currentTrackIdx) {
-          item.classList.add("active-song");
-        } else {
-          item.classList.remove("active-song");
-        }
-      });
+    function selectSong(index) {
+      if (currentSongIndex === index) {
+        togglePlay();
+      } else {
+        loadTrack(index);
+        audioPlayer.play();
+      }
     }
   </script>
 </body>
