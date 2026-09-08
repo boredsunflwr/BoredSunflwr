@@ -496,21 +496,60 @@
       text-align: center;
     }
 
+    /* GLOWING TIMELINE & PROGRESS BAR */
     .progress-bar-wrap {
       width: 100%;
-      height: 6px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 3px;
-      overflow: hidden;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+      position: relative;
+      overflow: visible;
       cursor: pointer !important;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.8);
     }
 
     .progress-bar-fill {
       width: 0%;
       height: 100%;
-      background: #ff4d5a;
-      box-shadow: 0 0 12px #ff4d5a;
+      background: linear-gradient(90deg, #ff1a40, #ff5266, #ff7082);
+      border-radius: 4px;
+      position: relative;
       transition: width 0.1s linear;
+    }
+
+    /* Dynamic Glow effect on playing */
+    .progress-bar-wrap.is-playing .progress-bar-fill {
+      box-shadow: 0 0 12px #ff3344, 0 0 24px rgba(255, 51, 68, 0.8);
+      animation: timelinePulse 1.8s infinite alternate ease-in-out;
+    }
+
+    @keyframes timelinePulse {
+      0% {
+        box-shadow: 0 0 10px #ff1a40, 0 0 20px rgba(255, 26, 64, 0.6);
+      }
+      100% {
+        box-shadow: 0 0 18px #ff4d66, 0 0 35px rgba(255, 77, 102, 0.95);
+      }
+    }
+
+    /* Glow Head Dot at timeline tip */
+    .progress-glow-head {
+      position: absolute;
+      right: -5px;
+      top: 50%;
+      transform: translateY(-50%) scale(0);
+      width: 14px;
+      height: 14px;
+      background: #ffffff;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #ffffff, 0 0 20px #ff3344, 0 0 30px #ff3344;
+      transition: transform 0.2s ease;
+      pointer-events: none;
+    }
+
+    .progress-bar-wrap.is-playing .progress-glow-head {
+      transform: translateY(-50%) scale(1);
     }
 
     .time-indicators {
@@ -520,7 +559,7 @@
       font-family: 'Space Mono', monospace;
       font-size: 0.75rem;
       color: rgba(255, 255, 255, 0.6);
-      margin-top: -6px;
+      margin-top: -2px;
     }
 
     .controls-row {
@@ -885,8 +924,11 @@
           <div class="audio-player-controls">
             <div class="track-title" id="track-name">Khat - Navjot Ahuja</div>
             
+            <!-- GLOWING TIMELINE WRAPPER -->
             <div class="progress-bar-wrap" id="progress-container" onclick="seekTrack(event)">
-              <div class="progress-bar-fill" id="progress-bar-fill"></div>
+              <div class="progress-bar-fill" id="progress-bar-fill">
+                <div class="progress-glow-head"></div>
+              </div>
             </div>
 
             <div class="time-indicators">
@@ -1050,17 +1092,19 @@
 
     /* AUDIO ENGINE CONFIGURATION */
     const audioPlayer = new Audio();
+    audioPlayer.crossOrigin = "anonymous";
     let isPlaying = false;
     let currentTrackIdx = 0;
 
-    // IMPORTANT: Replace 'YOUR_GITHUB_USERNAME' and 'YOUR_REPO_NAME' with your repository info!
-    const GITHUB_AUDIO_BASE = "https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME/main/audio/";
+    // jsDelivr CDN endpoint for streaming audio reliably from GitHub
+    // Format: https://cdn.jsdelivr.net/gh/<USERNAME>/<REPO>@main/audio/<FILE_NAME>
+    const GITHUB_CDN_BASE = "https://cdn.jsdelivr.net/gh/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME@main/audio/";
 
     const playlist = [
       { 
         title: "Khat (Official Audio)", 
         artist: "Navjot Ahuja", 
-        src: GITHUB_AUDIO_BASE + "Navjot%20Ahuja%20-%20Khat%20(Official%20Audio)%20.mp3" 
+        src: GITHUB_CDN_BASE + "Navjot%20Ahuja%20-%20Khat%20(Official%20Audio)%20.mp3" 
       },
       { 
         title: "Space Song", 
@@ -1101,7 +1145,6 @@
       "Feliz Aniversário,"
     ];
 
-    // Render initial playlist elements dynamically
     function renderPlaylistUI() {
       const listContainer = document.getElementById("song-list-items");
       listContainer.innerHTML = "";
@@ -1116,7 +1159,7 @@
             <span class="song-name">${track.title}</span>
             <span class="song-artist">${track.artist}</span>
           </div>
-          <i class="fa-solid fa-play play-icon-small"></i>
+          <i class="fa-solid ${idx === currentTrackIdx && isPlaying ? 'fa-pause' : 'fa-play'} play-icon-small"></i>
         `;
         listContainer.appendChild(li);
       });
@@ -1286,38 +1329,44 @@
       }
     }
 
-    function togglePlay() {
-      const track = playlist[currentTrackIdx];
+    function setPlayingState(playing) {
+      isPlaying = playing;
       const vinyl = document.getElementById("vinyl-disc");
       const playBtn = document.getElementById("play-toggle-btn");
+      const progressWrap = document.getElementById("progress-container");
+
+      if (playing) {
+        vinyl.classList.add("spinning");
+        progressWrap.classList.add("is-playing");
+        playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+      } else {
+        vinyl.classList.remove("spinning");
+        progressWrap.classList.remove("is-playing");
+        playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+      }
+      renderPlaylistUI();
+    }
+
+    function togglePlay() {
+      const track = playlist[currentTrackIdx];
 
       if (!isPlaying) {
         if (track.src && track.src !== "") {
-          if (!audioPlayer.src || audioPlayer.src === "") {
+          if (!audioPlayer.src || audioPlayer.src === "" || audioPlayer.src !== track.src) {
             audioPlayer.src = track.src;
           }
           audioPlayer.play().then(() => {
-            isPlaying = true;
-            vinyl.classList.add("spinning");
-            playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+            setPlayingState(true);
           }).catch(err => {
-            console.warn("Audio play prevented or source link missing:", err);
-            // Fallback UI spin mode if audio is blocked
-            isPlaying = true;
-            vinyl.classList.add("spinning");
-            playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+            console.warn("Audio play prevented or link failed:", err);
+            setPlayingState(true);
           });
         } else {
-          // If demo song has no active audio src
-          isPlaying = true;
-          vinyl.classList.add("spinning");
-          playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+          setPlayingState(true);
         }
       } else {
         audioPlayer.pause();
-        isPlaying = false;
-        vinyl.classList.remove("spinning");
-        playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+        setPlayingState(false);
       }
     }
 
@@ -1325,7 +1374,7 @@
       currentTrackIdx = idx;
       updateTrackDisplay();
       if (isPlaying) {
-        audioPlayer.play().catch(e => console.warn(e));
+        audioPlayer.play().then(() => setPlayingState(true)).catch(e => console.warn(e));
       } else {
         togglePlay();
       }
@@ -1334,13 +1383,13 @@
     function nextTrack() {
       currentTrackIdx = (currentTrackIdx + 1) % playlist.length;
       updateTrackDisplay();
-      if (isPlaying) audioPlayer.play().catch(e => console.warn(e));
+      if (isPlaying) audioPlayer.play().then(() => setPlayingState(true)).catch(e => console.warn(e));
     }
 
     function prevTrack() {
       currentTrackIdx = (currentTrackIdx - 1 + playlist.length) % playlist.length;
       updateTrackDisplay();
-      if (isPlaying) audioPlayer.play().catch(e => console.warn(e));
+      if (isPlaying) audioPlayer.play().then(() => setPlayingState(true)).catch(e => console.warn(e));
     }
 
     function seekTrack(event) {
