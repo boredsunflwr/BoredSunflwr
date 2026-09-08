@@ -902,12 +902,12 @@
 
           <ul class="song-list" id="song-list-items">
             <li class="song-item active-song" onclick="selectTrack(0)">
-              <div class="song-info">
-                <span class="song-name">Space Song</span>
-                <span class="song-artist">Beach House</span>
-              </div>
-              <i class="fa-solid fa-play play-icon-small"></i>
-            </li>
+  <div class="song-info">
+    <span class="song-name">Khat</span>
+    <span class="song-artist">Navjot Ahuja</span>
+  </div>
+  <i class="fa-solid fa-play play-icon-small"></i>
+</li>
             <li class="song-item" onclick="selectTrack(1)">
               <div class="song-info">
                 <span class="song-name">PPP</span>
@@ -1281,8 +1281,12 @@
     }
 
     function updateTrackDisplay() {
-      const track = playlist[currentTrackIdx];
-      document.getElementById("track-name").innerText = `${track.title} - ${track.artist}`;
+     const playlist = [
+  {
+    title: "Khat",
+    artist: "Navjot Ahuja",
+    src: "audio/Navjot%20Ahuja%20-%20Khat%20(Official%20Audio)%20.mp3"
+  },
 
       const items = document.querySelectorAll(".song-item");
       items.forEach((item, index) => {
