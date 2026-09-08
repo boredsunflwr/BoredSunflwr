@@ -1311,23 +1311,29 @@
       }
     }
 
-    function selectTrack(idx) {
-      currentTrackIdx = idx;
-      const track = playlist[currentTrackIdx];
+function selectTrack(idx) {
+  currentTrackIdx = idx;
+  const track = playlist[currentTrackIdx];
 
-      if (audioEl && track.src) {
-        audioEl.src = track.src;
-        audioEl.play().then(() => {
-          isPlaying = true;
-          const vinyl = document.getElementById("vinyl-disc");
-          const playBtn = document.getElementById("play-toggle-btn");
-          if (vinyl) vinyl.classList.add("spinning");
-          if (playBtn) playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
-        }).catch(err => console.log("Audio play error:", err));
-      }
-
-      updateTrackDisplay();
+  if (audioEl && track.src) {
+    audioEl.src = track.src;
+    audioEl.preload = "auto";
+    audioEl.load();
+    
+    const playPromise = audioEl.play();
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        isPlaying = true;
+        const vinyl = document.getElementById("vinyl-disc");
+        const playBtn = document.getElementById("play-toggle-btn");
+        if (vinyl) vinyl.classList.add("spinning");
+        if (playBtn) playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+      }).catch(err => console.log("Audio play error:", err));
     }
+  }
+
+  updateTrackDisplay();
+}
 
     function nextTrack() {
       currentTrackIdx = (currentTrackIdx + 1) % playlist.length;
