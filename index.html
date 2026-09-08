@@ -5,274 +5,350 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Happy Birthday!</title>
   
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <!-- Canvas Confetti Library -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Outfit:wght@300;400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
-    /* BASE RESET & VARIABLE CONSTANTS */
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      user-select: none;
+      box-sizing: border-box;
+      cursor: none !important;
     }
 
-    :root {
-      --bg-dark: #050508;
-      --accent-red: #ff2a4b;
-      --accent-rose: #ff4d6d;
-      --glow-color: rgba(255, 42, 75, 0.4);
-      --glass-bg: rgba(20, 20, 25, 0.65);
-      --glass-border: rgba(255, 255, 255, 0.12);
-      --text-main: #f3f4f6;
-      --text-muted: #9ca3af;
+    html {
+      scroll-behavior: smooth;
     }
 
-    body, html {
-      width: 100%;
-      height: 100%;
-      background-color: var(--bg-dark);
-      color: var(--text-main);
-      font-family: 'Plus Jakarta Sans', sans-serif;
+    body {
+      width: 100vw;
+      min-height: 100vh;
       overflow-x: hidden;
-      cursor: none; /* Custom fluid dot cursor active */
+      overflow-y: auto;
+      background: #000000;
+      font-family: 'Outfit', sans-serif;
+      color: #ffffff;
+      position: relative;
     }
 
-    /* CUSTOM CURSOR DOT */
-    #dot-cursor {
+    /* Dynamic Sleek Cursor Dot (28px) */
+    .custom-cursor-dot {
       position: fixed;
       top: 0;
       left: 0;
-      width: 12px;
-      height: 12px;
-      background-color: #ffffff;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       pointer-events: none;
-      z-index: 99999;
+      z-index: 999999;
       transform: translate(-50%, -50%);
-      transition: width 0.2s, height 0.2s, background-color 0.2s;
-      mix-blend-mode: difference;
+      background: #ff3344;
+      box-shadow: 0 0 20px rgba(255, 51, 68, 0.9);
+      transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease-out;
+      will-change: transform, left, top;
     }
 
-    #dot-cursor.dark-mode {
-      background-color: #ff2a4b;
+    .custom-cursor-dot.dark-mode {
+      background: #000000;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.95);
     }
 
-    /* FLUID MASK CANVAS BACKDROP */
+    /* LAYER 1: Underneath Oppositional Gradient */
+    .bg-gradient-underneath {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(135deg, #e60026 0%, #7a0010 40%, #200004 70%, #000000 100%);
+      z-index: 0;
+    }
+
+    /* LAYER 2: Canvas Mask Top Gradient */
     #fluid-mask-canvas {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      z-index: 1;
       pointer-events: none;
+      z-index: 1;
     }
 
-    /* SUNFLOWERS BLOOM GARDEN BACKGROUND */
-    .sunflowers-container {
+    /* Ambient Overlay */
+    .ambient-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle at 50% 20%, rgba(255, 120, 50, 0.2) 0%, rgba(0, 0, 0, 0.85) 85%);
+      pointer-events: none;
+      z-index: 2;
+      opacity: 0;
+      transition: opacity 1.2s ease;
+    }
+
+    body.lights-active .ambient-overlay {
+      opacity: 1;
+    }
+
+    /* BLOOMING SUNFLOWERS CONTAINER FOR STEP 1 */
+    .sunflowers-bloom-wrapper {
+      width: 100%;
+      max-width: 500px;
+      height: 90px;
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 18px;
+      position: relative;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    .sunflowers-bloom-wrapper.fade-out {
+      opacity: 0;
+    }
+
+    /* Aesthetic Mini Sunflower Element */
+    .mini-sunflower {
+      width: 42px;
+      height: 42px;
+      opacity: 0;
+      transform: scale(0) rotate(-45deg);
+      animation: bloomIn 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      filter: drop-shadow(0 0 10px rgba(255, 191, 0, 0.6));
+    }
+
+    /* Staggered Blooming Timing */
+    .mini-sunflower:nth-child(1) { animation-delay: 0.2s; }
+    .mini-sunflower:nth-child(2) { animation-delay: 0.4s; }
+    .mini-sunflower:nth-child(3) { animation-delay: 0.6s; }
+    .mini-sunflower:nth-child(4) { animation-delay: 0.8s; }
+    .mini-sunflower:nth-child(5) { animation-delay: 1.0s; }
+    .mini-sunflower:nth-child(6) { animation-delay: 1.2s; }
+
+    @keyframes bloomIn {
+      0% {
+        opacity: 0;
+        transform: scale(0) rotate(-60deg);
+      }
+      70% {
+        opacity: 1;
+        transform: scale(1.15) rotate(10deg);
+      }
+      100% {
+        opacity: 0.95;
+        transform: scale(1) rotate(0deg);
+      }
+    }
+
+    /* Festoon String Lights */
+    .lights-wrapper {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
-      height: 100%;
-      z-index: 0;
-      opacity: 0.35;
-      pointer-events: none;
-      transition: opacity 1s ease;
-    }
-
-    .sunflowers-container.fade-out {
-      opacity: 0;
-    }
-
-    .sunflower {
-      position: absolute;
-      transform-origin: center bottom;
-      animation: sway 6s ease-in-out infinite alternate;
-    }
-
-    @keyframes sway {
-      0% { transform: rotate(-3deg); }
-      100% { transform: rotate(3deg); }
-    }
-
-    /* NAVIGATION BUTTONS */
-    .corner-back-btn {
-      position: fixed;
-      top: 24px;
-      left: 24px;
       z-index: 100;
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      color: var(--text-main);
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(12px);
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .corner-back-btn:hover {
-      background: rgba(255, 42, 75, 0.2);
-      border-color: var(--accent-red);
-      transform: scale(1.08);
-    }
-
-    /* LIGHTS FESTOON STRIP */
-    .lights-festoon {
-      position: fixed;
-      top: -10px;
-      left: 0;
-      width: 100%;
-      display: flex;
-      justify-content: space-around;
-      z-index: 90;
       pointer-events: none;
       opacity: 0;
+      transform: translateY(-10px);
       transition: opacity 0.8s ease, transform 0.8s ease;
     }
 
-    .lights-festoon.on {
+    .lights-wrapper.on {
       opacity: 1;
+      transform: translateY(0);
     }
 
-    .lights-festoon.scrolled-hidden {
-      transform: translateY(-100%);
-      opacity: 0;
+    .lights-wrapper.scrolled-hidden {
+      opacity: 0 !important;
+      transform: translateY(-20px) !important;
     }
 
-    .bulb {
-      width: 14px;
-      height: 24px;
-      border-radius: 50% 50% 40% 40%;
-      background: #222;
+    .light-wire-main {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      border-top: 2px solid rgba(255, 180, 50, 0.7);
+      padding-top: 2px;
+    }
+
+    .bulb-socket {
       position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    .bulb::before {
-      content: '';
-      position: absolute;
-      top: -4px;
-      left: 3px;
+    .socket {
       width: 8px;
-      height: 5px;
-      background: #444;
-      border-radius: 2px;
+      height: 6px;
+      background: #333;
     }
 
-    .lights-festoon.on .bulb:nth-child(4n+1) { background: #ff2a4b; box-shadow: 0 5px 15px #ff2a4b; animation: pulseGlow 1.5s infinite alternate; }
-    .lights-festoon.on .bulb:nth-child(4n+2) { background: #ffb703; box-shadow: 0 5px 15px #ffb703; animation: pulseGlow 1.8s infinite alternate 0.3s; }
-    .lights-festoon.on .bulb:nth-child(4n+3) { background: #06d6a0; box-shadow: 0 5px 15px #06d6a0; animation: pulseGlow 1.3s infinite alternate 0.6s; }
-    .lights-festoon.on .bulb:nth-child(4n+4) { background: #118ab2; box-shadow: 0 5px 15px #118ab2; animation: pulseGlow 1.6s infinite alternate 0.9s; }
-
-    @keyframes pulseGlow {
-      0% { opacity: 0.6; filter: brightness(0.8); }
-      100% { opacity: 1; filter: brightness(1.4); }
+    .bulb-gold {
+      width: 15px;
+      height: 24px;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      background: radial-gradient(circle at 35% 35%, #ffffff, #ffb700 85%);
+      box-shadow: 0 0 18px #ffcc00, 0 0 38px #ff8800;
+      animation: warmGlow 1.8s infinite alternate ease-in-out;
     }
 
-    /* COMMON PAGE LAYOUT SECTIONS */
+    @keyframes warmGlow {
+      0% { opacity: 0.7; transform: scale(0.95); }
+      100% { opacity: 1; transform: scale(1.1); box-shadow: 0 0 28px #ffe066, 0 0 50px #ff8800; }
+    }
+
+    /* Navigation Button */
+    .btn-corner-back {
+      position: fixed;
+      top: 25px;
+      left: 25px;
+      z-index: 110;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #ffffff;
+      padding: 10px 22px;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      backdrop-filter: blur(12px);
+      transition: all 0.3s ease;
+    }
+
+    .btn-corner-back:hover {
+      background: rgba(255, 77, 77, 0.4);
+      border-color: #ff4d4d;
+    }
+
+    /* Page Sections */
     .fullpage-section {
-      position: relative;
       width: 100vw;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      padding: 40px 20px;
+      position: relative;
       z-index: 10;
-      padding: 2rem;
-      transition: opacity 0.5s ease, transform 0.5s ease;
     }
 
-    .fullpage-section.hidden {
+    .hidden {
       display: none !important;
     }
 
-    /* CARD CONTAINERS & GLASSMORPHISM */
-    .glass-card {
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      backdrop-filter: blur(16px);
-      border-radius: 24px;
-      padding: 2.5rem 3rem;
-      max-width: 540px;
-      width: 100%;
+    /* Scroll Prompt Indicator */
+    .scroll-hint-prompt {
+      margin-top: 2rem;
+      font-size: 0.95rem;
+      color: #ffc2c6;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: bouncePrompt 2s infinite ease-in-out;
+      opacity: 0.9;
+    }
+
+    @keyframes bouncePrompt {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+
+    /* Typography & Inputs */
+    h2 {
+      font-size: 2.2rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
       text-align: center;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
     }
 
-    /* INPUTS & BUTTONS */
-    .input-group {
-      margin: 1.8rem 0;
-      position: relative;
-    }
-
-    .custom-input {
+    .input-field {
       width: 100%;
-      padding: 1rem 1.2rem;
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid var(--glass-border);
-      border-radius: 14px;
-      color: #fff;
+      max-width: 340px;
+      padding: 14px 24px;
       font-size: 1.1rem;
       font-family: inherit;
+      border-radius: 35px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      background: rgba(0, 0, 0, 0.65);
+      color: #ffffff;
+      text-align: center;
       outline: none;
+      backdrop-filter: blur(10px);
       transition: all 0.3s ease;
     }
 
-    .custom-input:focus {
-      border-color: var(--accent-red);
-      box-shadow: 0 0 15px var(--glow-color);
+    .input-field:focus {
+      border-color: #ff4d5a;
+      box-shadow: 0 0 25px rgba(255, 77, 90, 0.7);
     }
 
     .btn-glow {
-      background: linear-gradient(135deg, var(--accent-red), var(--accent-rose));
-      color: #fff;
-      border: none;
-      padding: 1rem 2.2rem;
-      font-size: 1rem;
+      margin-top: 1.8rem;
+      padding: 14px 38px;
+      font-size: 1.05rem;
+      font-family: inherit;
       font-weight: 600;
-      border-radius: 30px;
-      cursor: pointer;
-      box-shadow: 0 10px 25px var(--glow-color);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      color: #ffffff;
+      background: linear-gradient(135deg, #a3000f, #570008);
+      border: 1px solid rgba(255, 120, 120, 0.5);
+      border-radius: 35px;
+      box-shadow: 0 4px 25px rgba(0, 0, 0, 0.8), 0 0 20px rgba(220, 0, 30, 0.6);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
     }
 
     .btn-glow:hover {
-      transform: translateY(-3px) scale(1.03);
-      box-shadow: 0 15px 35px var(--glow-color);
+      transform: scale(1.05);
+      background: linear-gradient(135deg, #c40012, #7a000b);
+      box-shadow: 0 0 30px rgba(255, 50, 70, 0.9);
     }
 
-    /* TYPEWRITER TEXT */
-    .typewriter-wrapper {
-      font-size: 2rem;
-      font-weight: 800;
+    .greeting-container {
+      text-align: center;
+    }
+
+    .hb-glow-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      font-weight: 700;
+      color: #ffffff;
+      text-shadow: 0 0 25px rgba(255, 255, 255, 0.9);
       min-height: 80px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
     }
 
-    .typewriter-cursor {
+    .fixed-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 4.8rem;
+      font-weight: 900;
+      color: #ffffff;
+      text-shadow: 0 0 25px #ff3344, 0 0 60px rgba(255, 0, 40, 0.9);
+      margin-bottom: 2.5rem;
+    }
+
+    .cursor {
       display: inline-block;
-      width: 3px;
-      height: 2.2rem;
-      background-color: var(--accent-red);
-      animation: blink 0.8s infinite;
+      width: 4px;
+      height: 2.6rem;
+      background-color: #ffffff;
+      margin-left: 6px;
+      box-shadow: 0 0 12px #ffffff;
+      animation: blink 0.7s infinite;
+      vertical-align: middle;
     }
 
     @keyframes blink {
@@ -280,254 +356,257 @@
       50% { opacity: 0; }
     }
 
-    /* STEP 4: BIRTHDAY CAKE & CANDLES SVG */
+    /* Cake Elements */
     .cake-container {
-      margin: 1.5rem 0;
-      display: flex;
-      justify-content: center;
+      position: relative;
+      width: 260px;
+      height: 260px;
+      margin: 10px auto;
     }
 
-    .cake-svg {
-      width: 220px;
-      height: 220px;
-      overflow: visible;
+    .cake {
+      width: 100%;
+      height: 100%;
     }
 
     .flame {
-      fill: #ff9e00;
+      fill: #ff9d00;
+      filter: drop-shadow(0 0 10px #ff4500) drop-shadow(0 0 20px #ffd700);
       transform-origin: center bottom;
-      animation: flicker 0.6s infinite alternate;
-      transition: opacity 0.4s ease;
+      animation: flicker 0.6s ease-in-out infinite alternate;
+      transition: opacity 0.5s ease;
+      opacity: 1;
+    }
+
+    @keyframes flicker {
+      0% { transform: scale(1) rotate(-2deg); }
+      100% { transform: scale(1.12) rotate(2deg); }
     }
 
     .flame.blown-out {
       opacity: 0 !important;
+      animation: none !important;
     }
 
-    @keyframes flicker {
-      0% { transform: scale(1) rotate(-2deg); fill: #ff9e00; }
-      100% { transform: scale(1.15) rotate(2deg); fill: #ff3c00; }
+    .wish-text {
+      font-size: 1.2rem;
+      color: #ffb3b8;
+      margin-top: 10px;
+      text-align: center;
     }
 
-    .scroll-hint-prompt {
-      margin-top: 2rem;
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      animation: bounce 2s infinite;
-    }
-
-    @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-      40% { transform: translateY(-8px); }
-      60% { transform: translateY(-4px); }
-    }
-
-    /* STEP 5: TWO COLUMN MUSIC PLAYER SECTION */
+    /* Music Player Layout */
     .music-section-wrapper {
-      max-width: 1000px;
       width: 100%;
+      max-width: 1100px;
       display: flex;
       flex-direction: column;
+      align-items: center;
       gap: 2rem;
     }
 
     .music-taste-title {
       font-family: 'Playfair Display', serif;
-      font-size: 2.5rem;
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #ffffff;
       text-align: center;
-      background: linear-gradient(135deg, #fff, var(--text-muted));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 25px rgba(255, 77, 90, 0.8);
     }
 
     .music-dual-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2.5rem;
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      backdrop-filter: blur(20px);
-      border-radius: 28px;
-      padding: 2.5rem;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
-      opacity: 0;
-      transform: translateY(30px);
-      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+      margin-top: 1rem;
     }
 
-    .music-dual-container.revealed {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* VINYL PLAYER LEFT */
+    /* Vinyl Player */
     .vinyl-player-left {
+      flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 1.5rem;
+      transform: translateX(-70px);
+      opacity: 0;
+      transition: transform 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.9s ease;
     }
 
     .album-display {
       position: relative;
-      width: 220px;
-      height: 220px;
+      width: 300px;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
     }
 
     .album-cover {
+      width: 280px;
+      height: 280px;
+      background: radial-gradient(circle at 35% 35%, #a80e1a, #4a0006);
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.95), inset 0 0 35px rgba(0, 0, 0, 0.7);
+      border-radius: 4px;
       position: absolute;
-      top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
-      border-radius: 12px;
-      background: #111;
-      background-image: linear-gradient(45deg, #2a0813, #0a0518);
-      z-index: 2;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      border: 1px solid var(--glass-border);
+      top: 10px;
+      z-index: 3;
+      border: 1px solid rgba(255, 255, 255, 0.15);
     }
 
     .vinyl-record {
+      width: 270px;
+      height: 270px;
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .vinyl-record.spinning {
-      transform: translateX(50px);
+      right: -70px;
+      top: 15px;
+      z-index: 2;
+      border-radius: 50%;
+      background: #0d0d0d;
+      box-shadow: -5px 0 25px rgba(0, 0, 0, 0.9);
+      transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .vinyl-svg {
       width: 100%;
       height: 100%;
-      animation: spinVinyl 5s linear infinite;
-      animation-play-state: paused;
+      border-radius: 50%;
     }
 
-    .vinyl-record.spinning .vinyl-svg {
-      animation-play-state: running;
+    .vinyl-record.spinning {
+      animation: spinVinyl 4s linear infinite;
+      right: -90px;
     }
 
     @keyframes spinVinyl {
+      0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
 
     .audio-player-controls {
       width: 100%;
+      max-width: 380px;
+      margin-top: 1.5rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 1rem;
-      margin-top: 1rem;
+      gap: 12px;
     }
 
     .track-title {
-      font-weight: 600;
-      font-size: 1.1rem;
-      color: #fff;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.9rem;
+      color: #ffb3b8;
+      letter-spacing: 1px;
     }
 
     .progress-bar-wrap {
       width: 100%;
       height: 4px;
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.2);
       border-radius: 2px;
       overflow: hidden;
-      position: relative;
     }
 
     .progress-bar-fill {
       width: 35%;
       height: 100%;
-      background: var(--accent-red);
+      background: #ff4d5a;
+      box-shadow: 0 0 12px #ff4d5a;
     }
 
     .controls-row {
       display: flex;
       align-items: center;
-      gap: 1.5rem;
+      gap: 24px;
+      margin-top: 6px;
     }
 
     .player-btn {
-      background: none;
+      background: transparent;
       border: none;
-      color: var(--text-main);
+      color: #ffffff;
       font-size: 1.2rem;
-      cursor: pointer;
-      transition: color 0.2s ease, transform 0.2s ease;
+      transition: all 0.2s ease;
     }
 
     .player-btn:hover {
-      color: var(--accent-red);
+      color: #ff4d5a;
       transform: scale(1.15);
     }
 
-    .play-btn-large {
-      width: 48px;
-      height: 48px;
-      background: #fff;
-      color: #000;
+    .player-btn.play-btn-large {
+      width: 50px;
+      height: 50px;
+      background: #ff4d5a;
+      color: #ffffff;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
+      box-shadow: 0 0 25px rgba(255, 77, 90, 0.8);
     }
 
-    .play-btn-large:hover {
-      color: #000;
-      background: var(--accent-red);
-    }
-
-    /* PLAYLIST RIGHT */
+    /* Playlist Container */
     .playlist-right {
+      flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      align-items: flex-start;
+      background: rgba(25, 0, 5, 0.65);
+      border: 1px solid rgba(255, 77, 90, 0.3);
+      border-radius: 20px;
+      padding: 30px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+      transform: translateX(70px);
+      opacity: 0;
+      transition: transform 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.9s ease;
     }
 
     .playlist-title {
-      font-size: 1.1rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 1.3rem;
       font-weight: 700;
-      color: var(--text-muted);
-      letter-spacing: 1px;
+      color: #ff4d5a;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
       text-transform: uppercase;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
     .song-list {
+      width: 100%;
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 0.6rem;
+      gap: 12px;
     }
 
     .song-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.8rem 1rem;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 12px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid transparent;
-      cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.3s ease;
+      width: 100%;
     }
 
     .song-item:hover, .song-item.active-song {
-      background: rgba(255, 42, 75, 0.15);
-      border-color: rgba(255, 42, 75, 0.4);
+      background: rgba(255, 77, 90, 0.22);
+      border-color: rgba(255, 77, 90, 0.6);
+      transform: translateX(6px);
     }
 
     .song-info {
@@ -538,149 +617,203 @@
     .song-name {
       font-weight: 600;
       font-size: 0.95rem;
+      color: #ffffff;
     }
 
     .song-artist {
       font-size: 0.8rem;
-      color: var(--text-muted);
+      color: #ffb3b8;
     }
 
     .play-icon-small {
-      font-size: 0.8rem;
-      opacity: 0;
-      transition: opacity 0.2s ease;
+      color: #ff4d5a;
+      font-size: 0.9rem;
     }
 
-    .song-item:hover .play-icon-small, .song-item.active-song .play-icon-small {
+    /* Scroll Reveal State */
+    .music-dual-container.revealed .vinyl-player-left {
+      transform: translateX(0);
       opacity: 1;
-      color: var(--accent-red);
     }
 
-    /* RESPONSIVE BREAKPOINTS */
-    @media (max-width: 768px) {
+    .music-dual-container.revealed .playlist-right {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 850px) {
       .music-dual-container {
-        grid-template-columns: 1fr;
-        padding: 1.5rem;
+        flex-direction: column;
+        align-items: center;
       }
-
-      .glass-card {
-        padding: 2rem 1.5rem;
-      }
-
-      .typewriter-wrapper {
-        font-size: 1.5rem;
+      .playlist-right {
+        width: 100%;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- Custom Cursor Dot -->
-  <div id="dot-cursor"></div>
+  <!-- LAYER 1: Underneath Oppositional Gradient -->
+  <div class="bg-gradient-underneath"></div>
 
-  <!-- Dynamic Fluid Mask Overlay Canvas -->
+  <!-- LAYER 2: Canvas Mask Top Gradient Layer -->
   <canvas id="fluid-mask-canvas"></canvas>
 
-  <!-- Sunflowers Garden Background (Step 1 backdrop) -->
-  <div id="sunflowers-garden" class="sunflowers-container">
-    <svg class="sunflower" style="left: 10%; bottom: -20px; width: 120px;" viewBox="0 0 100 100">
-      <circle cx="50" cy="50" r="20" fill="#3d2314" />
-      <g fill="#ffb703">
-        <ellipse cx="50" cy="15" rx="6" ry="15" />
-        <ellipse cx="50" cy="85" rx="6" ry="15" />
-        <ellipse cx="15" cy="50" rx="15" ry="6" />
-        <ellipse cx="85" cy="50" rx="15" ry="6" />
-        <ellipse cx="25" cy="25" rx="8" ry="14" transform="rotate(-45 25 25)" />
-        <ellipse cx="75" cy="75" rx="8" ry="14" transform="rotate(-45 75 75)" />
-        <ellipse cx="25" cy="75" rx="8" ry="14" transform="rotate(45 25 75)" />
-        <ellipse cx="75" cy="25" rx="8" ry="14" transform="rotate(45 75 25)" />
-      </g>
-    </svg>
-    <svg class="sunflower" style="right: 12%; bottom: -10px; width: 150px; animation-delay: -2s;" viewBox="0 0 100 100">
-      <circle cx="50" cy="50" r="20" fill="#3d2314" />
-      <g fill="#fb8500">
-        <ellipse cx="50" cy="15" rx="6" ry="15" />
-        <ellipse cx="50" cy="85" rx="6" ry="15" />
-        <ellipse cx="15" cy="50" rx="15" ry="6" />
-        <ellipse cx="85" cy="50" rx="15" ry="6" />
-        <ellipse cx="25" cy="25" rx="8" ry="14" transform="rotate(-45 25 25)" />
-        <ellipse cx="75" cy="75" rx="8" ry="14" transform="rotate(-45 75 75)" />
-        <ellipse cx="25" cy="75" rx="8" ry="14" transform="rotate(45 25 75)" />
-        <ellipse cx="75" cy="25" rx="8" ry="14" transform="rotate(45 75 25)" />
-      </g>
-    </svg>
+  <!-- Dynamic Red / Ink Black Cursor Dot -->
+  <div id="dot-cursor" class="custom-cursor-dot"></div>
+
+  <!-- Ambient Light Overlay -->
+  <div class="ambient-overlay"></div>
+
+  <!-- Festive String Lights -->
+  <div id="lights-strip" class="lights-wrapper">
+    <div class="light-wire-main">
+      <div class="bulb-socket"><div class="socket"></div><div class="bulb-gold"></div></div>
+      <div class="bulb-socket"><div class="socket"></div><div class="bulb-gold"></div></div>
+      <div class="bulb-socket"><div class="socket"></div><div class="bulb-gold"></div></div>
+      <div class="bulb-socket"><div class="socket"></div><div class="bulb-gold"></div></div>
+      <div class="bulb-socket"><div class="socket"></div><div class="bulb-gold"></div></div>
+      <div class="bulb-socket"><div class="socket"></div><div class="bulb-gold"></div></div>
+      <div class="bulb-socket"><div class="socket"></div><div class="bulb-gold"></div></div>
+      <div class="bulb-socket"><div class="socket"></div><div class="bulb-gold"></div></div>
+    </div>
   </div>
 
-  <!-- Global Corner Back Button -->
-  <button id="corner-back-btn" class="corner-back-btn hidden" onclick="handleCornerBack()">
-    <i class="fa-solid fa-arrow-left"></i>
+  <!-- Back Button -->
+  <button id="corner-back-btn" class="btn-corner-back hidden" onclick="handleCornerBack()">
+    <i class="fa-solid fa-arrow-left"></i> Back
   </button>
 
-  <!-- Top Lights Festoon Strip -->
-  <div id="lights-strip" class="lights-festoon">
-    <div class="bulb"></div><div class="bulb"></div><div class="bulb"></div><div class="bulb"></div>
-    <div class="bulb"></div><div class="bulb"></div><div class="bulb"></div><div class="bulb"></div>
-    <div class="bulb"></div><div class="bulb"></div><div class="bulb"></div><div class="bulb"></div>
-  </div>
-
-  <!-- STEP 1: NAME INPUT -->
+  <!-- STEP 1: Enter Name & Blooming Sunflowers -->
   <section id="step-name" class="fullpage-section">
-    <div class="glass-card">
-      <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem;">Welcome ✨</h2>
-      <p style="color: var(--text-muted);">Whose special day are we celebrating?</p>
-      
-      <div class="input-group">
-        <input type="text" id="user-name-input" class="custom-input" placeholder="Enter name here..." onkeydown="handleKeyPress(event)" />
-      </div>
-
-      <button class="btn-glow" onclick="startGreeting()">Continue <i class="fa-solid fa-sparkles"></i></button>
+    <h2>Who is the birthday star? 👑</h2>
+    <input type="text" id="user-name-input" class="input-field" placeholder="Enter name..." autocomplete="off" onkeydown="handleKeyPress(event)">
+    
+    <!-- Blooming Aesthetic Sunflowers -->
+    <div id="sunflowers-garden" class="sunflowers-bloom-wrapper">
+      <svg class="mini-sunflower" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="16" fill="#3b1d0e"/>
+        <g fill="#ffc107">
+          <ellipse cx="50" cy="18" rx="7" ry="16"/>
+          <ellipse cx="50" cy="82" rx="7" ry="16"/>
+          <ellipse cx="18" cy="50" rx="16" ry="7"/>
+          <ellipse cx="82" cy="50" rx="16" ry="7"/>
+          <ellipse cx="27" cy="27" rx="7" ry="16" transform="rotate(-45 27 27)"/>
+          <ellipse cx="73" cy="73" rx="7" ry="16" transform="rotate(-45 73 73)"/>
+          <ellipse cx="27" cy="73" rx="7" ry="16" transform="rotate(45 27 73)"/>
+          <ellipse cx="73" cy="27" rx="7" ry="16" transform="rotate(45 73 27)"/>
+        </g>
+      </svg>
+      <svg class="mini-sunflower" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="16" fill="#3b1d0e"/>
+        <g fill="#ffb300">
+          <ellipse cx="50" cy="18" rx="7" ry="16"/>
+          <ellipse cx="50" cy="82" rx="7" ry="16"/>
+          <ellipse cx="18" cy="50" rx="16" ry="7"/>
+          <ellipse cx="82" cy="50" rx="16" ry="7"/>
+          <ellipse cx="27" cy="27" rx="7" ry="16" transform="rotate(-45 27 27)"/>
+          <ellipse cx="73" cy="73" rx="7" ry="16" transform="rotate(-45 73 73)"/>
+          <ellipse cx="27" cy="73" rx="7" ry="16" transform="rotate(45 27 73)"/>
+          <ellipse cx="73" cy="27" rx="7" ry="16" transform="rotate(45 73 27)"/>
+        </g>
+      </svg>
+      <svg class="mini-sunflower" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="16" fill="#3b1d0e"/>
+        <g fill="#ffc107">
+          <ellipse cx="50" cy="18" rx="7" ry="16"/>
+          <ellipse cx="50" cy="82" rx="7" ry="16"/>
+          <ellipse cx="18" cy="50" rx="16" ry="7"/>
+          <ellipse cx="82" cy="50" rx="16" ry="7"/>
+          <ellipse cx="27" cy="27" rx="7" ry="16" transform="rotate(-45 27 27)"/>
+          <ellipse cx="73" cy="73" rx="7" ry="16" transform="rotate(-45 73 73)"/>
+          <ellipse cx="27" cy="73" rx="7" ry="16" transform="rotate(45 27 73)"/>
+          <ellipse cx="73" cy="27" rx="7" ry="16" transform="rotate(45 73 27)"/>
+        </g>
+      </svg>
+      <svg class="mini-sunflower" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="16" fill="#3b1d0e"/>
+        <g fill="#ffb300">
+          <ellipse cx="50" cy="18" rx="7" ry="16"/>
+          <ellipse cx="50" cy="82" rx="7" ry="16"/>
+          <ellipse cx="18" cy="50" rx="16" ry="7"/>
+          <ellipse cx="82" cy="50" rx="16" ry="7"/>
+          <ellipse cx="27" cy="27" rx="7" ry="16" transform="rotate(-45 27 27)"/>
+          <ellipse cx="73" cy="73" rx="7" ry="16" transform="rotate(-45 73 73)"/>
+          <ellipse cx="27" cy="73" rx="7" ry="16" transform="rotate(45 27 73)"/>
+          <ellipse cx="73" cy="27" rx="7" ry="16" transform="rotate(45 73 27)"/>
+        </g>
+      </svg>
+      <svg class="mini-sunflower" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="16" fill="#3b1d0e"/>
+        <g fill="#ffc107">
+          <ellipse cx="50" cy="18" rx="7" ry="16"/>
+          <ellipse cx="50" cy="82" rx="7" ry="16"/>
+          <ellipse cx="18" cy="50" rx="16" ry="7"/>
+          <ellipse cx="82" cy="50" rx="16" ry="7"/>
+          <ellipse cx="27" cy="27" rx="7" ry="16" transform="rotate(-45 27 27)"/>
+          <ellipse cx="73" cy="73" rx="7" ry="16" transform="rotate(-45 73 73)"/>
+          <ellipse cx="27" cy="73" rx="7" ry="16" transform="rotate(45 27 73)"/>
+          <ellipse cx="73" cy="27" rx="7" ry="16" transform="rotate(45 73 27)"/>
+        </g>
+      </svg>
+      <svg class="mini-sunflower" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="16" fill="#3b1d0e"/>
+        <g fill="#ffb300">
+          <ellipse cx="50" cy="18" rx="7" ry="16"/>
+          <ellipse cx="50" cy="82" rx="7" ry="16"/>
+          <ellipse cx="18" cy="50" rx="16" ry="7"/>
+          <ellipse cx="82" cy="50" rx="16" ry="7"/>
+          <ellipse cx="27" cy="27" rx="7" ry="16" transform="rotate(-45 27 27)"/>
+          <ellipse cx="73" cy="73" rx="7" ry="16" transform="rotate(-45 73 73)"/>
+          <ellipse cx="27" cy="73" rx="7" ry="16" transform="rotate(45 27 73)"/>
+          <ellipse cx="73" cy="27" rx="7" ry="16" transform="rotate(45 73 27)"/>
+        </g>
+      </svg>
     </div>
+
+    <button class="btn-glow" onclick="startGreeting()">Celebrate 🎉</button>
   </section>
 
-  <!-- STEP 2: MULTI-LANGUAGE TYPEWRITER GREETING -->
+  <!-- STEP 2: Multilingual Typewriter -->
   <section id="step-greeting" class="fullpage-section hidden">
-    <div class="glass-card">
-      <div class="typewriter-wrapper">
-        <span id="typewriter-text"></span>
-        <span class="typewriter-cursor"></span>
-      </div>
-      <h1 id="user-name-display" style="font-size: 2.5rem; color: var(--accent-rose); margin-top: 0.5rem;">Star</h1>
-
-      <button class="btn-glow" style="margin-top: 2rem;" onclick="goToLightsStep()">Next Surprise 🎁</button>
+    <div class="greeting-container">
+      <h2 class="hb-glow-text">
+        <span id="typewriter-text"></span><span class="cursor"></span>
+      </h2>
+      <h1 id="user-name-display" class="fixed-name"></h1>
+      <button class="btn-glow" onclick="goToLightsStep()">Open Surprise 🎁</button>
     </div>
   </section>
 
-  <!-- STEP 3: TURN ON LIGHTS PROMPT -->
+  <!-- STEP 3: Lights Prompt -->
   <section id="step-lights" class="fullpage-section hidden">
-    <div class="glass-card">
-      <i class="fa-solid fa-lightbulb" style="font-size: 3rem; color: #ffb703; margin-bottom: 1rem;"></i>
-      <h2 style="margin-bottom: 0.8rem;">It's a bit dark in here...</h2>
-      <p style="color: var(--text-muted); margin-bottom: 1.8rem;">Let's turn on the lights to start the party!</p>
-
-      <button class="btn-glow" onclick="turnOnLightsAndShowCake()">Turn On Lights 💡</button>
-    </div>
+    <h2>Set the Celebration Mood! ✨</h2>
+    <p style="color: #ffb3b8; font-size: 1.15rem; margin-bottom: 1.5rem; text-align: center;">
+      Tap below to illuminate the room before your cake arrives!
+    </p>
+    <button class="btn-glow" onclick="turnOnLightsAndShowCake()">Turn On Lights ✨</button>
   </section>
 
-  <!-- STEP 4: MAIN BIRTHDAY CAKE & CANDLE BLOWING -->
+  <!-- STEP 4: Interactive Cake Page -->
   <section id="step-main" class="fullpage-section hidden">
-    <h1 id="welcome-header" style="font-size: 2.8rem; text-align: center; margin-bottom: 0.5rem;">Happy Birthday! 🎉</h1>
-    <p class="wish-text" style="color: var(--text-muted);">Make a wish and blow out the candles</p>
+    <h2 id="welcome-header" style="font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900; text-shadow: 0 0 25px #ff3344;"></h2>
+    <p class="wish-text">Make a wish and blow out the candles! 🕯️</p>
 
-    <div class="cake-container">
-      <svg class="cake-svg" viewBox="0 0 200 200">
-        <!-- Cake Base Plate -->
-        <ellipse cx="100" cy="170" rx="80" ry="18" fill="#1e1e24" stroke="#333" stroke-width="2"/>
+    <div class="cake-container" onclick="blowCandles()">
+      <svg class="cake" viewBox="0 0 200 200">
+        <ellipse cx="100" cy="170" rx="85" ry="18" fill="#1f0305" stroke="#4a0008" stroke-width="2"/>
+        <ellipse cx="100" cy="168" rx="75" ry="14" fill="#380207"/>
         
-        <!-- Bottom Cake Layer -->
-        <path d="M 30 130 Q 100 150 170 130 L 170 160 Q 100 180 30 160 Z" fill="#2b0e1a"/>
-        <path d="M 30 130 Q 100 150 170 130 L 170 135 Q 100 155 30 135 Z" fill="#ff2a4b"/>
+        <path d="M 30 120 L 30 155 Q 100 180 170 155 L 170 120 Z" fill="#2b0005"/>
+        <ellipse cx="100" cy="120" rx="70" ry="15" fill="#4d000a"/>
+        
+        <path d="M 30 120 Q 100 135 170 120 Q 170 110 170 100 Q 100 115 30 100 Z" fill="#ff3344"/>
+        
+        <path d="M 35 75 L 35 105 Q 100 125 165 105 L 165 75 Z" fill="#2b0005"/>
+        <ellipse cx="100" cy="75" rx="65" ry="14" fill="#80000e"/>
 
-        <!-- Middle Cake Layer -->
-        <path d="M 40 95 Q 100 115 160 95 L 160 130 Q 100 150 40 130 Z" fill="#3d1425"/>
-        <path d="M 40 95 Q 100 115 160 95 L 160 100 Q 100 120 40 100 Z" fill="#ff4d6d"/>
-
-        <!-- Top Icing Drips -->
-        <path d="M 40 95 Q 55 110 70 98 Q 85 112 100 96 Q 115 110 130 97 Q 145 112 160 95 Q 100 75 40 95 Z" fill="#fff" opacity="0.9"/>
+        <path d="M 35 75 Q 45 90 55 75 Q 65 95 75 75 Q 85 90 95 75 Q 105 95 115 75 Q 125 90 135 75 Q 145 95 155 75 Q 165 85 165 75 Z" fill="#ffffff"/>
 
         <!-- Lit Candles -->
         <rect x="65" y="45" width="8" height="32" rx="3" fill="#ff4d5a"/>
