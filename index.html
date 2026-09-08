@@ -39,7 +39,7 @@
       position: relative;
     }
 
-    /* Dynamic Sleek Cursor Dot (28px) */
+    /* Custom Red / Ink Black Cursor Dot */
     .custom-cursor-dot {
       position: fixed;
       top: 0;
@@ -130,7 +130,6 @@
       filter: drop-shadow(0 0 10px rgba(255, 191, 0, 0.6));
     }
 
-    /* Staggered Blooming Timing */
     .mini-sunflower:nth-child(1) { animation-delay: 0.2s; }
     .mini-sunflower:nth-child(2) { animation-delay: 0.4s; }
     .mini-sunflower:nth-child(3) { animation-delay: 0.6s; }
@@ -139,18 +138,9 @@
     .mini-sunflower:nth-child(6) { animation-delay: 1.2s; }
 
     @keyframes bloomIn {
-      0% {
-        opacity: 0;
-        transform: scale(0) rotate(-60deg);
-      }
-      70% {
-        opacity: 1;
-        transform: scale(1.15) rotate(10deg);
-      }
-      100% {
-        opacity: 0.95;
-        transform: scale(1) rotate(0deg);
-      }
+      0% { opacity: 0; transform: scale(0) rotate(-60deg); }
+      70% { opacity: 1; transform: scale(1.15) rotate(10deg); }
+      100% { opacity: 0.95; transform: scale(1) rotate(0deg); }
     }
 
     /* Festoon String Lights */
@@ -503,21 +493,34 @@
       font-size: 0.9rem;
       color: #ffb3b8;
       letter-spacing: 1px;
+      text-align: center;
     }
 
     .progress-bar-wrap {
       width: 100%;
-      height: 4px;
+      height: 6px;
       background: rgba(255, 255, 255, 0.2);
-      border-radius: 2px;
+      border-radius: 3px;
       overflow: hidden;
+      cursor: pointer !important;
     }
 
     .progress-bar-fill {
-      width: 35%;
+      width: 0%;
       height: 100%;
       background: #ff4d5a;
       box-shadow: 0 0 12px #ff4d5a;
+      transition: width 0.1s linear;
+    }
+
+    .time-indicators {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.6);
+      margin-top: -6px;
     }
 
     .controls-row {
@@ -880,10 +883,15 @@
           </div>
 
           <div class="audio-player-controls">
-            <div class="track-title" id="track-name">Space Song - Beach House</div>
+            <div class="track-title" id="track-name">Khat - Navjot Ahuja</div>
             
-            <div class="progress-bar-wrap">
-              <div class="progress-bar-fill"></div>
+            <div class="progress-bar-wrap" id="progress-container" onclick="seekTrack(event)">
+              <div class="progress-bar-fill" id="progress-bar-fill"></div>
+            </div>
+
+            <div class="time-indicators">
+              <span id="time-current">0:00</span>
+              <span id="time-duration">0:00</span>
             </div>
 
             <div class="controls-row">
@@ -901,48 +909,7 @@
           </div>
 
           <ul class="song-list" id="song-list-items">
-            <li class="song-item active-song" onclick="selectTrack(0)">
-              <div class="song-info">
-                <span class="song-name">Space Song</span>
-                <span class="song-artist">Beach House</span>
-              </div>
-              <i class="fa-solid fa-play play-icon-small"></i>
-            </li>
-            <li class="song-item" onclick="selectTrack(1)">
-              <div class="song-info">
-                <span class="song-name">PPP</span>
-                <span class="song-artist">Beach House</span>
-              </div>
-              <i class="fa-solid fa-play play-icon-small"></i>
-            </li>
-            <li class="song-item" onclick="selectTrack(2)">
-              <div class="song-info">
-                <span class="song-name">Levitation</span>
-                <span class="song-artist">Beach House</span>
-              </div>
-              <i class="fa-solid fa-play play-icon-small"></i>
-            </li>
-            <li class="song-item" onclick="selectTrack(3)">
-              <div class="song-info">
-                <span class="song-name">Cigarette Daydreams</span>
-                <span class="song-artist">Cage The Elephant</span>
-              </div>
-              <i class="fa-solid fa-play play-icon-small"></i>
-            </li>
-            <li class="song-item" onclick="selectTrack(4)">
-              <div class="song-info">
-                <span class="song-name">Chamber Of Reflection</span>
-                <span class="song-artist">Mac DeMarco</span>
-              </div>
-              <i class="fa-solid fa-play play-icon-small"></i>
-            </li>
-            <li class="song-item" onclick="selectTrack(5)">
-              <div class="song-info">
-                <span class="song-name">505</span>
-                <span class="song-artist">Arctic Monkeys</span>
-              </div>
-              <i class="fa-solid fa-play play-icon-small"></i>
-            </li>
+            <!-- Dynamic items generated via JavaScript -->
           </ul>
         </div>
 
@@ -1080,16 +1047,46 @@
     let typewriterTimeout = null;
     let candlesBlown = false;
     let currentStep = 1;
+
+    /* AUDIO ENGINE CONFIGURATION */
+    const audioPlayer = new Audio();
     let isPlaying = false;
     let currentTrackIdx = 0;
 
+    // IMPORTANT: Replace 'YOUR_GITHUB_USERNAME' and 'YOUR_REPO_NAME' with your repository info!
+    const GITHUB_AUDIO_BASE = "https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME/main/audio/";
+
     const playlist = [
-      { title: "Space Song", artist: "Beach House" },
-      { title: "PPP", artist: "Beach House" },
-      { title: "Levitation", artist: "Beach House" },
-      { title: "Cigarette Daydreams", artist: "Cage The Elephant" },
-      { title: "Chamber Of Reflection", artist: "Mac DeMarco" },
-      { title: "505", artist: "Arctic Monkeys" }
+      { 
+        title: "Khat (Official Audio)", 
+        artist: "Navjot Ahuja", 
+        src: GITHUB_AUDIO_BASE + "Navjot%20Ahuja%20-%20Khat%20(Official%20Audio)%20.mp3" 
+      },
+      { 
+        title: "Space Song", 
+        artist: "Beach House", 
+        src: "" 
+      },
+      { 
+        title: "PPP", 
+        artist: "Beach House", 
+        src: "" 
+      },
+      { 
+        title: "Cigarette Daydreams", 
+        artist: "Cage The Elephant", 
+        src: "" 
+      },
+      { 
+        title: "Chamber Of Reflection", 
+        artist: "Mac DeMarco", 
+        src: "" 
+      },
+      { 
+        title: "505", 
+        artist: "Arctic Monkeys", 
+        src: "" 
+      }
     ];
 
     const happyBirthdayLanguages = [
@@ -1104,6 +1101,27 @@
       "Feliz Aniversário,"
     ];
 
+    // Render initial playlist elements dynamically
+    function renderPlaylistUI() {
+      const listContainer = document.getElementById("song-list-items");
+      listContainer.innerHTML = "";
+
+      playlist.forEach((track, idx) => {
+        const li = document.createElement("li");
+        li.className = `song-item ${idx === currentTrackIdx ? 'active-song' : ''}`;
+        li.onclick = () => selectTrack(idx);
+
+        li.innerHTML = `
+          <div class="song-info">
+            <span class="song-name">${track.title}</span>
+            <span class="song-artist">${track.artist}</span>
+          </div>
+          <i class="fa-solid fa-play play-icon-small"></i>
+        `;
+        listContainer.appendChild(li);
+      });
+    }
+
     function handleKeyPress(event) {
       if (event.key === "Enter") startGreeting();
     }
@@ -1112,7 +1130,6 @@
       const inputVal = document.getElementById("user-name-input").value.trim();
       if (inputVal !== "") userName = inputVal;
 
-      // Fade out sunflowers garden smoothly before changing page
       const sunflowers = document.getElementById("sunflowers-garden");
       sunflowers.classList.add("fade-out");
 
@@ -1192,6 +1209,7 @@
         document.getElementById("step-lights").classList.remove("hidden");
         document.getElementById("lights-strip").classList.remove("on");
         document.body.classList.remove("lights-active");
+        if (isPlaying) togglePlay();
         currentStep = 3;
       } else if (currentStep === 3) {
         document.getElementById("step-lights").classList.add("hidden");
@@ -1207,7 +1225,6 @@
         document.getElementById("step-greeting").classList.add("hidden");
         document.getElementById("corner-back-btn").classList.add("hidden");
         
-        // Reset sunflowers bloom garden on return to step 1
         const sunflowers = document.getElementById("sunflowers-garden");
         sunflowers.classList.remove("fade-out");
         
@@ -1249,16 +1266,56 @@
 
     observer.observe(musicSection);
 
-    /* Audio Player Controls */
+    /* AUDIO PLAYER HANDLERS */
+    function formatTime(seconds) {
+      if (isNaN(seconds)) return "0:00";
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    function updateTrackDisplay() {
+      const track = playlist[currentTrackIdx];
+      document.getElementById("track-name").innerText = `${track.title} - ${track.artist}`;
+
+      renderPlaylistUI();
+
+      if (track.src && track.src !== "") {
+        audioPlayer.src = track.src;
+        audioPlayer.load();
+      }
+    }
+
     function togglePlay() {
-      isPlaying = !isPlaying;
+      const track = playlist[currentTrackIdx];
       const vinyl = document.getElementById("vinyl-disc");
       const playBtn = document.getElementById("play-toggle-btn");
 
-      if (isPlaying) {
-        vinyl.classList.add("spinning");
-        playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+      if (!isPlaying) {
+        if (track.src && track.src !== "") {
+          if (!audioPlayer.src || audioPlayer.src === "") {
+            audioPlayer.src = track.src;
+          }
+          audioPlayer.play().then(() => {
+            isPlaying = true;
+            vinyl.classList.add("spinning");
+            playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+          }).catch(err => {
+            console.warn("Audio play prevented or source link missing:", err);
+            // Fallback UI spin mode if audio is blocked
+            isPlaying = true;
+            vinyl.classList.add("spinning");
+            playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+          });
+        } else {
+          // If demo song has no active audio src
+          isPlaying = true;
+          vinyl.classList.add("spinning");
+          playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+        }
       } else {
+        audioPlayer.pause();
+        isPlaying = false;
         vinyl.classList.remove("spinning");
         playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
       }
@@ -1267,32 +1324,53 @@
     function selectTrack(idx) {
       currentTrackIdx = idx;
       updateTrackDisplay();
-      if (!isPlaying) togglePlay();
+      if (isPlaying) {
+        audioPlayer.play().catch(e => console.warn(e));
+      } else {
+        togglePlay();
+      }
     }
 
     function nextTrack() {
       currentTrackIdx = (currentTrackIdx + 1) % playlist.length;
       updateTrackDisplay();
+      if (isPlaying) audioPlayer.play().catch(e => console.warn(e));
     }
 
     function prevTrack() {
       currentTrackIdx = (currentTrackIdx - 1 + playlist.length) % playlist.length;
       updateTrackDisplay();
+      if (isPlaying) audioPlayer.play().catch(e => console.warn(e));
     }
 
-    function updateTrackDisplay() {
-      const track = playlist[currentTrackIdx];
-      document.getElementById("track-name").innerText = `${track.title} - ${track.artist}`;
+    function seekTrack(event) {
+      const container = document.getElementById("progress-container");
+      const rect = container.getBoundingClientRect();
+      const clickX = event.clientX - rect.left;
+      const width = rect.width;
+      const seekRatio = clickX / width;
 
-      const items = document.querySelectorAll(".song-item");
-      items.forEach((item, index) => {
-        if (index === currentTrackIdx) {
-          item.classList.add("active-song");
-        } else {
-          item.classList.remove("active-song");
-        }
-      });
+      if (audioPlayer.duration) {
+        audioPlayer.currentTime = seekRatio * audioPlayer.duration;
+      }
     }
+
+    /* Audio Progress Updates */
+    audioPlayer.addEventListener("timeupdate", () => {
+      if (audioPlayer.duration) {
+        const pct = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+        document.getElementById("progress-bar-fill").style.width = `${pct}%`;
+        document.getElementById("time-current").innerText = formatTime(audioPlayer.currentTime);
+        document.getElementById("time-duration").innerText = formatTime(audioPlayer.duration);
+      }
+    });
+
+    audioPlayer.addEventListener("ended", () => {
+      nextTrack();
+    });
+
+    // Initialize playlist on page load
+    renderPlaylistUI();
   </script>
 </body>
 </html>
