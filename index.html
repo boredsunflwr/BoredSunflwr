@@ -1328,10 +1328,17 @@
     const durationEl = document.getElementById("duration");
 
     function formatTime(seconds) {
-      if (isNaN(seconds) || !seconds) return "0:00";
+      if (isNaN(seconds) || !seconds || !isFinite(seconds)) return "0:00";
       const mins = Math.floor(seconds / 60);
       const secs = Math.floor(seconds % 60).toString().padStart(2, '0');
       return `${mins}:${secs}`;
+    }
+
+    function updateProgressBarFill(percent) {
+      if (!progressBar) return;
+      progressBar.value = percent;
+      // Force visual fill update across all browsers
+      progressBar.style.background = `linear-gradient(to right, #ffffff ${percent}%, rgba(255, 255, 255, 0.2) ${percent}%)`;
     }
 
     function togglePlay() {
@@ -1355,7 +1362,7 @@
     }
 
     function selectTrack(idx) {
-      if (currentTrackIdx === idx && audioEl.src.includes(playlist[idx].src)) {
+      if (currentTrackIdx === idx && audioEl && audioEl.src.includes(playlist[idx].src)) {
         togglePlay();
         return;
       }
@@ -1366,6 +1373,7 @@
       if (audioEl && track.src) {
         audioEl.src = track.src;
         audioEl.load();
+        updateProgressBarFill(0);
 
         setTimeout(() => {
           audioEl.play().then(() => {
@@ -1408,14 +1416,13 @@
       });
     }
 
-    /* Timeline Progress & Fast-Forward Scrubbing Logic */
-    if (audioEl && progressBar) {
+    /* REAL-TIME PROGRESS SYNC & SCRUBBING */
+    if (audioEl) {
+      // Fires constantly while music plays
       audioEl.addEventListener("timeupdate", () => {
-        if (audioEl.duration) {
+        if (audioEl.duration && !isNaN(audioEl.duration)) {
           const progressPercent = (audioEl.currentTime / audioEl.duration) * 100;
-          progressBar.value = progressPercent;
-
-          progressBar.style.background = `linear-gradient(to right, #ffffff ${progressPercent}%, rgba(255, 255, 255, 0.2) ${progressPercent}%)`;
+          updateProgressBarFill(progressPercent);
 
           if (currentTimeEl) currentTimeEl.innerText = formatTime(audioEl.currentTime);
           if (durationEl) durationEl.innerText = formatTime(audioEl.duration);
@@ -1429,16 +1436,19 @@
       audioEl.addEventListener("ended", () => {
         nextTrack();
       });
+    }
 
-      const seekAudio = () => {
-        if (audioEl.duration) {
+    if (progressBar) {
+      const handleScrub = (e) => {
+        if (audioEl && audioEl.duration) {
           const seekTime = (progressBar.value / 100) * audioEl.duration;
           audioEl.currentTime = seekTime;
+          updateProgressBarFill(progressBar.value);
         }
       };
 
-      progressBar.addEventListener("input", seekAudio);
-      progressBar.addEventListener("change", seekAudio);
+      progressBar.addEventListener("input", handleScrub);
+      progressBar.addEventListener("change", handleScrub);
     }
   </script>
 </body>
