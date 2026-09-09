@@ -693,10 +693,66 @@
         width: 100%;
       }
     }
+    /* Timeline Slider Styling */
+#progress-bar {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  width: 100% !important;
+  height: 6px !important;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  transition: box-shadow 0.2s ease;
+}
+
+/* Hover Glow Effect */
+#progress-bar:hover {
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+}
+
+/* White Glowing Draggable Thumb (Chrome/Safari) */
+#progress-bar::-webkit-slider-thumb {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  width: 14px !important;
+  height: 14px !important;
+  border-radius: 50% !important;
+  background: #ffffff !important;
+  box-shadow: 0 0 8px #ffffff, 0 0 15px #ffffff !important;
+  cursor: pointer !important;
+  transition: transform 0.15s ease;
+}
+
+#progress-bar::-webkit-slider-thumb:hover {
+  transform: scale(1.3);
+}
+
+/* White Glowing Draggable Thumb (Firefox) */
+#progress-bar::-moz-range-thumb {
+  width: 14px !important;
+  height: 14px !important;
+  border: none !important;
+  border-radius: 50% !important;
+  background: #ffffff !important;
+  box-shadow: 0 0 8px #ffffff, 0 0 15px #ffffff !important;
+  cursor: pointer !important;
+}
   </style>
 </head>
 <body>
-<audio id="main-audio" src="audio/Navjot%20Ahuja%20-%20Khat%20(Official%20Audio)%20.mp3"></audio>
+<!-- Main Audio Tag -->
+<audio id="main-audio" src="audio/Navjot%20Ahuja%20-%20Khat%20(Official%20Audio)%20.mp3" preload="auto"></audio>
+
+<!-- Glowing Interactive Progress Bar -->
+<div class="progress-wrapper" style="position: relative; z-index: 9999; width: 100%; margin: 15px 0;">
+  <input type="range" id="progress-bar" value="0" min="0" max="100" step="0.1">
+  <div style="display: flex; justify-content: space-between; color: #ffffff; font-size: 12px; margin-top: 6px; font-family: sans-serif;">
+    <span id="current-time">0:00</span>
+    <span id="duration">0:00</span>
+  </div>
+</div>
   <!-- LAYER 1: Underneath Oppositional Gradient -->
   <div class="bg-gradient-underneath"></div>
 
@@ -1337,7 +1393,6 @@
     function updateProgressBarFill(percent) {
       if (!progressBar) return;
       progressBar.value = percent;
-      // Force visual fill update across all browsers
       progressBar.style.background = `linear-gradient(to right, #ffffff ${percent}%, rgba(255, 255, 255, 0.2) ${percent}%)`;
     }
 
@@ -1416,9 +1471,8 @@
       });
     }
 
-    /* REAL-TIME PROGRESS SYNC & SCRUBBING */
+    /* Live Time Sync and Click/Scrub Handling */
     if (audioEl) {
-      // Fires constantly while music plays
       audioEl.addEventListener("timeupdate", () => {
         if (audioEl.duration && !isNaN(audioEl.duration)) {
           const progressPercent = (audioEl.currentTime / audioEl.duration) * 100;
@@ -1439,7 +1493,7 @@
     }
 
     if (progressBar) {
-      const handleScrub = (e) => {
+      const handleScrub = () => {
         if (audioEl && audioEl.duration) {
           const seekTime = (progressBar.value / 100) * audioEl.duration;
           audioEl.currentTime = seekTime;
