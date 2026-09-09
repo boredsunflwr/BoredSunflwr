@@ -38,7 +38,50 @@
       color: #ffffff;
       position: relative;
     }
+/* Progress Bar Track & Glow */
+#progress-bar {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
 
+#progress-bar:hover {
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 25px rgba(255, 255, 255, 0.5);
+}
+
+/* Scrub Thumb (Draggable Handle) */
+#progress-bar::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 12px #ffffff, 0 0 20px #ffffff;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+#progress-bar::-webkit-slider-thumb:hover {
+  transform: scale(1.3);
+}
+
+#progress-bar::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: none;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 12px #ffffff, 0 0 20px #ffffff;
+  cursor: pointer;
+}
     /* Dynamic Sleek Cursor Dot (28px) */
     .custom-cursor-dot {
       position: fixed;
@@ -1311,35 +1354,32 @@
       }
     }
 
-function selectTrack(idx) {
-  // If clicking the song that is ALREADY selected, just toggle play/pause
-  if (currentTrackIdx === idx && audioEl.src.includes(playlist[idx].src)) {
-    togglePlay();
-    return;
-  }
+    function selectTrack(idx) {
+      if (currentTrackIdx === idx && audioEl.src.includes(playlist[idx].src)) {
+        togglePlay();
+        return;
+      }
 
-  // Switch to the new track index
-  currentTrackIdx = idx;
-  const track = playlist[currentTrackIdx];
+      currentTrackIdx = idx;
+      const track = playlist[currentTrackIdx];
 
-  if (audioEl && track.src) {
-    audioEl.src = track.src;
-    audioEl.load();
+      if (audioEl && track.src) {
+        audioEl.src = track.src;
+        audioEl.load();
 
-    // Play after short pause to give browser time to attach the new source
-    setTimeout(() => {
-      audioEl.play().then(() => {
-        isPlaying = true;
-        const vinyl = document.getElementById("vinyl-disc");
-        const playBtn = document.getElementById("play-toggle-btn");
-        if (vinyl) vinyl.classList.add("spinning");
-        if (playBtn) playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
-      }).catch(err => console.log("Audio play error:", err));
-    }, 50);
-  }
+        setTimeout(() => {
+          audioEl.play().then(() => {
+            isPlaying = true;
+            const vinyl = document.getElementById("vinyl-disc");
+            const playBtn = document.getElementById("play-toggle-btn");
+            if (vinyl) vinyl.classList.add("spinning");
+            if (playBtn) playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+          }).catch(err => console.log("Audio play error:", err));
+        }, 50);
+      }
 
-  updateTrackDisplay();
-}
+      updateTrackDisplay();
+    }
 
     function nextTrack() {
       currentTrackIdx = (currentTrackIdx + 1) % playlist.length;
@@ -1368,13 +1408,15 @@ function selectTrack(idx) {
       });
     }
 
-    // Connect timeline progress bar & dragging
-    if (audioEl) {
+    /* Timeline Progress & Fast-Forward Scrubbing Logic */
+    if (audioEl && progressBar) {
       audioEl.addEventListener("timeupdate", () => {
-        if (audioEl.duration && progressBar) {
+        if (audioEl.duration) {
           const progressPercent = (audioEl.currentTime / audioEl.duration) * 100;
           progressBar.value = progressPercent;
-          
+
+          progressBar.style.background = `linear-gradient(to right, #ffffff ${progressPercent}%, rgba(255, 255, 255, 0.2) ${progressPercent}%)`;
+
           if (currentTimeEl) currentTimeEl.innerText = formatTime(audioEl.currentTime);
           if (durationEl) durationEl.innerText = formatTime(audioEl.duration);
         }
@@ -1387,15 +1429,16 @@ function selectTrack(idx) {
       audioEl.addEventListener("ended", () => {
         nextTrack();
       });
-    }
 
-    if (progressBar) {
-      progressBar.addEventListener("input", () => {
-        if (audioEl && audioEl.duration) {
+      const seekAudio = () => {
+        if (audioEl.duration) {
           const seekTime = (progressBar.value / 100) * audioEl.duration;
           audioEl.currentTime = seekTime;
         }
-      });
+      };
+
+      progressBar.addEventListener("input", seekAudio);
+      progressBar.addEventListener("change", seekAudio);
     }
   </script>
 </body>
