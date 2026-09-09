@@ -1377,23 +1377,17 @@
       observer.observe(musicSection);
     }
 
-    /* Audio Player Controls */
+   /* Audio Player Controls */
     const audioEl = document.getElementById("main-audio");
     const progressBar = document.getElementById("progress-bar");
     const currentTimeEl = document.getElementById("current-time");
     const durationEl = document.getElementById("duration");
 
     function formatTime(seconds) {
-      if (isNaN(seconds) || !seconds || !isFinite(seconds)) return "0:00";
+      if (isNaN(seconds) || !seconds) return "0:00";
       const mins = Math.floor(seconds / 60);
       const secs = Math.floor(seconds % 60).toString().padStart(2, '0');
       return `${mins}:${secs}`;
-    }
-
-    function updateProgressBarFill(percent) {
-      if (!progressBar) return;
-      progressBar.value = percent;
-      progressBar.style.background = `linear-gradient(to right, #ffffff ${percent}%, rgba(255, 255, 255, 0.2) ${percent}%)`;
     }
 
     function togglePlay() {
@@ -1428,7 +1422,6 @@
       if (audioEl && track.src) {
         audioEl.src = track.src;
         audioEl.load();
-        updateProgressBarFill(0);
 
         setTimeout(() => {
           audioEl.play().then(() => {
@@ -1442,16 +1435,6 @@
       }
 
       updateTrackDisplay();
-    }
-
-    function nextTrack() {
-      currentTrackIdx = (currentTrackIdx + 1) % playlist.length;
-      selectTrack(currentTrackIdx);
-    }
-
-    function prevTrack() {
-      currentTrackIdx = (currentTrackIdx - 1 + playlist.length) % playlist.length;
-      selectTrack(currentTrackIdx);
     }
 
     function updateTrackDisplay() {
@@ -1469,40 +1452,6 @@
           item.classList.remove("active-song");
         }
       });
-    }
-
-    /* Live Time Sync and Click/Scrub Handling */
-    if (audioEl) {
-      audioEl.addEventListener("timeupdate", () => {
-        if (audioEl.duration && !isNaN(audioEl.duration)) {
-          const progressPercent = (audioEl.currentTime / audioEl.duration) * 100;
-          updateProgressBarFill(progressPercent);
-
-          if (currentTimeEl) currentTimeEl.innerText = formatTime(audioEl.currentTime);
-          if (durationEl) durationEl.innerText = formatTime(audioEl.duration);
-        }
-      });
-
-      audioEl.addEventListener("loadedmetadata", () => {
-        if (durationEl) durationEl.innerText = formatTime(audioEl.duration);
-      });
-
-      audioEl.addEventListener("ended", () => {
-        nextTrack();
-      });
-    }
-
-    if (progressBar) {
-      const handleScrub = () => {
-        if (audioEl && audioEl.duration) {
-          const seekTime = (progressBar.value / 100) * audioEl.duration;
-          audioEl.currentTime = seekTime;
-          updateProgressBarFill(progressBar.value);
-        }
-      };
-
-      progressBar.addEventListener("input", handleScrub);
-      progressBar.addEventListener("change", handleScrub);
     }
   </script>
 </body>
