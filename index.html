@@ -951,7 +951,7 @@
     </div>
   </section>
 
-  <script>
+ <script>
     /* CURSOR DOT SETUP */
     const dotCursor = document.getElementById('dot-cursor');
     let mouseX = window.innerWidth / 2;
@@ -977,23 +977,27 @@
     function renderCursor() {
       cursorX += (mouseX - cursorX) * 0.22;
       cursorY += (mouseY - cursorY) * 0.22;
-      dotCursor.style.left = `${cursorX}px`;
-      dotCursor.style.top = `${cursorY}px`;
+      if (dotCursor) {
+        dotCursor.style.left = `${cursorX}px`;
+        dotCursor.style.top = `${cursorY}px`;
+      }
       requestAnimationFrame(renderCursor);
     }
     renderCursor();
 
     /* SHAPELESS FLOWING ORGANIC LIQUID MASK ENGINE */
     const canvas = document.getElementById('fluid-mask-canvas');
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas ? canvas.getContext('2d') : null;
 
     function resizeCanvas() {
+      if (!canvas || !ctx) return;
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       drawTopGradientLayer();
     }
 
     function drawTopGradientLayer() {
+      if (!canvas || !ctx) return;
       const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
       grad.addColorStop(0, '#000000');
       grad.addColorStop(0.3, '#1f0004');
@@ -1005,8 +1009,10 @@
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
+    if (canvas && ctx) {
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+    }
 
     const NUM_NODES = 12;
     let fluidNodes = [];
@@ -1024,6 +1030,7 @@
     }
 
     function renderOrganicLiquidMask() {
+      if (!canvas || !ctx) return;
       drawTopGradientLayer();
       ctx.globalCompositeOperation = 'destination-out';
 
@@ -1070,7 +1077,9 @@
 
       requestAnimationFrame(renderOrganicLiquidMask);
     }
-    renderOrganicLiquidMask();
+    if (canvas && ctx) {
+      renderOrganicLiquidMask();
+    }
 
     /* APP FLOW LOGIC */
     let userName = "Star";
@@ -1084,12 +1093,16 @@
     let currentTrackIdx = 0;
 
     const playlist = [
-      { title: "Space Song", artist: "Beach House" },
-      { title: "PPP", artist: "Beach House" },
-      { title: "Levitation", artist: "Beach House" },
-      { title: "Cigarette Daydreams", artist: "Cage The Elephant" },
-      { title: "Chamber Of Reflection", artist: "Mac DeMarco" },
-      { title: "505", artist: "Arctic Monkeys" }
+      { 
+        title: "Khat", 
+        artist: "Navjot Ahuja", 
+        src: "audio/Navjot%20Ahuja%20-%20Khat%20(Official%20Audio)%20.mp3" 
+      },
+      { title: "PPP", artist: "Beach House", src: "audio/song2.mp3" },
+      { title: "Levitation", artist: "Beach House", src: "audio/song3.mp3" },
+      { title: "Cigarette Daydreams", artist: "Cage The Elephant", src: "audio/song4.mp3" },
+      { title: "Chamber Of Reflection", artist: "Mac DeMarco", src: "audio/song5.mp3" },
+      { title: "505", artist: "Arctic Monkeys", src: "audio/song6.mp3" }
     ];
 
     const happyBirthdayLanguages = [
@@ -1112,9 +1125,8 @@
       const inputVal = document.getElementById("user-name-input").value.trim();
       if (inputVal !== "") userName = inputVal;
 
-      // Fade out sunflowers garden smoothly before changing page
       const sunflowers = document.getElementById("sunflowers-garden");
-      sunflowers.classList.add("fade-out");
+      if (sunflowers) sunflowers.classList.add("fade-out");
 
       setTimeout(() => {
         currentStep = 2;
@@ -1125,7 +1137,9 @@
 
         document.getElementById("music-taste-header").innerText = `${userName}'s Sound Track ✨`;
 
-        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        if (typeof confetti === 'function') {
+          confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        }
 
         langIndex = 0;
         charIndex = 0;
@@ -1139,12 +1153,14 @@
       const currentPhrase = happyBirthdayLanguages[langIndex];
       const typewriterEl = document.getElementById("typewriter-text");
 
-      if (isDeleting) {
-        typewriterEl.textContent = currentPhrase.substring(0, charIndex - 1);
-        charIndex--;
-      } else {
-        typewriterEl.textContent = currentPhrase.substring(0, charIndex + 1);
-        charIndex++;
+      if (typewriterEl) {
+        if (isDeleting) {
+          typewriterEl.textContent = currentPhrase.substring(0, charIndex - 1);
+          charIndex--;
+        } else {
+          typewriterEl.textContent = currentPhrase.substring(0, charIndex + 1);
+          charIndex++;
+        }
       }
 
       let typingSpeed = isDeleting ? 40 : 80;
@@ -1172,7 +1188,9 @@
       document.body.classList.add("lights-active");
       document.getElementById("lights-strip").classList.add("on");
 
-      confetti({ particleCount: 90, spread: 80, origin: { y: 0.2 } });
+      if (typeof confetti === 'function') {
+        confetti({ particleCount: 90, spread: 80, origin: { y: 0.2 } });
+      }
 
       setTimeout(() => {
         currentStep = 4;
@@ -1181,7 +1199,9 @@
         document.getElementById("step-playlist").classList.remove("hidden");
         document.getElementById("welcome-header").innerText = `Happy Birthday, ${userName}! 🎉`;
 
-        confetti({ particleCount: 140, spread: 100, origin: { y: 0.5 } });
+        if (typeof confetti === 'function') {
+          confetti({ particleCount: 140, spread: 100, origin: { y: 0.5 } });
+        }
       }, 700);
     }
 
@@ -1207,9 +1227,8 @@
         document.getElementById("step-greeting").classList.add("hidden");
         document.getElementById("corner-back-btn").classList.add("hidden");
         
-        // Reset sunflowers bloom garden on return to step 1
         const sunflowers = document.getElementById("sunflowers-garden");
-        sunflowers.classList.remove("fade-out");
+        if (sunflowers) sunflowers.classList.remove("fade-out");
         
         document.getElementById("step-name").classList.remove("hidden");
         currentStep = 1;
@@ -1220,14 +1239,22 @@
       if (candlesBlown) return;
       candlesBlown = true;
 
-      document.getElementById("flame1").classList.add("blown-out");
-      document.getElementById("flame2").classList.add("blown-out");
-      document.getElementById("flame3").classList.add("blown-out");
+      const f1 = document.getElementById("flame1");
+      const f2 = document.getElementById("flame2");
+      const f3 = document.getElementById("flame3");
+      if (f1) f1.classList.add("blown-out");
+      if (f2) f2.classList.add("blown-out");
+      if (f3) f3.classList.add("blown-out");
 
-      document.querySelector(".wish-text").innerText = "Your wish has been made! ✨";
-      document.getElementById("blow-btn").innerText = "Wish Made! 🎉";
+      const wishText = document.querySelector(".wish-text");
+      if (wishText) wishText.innerText = "Your wish has been made! ✨";
+      
+      const blowBtn = document.getElementById("blow-btn");
+      if (blowBtn) blowBtn.innerText = "Wish Made! 🎉";
 
-      confetti({ particleCount: 200, spread: 120, origin: { y: 0.6 } });
+      if (typeof confetti === 'function') {
+        confetti({ particleCount: 200, spread: 120, origin: { y: 0.6 } });
+      }
     }
 
     /* Scroll Observer for Music reveal */
@@ -1235,54 +1262,101 @@
     const lightsStrip = document.getElementById('lights-strip');
     const musicContainer = document.getElementById('music-dual-container');
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          lightsStrip.classList.add('scrolled-hidden');
-          musicContainer.classList.add('revealed');
-        } else {
-          lightsStrip.classList.remove('scrolled-hidden');
-          musicContainer.classList.remove('revealed');
-        }
-      });
-    }, { threshold: 0.25 });
+    if (musicSection && lightsStrip && musicContainer) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            lightsStrip.classList.add('scrolled-hidden');
+            musicContainer.classList.add('revealed');
+          } else {
+            lightsStrip.classList.remove('scrolled-hidden');
+            musicContainer.classList.remove('revealed');
+          }
+        });
+      }, { threshold: 0.25 });
 
-    observer.observe(musicSection);
+      observer.observe(musicSection);
+    }
 
-    /* Audio Player Controls */
+   /* Audio Player Controls */
+    const audioEl = document.getElementById("main-audio");
+    const progressBar = document.getElementById("progress-bar");
+    const currentTimeEl = document.getElementById("current-time");
+    const durationEl = document.getElementById("duration");
+
+    function formatTime(seconds) {
+      if (isNaN(seconds) || !seconds) return "0:00";
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60).toString().padStart(2, '0');
+      return `${mins}:${secs}`;
+    }
+
     function togglePlay() {
-      isPlaying = !isPlaying;
       const vinyl = document.getElementById("vinyl-disc");
       const playBtn = document.getElementById("play-toggle-btn");
 
-      if (isPlaying) {
-        vinyl.classList.add("spinning");
-        playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+      if (!audioEl) return;
+
+      if (audioEl.paused) {
+        audioEl.play().then(() => {
+          isPlaying = true;
+          if (vinyl) vinyl.classList.add("spinning");
+          if (playBtn) playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+        }).catch(err => console.log("Audio play error:", err));
       } else {
-        vinyl.classList.remove("spinning");
-        playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+        audioEl.pause();
+        isPlaying = false;
+        if (vinyl) vinyl.classList.remove("spinning");
+        if (playBtn) playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
       }
     }
 
-    function selectTrack(idx) {
-      currentTrackIdx = idx;
-      updateTrackDisplay();
-      if (!isPlaying) togglePlay();
-    }
+  function selectTrack(idx) {
+  // If clicking the song that is ALREADY selected, just toggle play/pause
+  if (currentTrackIdx === idx && audioEl.src.includes(playlist[idx].src)) {
+    togglePlay();
+    return;
+  }
+
+  // Switch to the new track index
+  currentTrackIdx = idx;
+  const track = playlist[currentTrackIdx];
+
+  if (audioEl && track.src) {
+    audioEl.src = track.src;
+    audioEl.load();
+
+    // Play after short pause to give browser time to attach the new source
+    setTimeout(() => {
+      audioEl.play().then(() => {
+        isPlaying = true;
+        const vinyl = document.getElementById("vinyl-disc");
+        const playBtn = document.getElementById("play-toggle-btn");
+        if (vinyl) vinyl.classList.add("spinning");
+        if (playBtn) playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+      }).catch(err => console.log("Audio play error:", err));
+    }, 50);
+  }
+
+  updateTrackDisplay();
+}
 
     function nextTrack() {
       currentTrackIdx = (currentTrackIdx + 1) % playlist.length;
-      updateTrackDisplay();
+      selectTrack(currentTrackIdx);
     }
 
     function prevTrack() {
       currentTrackIdx = (currentTrackIdx - 1 + playlist.length) % playlist.length;
-      updateTrackDisplay();
+      selectTrack(currentTrackIdx);
     }
 
     function updateTrackDisplay() {
       const track = playlist[currentTrackIdx];
-      document.getElementById("track-name").innerText = `${track.title} - ${track.artist}`;
+      const trackNameEl = document.getElementById("track-name");
+      if (trackNameEl) {
+        trackNameEl.innerText = `${track.title} - ${track.artist}`;
+      }
 
       const items = document.querySelectorAll(".song-item");
       items.forEach((item, index) => {
@@ -1290,6 +1364,36 @@
           item.classList.add("active-song");
         } else {
           item.classList.remove("active-song");
+        }
+      });
+    }
+
+    // Connect timeline progress bar & dragging
+    if (audioEl) {
+      audioEl.addEventListener("timeupdate", () => {
+        if (audioEl.duration && progressBar) {
+          const progressPercent = (audioEl.currentTime / audioEl.duration) * 100;
+          progressBar.value = progressPercent;
+          
+          if (currentTimeEl) currentTimeEl.innerText = formatTime(audioEl.currentTime);
+          if (durationEl) durationEl.innerText = formatTime(audioEl.duration);
+        }
+      });
+
+      audioEl.addEventListener("loadedmetadata", () => {
+        if (durationEl) durationEl.innerText = formatTime(audioEl.duration);
+      });
+
+      audioEl.addEventListener("ended", () => {
+        nextTrack();
+      });
+    }
+
+    if (progressBar) {
+      progressBar.addEventListener("input", () => {
+        if (audioEl && audioEl.duration) {
+          const seekTime = (progressBar.value / 100) * audioEl.duration;
+          audioEl.currentTime = seekTime;
         }
       });
     }
