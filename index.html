@@ -1278,8 +1278,18 @@
       observer.observe(musicSection);
     }
 
-    /* Audio Player Controls */
+  /* Audio Player Controls */
     const audioEl = document.getElementById("main-audio");
+    const progressBar = document.getElementById("progress-bar");
+    const currentTimeEl = document.getElementById("current-time");
+    const durationEl = document.getElementById("duration");
+
+    function formatTime(seconds) {
+      if (isNaN(seconds) || !seconds) return "0:00";
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60).toString().padStart(2, '0');
+      return `${mins}:${secs}`;
+    }
 
     function togglePlay() {
       const vinyl = document.getElementById("vinyl-disc");
@@ -1302,23 +1312,28 @@
     }
 
     function selectTrack(idx) {
-      currentTrackIdx = idx;
-      const track = playlist[currentTrackIdx];
+  currentTrackIdx = idx;
+  const track = playlist[currentTrackIdx];
 
-      if (audioEl && track.src) {
-        audioEl.src = track.src;
-        audioEl.play().then(() => {
-          isPlaying = true;
-          const vinyl = document.getElementById("vinyl-disc");
-          const playBtn = document.getElementById("play-toggle-btn");
-          if (vinyl) vinyl.classList.add("spinning");
-          if (playBtn) playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
-        }).catch(err => console.log("Audio play error:", err));
-      }
-
-      updateTrackDisplay();
+  if (audioEl && track.src) {
+    audioEl.src = track.src;
+    audioEl.preload = "auto";
+    audioEl.load();
+    
+    const playPromise = audioEl.play();
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        isPlaying = true;
+        const vinyl = document.getElementById("vinyl-disc");
+        const playBtn = document.getElementById("play-toggle-btn");
+        if (vinyl) vinyl.classList.add("spinning");
+        if (playBtn) playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+      }).catch(err => console.log("Audio play error:", err));
     }
+  }
 
+  updateTrackDisplay();
+}
     function nextTrack() {
       currentTrackIdx = (currentTrackIdx + 1) % playlist.length;
       selectTrack(currentTrackIdx);
@@ -1345,6 +1360,36 @@
         }
       });
     }
-</script>
+
+    // Connect timeline progress bar & dragging
+    if (audioEl) {
+      audioEl.addEventListener("timeupdate", () => {
+        if (audioEl.duration && progressBar) {
+          const progressPercent = (audioEl.currentTime / audioEl.duration) * 100;
+          progressBar.value = progressPercent;
+          
+          if (currentTimeEl) currentTimeEl.innerText = formatTime(audioEl.currentTime);
+          if (durationEl) durationEl.innerText = formatTime(audioEl.duration);
+        }
+      });
+
+      audioEl.addEventListener("loadedmetadata", () => {
+        if (durationEl) durationEl.innerText = formatTime(audioEl.duration);
+      });
+
+      audioEl.addEventListener("ended", () => {
+        nextTrack();
+      });
+    }
+
+    if (progressBar) {
+      progressBar.addEventListener("input", () => {
+        if (audioEl && audioEl.duration) {
+          const seekTime = (progressBar.value / 100) * audioEl.duration;
+          audioEl.currentTime = seekTime;
+        }
+      });
+    }
+  </script>
 </body>
 </html>
