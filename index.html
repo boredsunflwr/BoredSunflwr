@@ -1312,24 +1312,30 @@
     }
 
     function selectTrack(idx) {
+  // If clicking the song that is ALREADY selected, just toggle play/pause
+  if (currentTrackIdx === idx && audioEl.src.includes(playlist[idx].src)) {
+    togglePlay();
+    return;
+  }
+
+  // Switch to the new track index
   currentTrackIdx = idx;
   const track = playlist[currentTrackIdx];
 
   if (audioEl && track.src) {
     audioEl.src = track.src;
-    audioEl.preload = "auto";
     audioEl.load();
-    
-    const playPromise = audioEl.play();
-    if (playPromise !== undefined) {
-      playPromise.then(() => {
+
+    // Play after short pause to give browser time to attach the new source
+    setTimeout(() => {
+      audioEl.play().then(() => {
         isPlaying = true;
         const vinyl = document.getElementById("vinyl-disc");
         const playBtn = document.getElementById("play-toggle-btn");
         if (vinyl) vinyl.classList.add("spinning");
         if (playBtn) playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
       }).catch(err => console.log("Audio play error:", err));
-    }
+    }, 50);
   }
 
   updateTrackDisplay();
