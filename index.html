@@ -1316,7 +1316,6 @@
     }
 
     function selectTrack(idx) {
-  // If clicking the current track, toggle play/pause
   if (currentTrackIdx === idx && audioEl && audioEl.src.includes(playlist[idx].src)) {
     togglePlay();
     return;
@@ -1326,24 +1325,21 @@
   const track = playlist[currentTrackIdx];
 
   if (audioEl && track.src) {
-    audioEl.pause();
+    // 1. Reset visual indicators during load
+    const vinyl = document.getElementById("vinyl-disc");
+    if (vinyl) vinyl.classList.remove("spinning");
+
     audioEl.src = track.src;
     audioEl.load();
 
-    // Trigger instant playback attempt immediately
-    const playPromise = audioEl.play();
-
-    if (playPromise !== undefined) {
-      playPromise.then(() => {
-        isPlaying = true;
-        const vinyl = document.getElementById("vinyl-disc");
-        const playBtn = document.getElementById("play-toggle-btn");
-        if (vinyl) vinyl.classList.add("spinning");
-        if (playBtn) playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
-      }).catch(err => {
-        console.log("Audio load delay, retrying...", err);
-      });
-    }
+    // 2. Play audio
+    audioEl.play().then(() => {
+      isPlaying = true;
+      // 3. ONLY spin when sound actually begins playing
+      if (vinyl) vinyl.classList.add("spinning");
+      const playBtn = document.getElementById("play-toggle-btn");
+      if (playBtn) playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+    }).catch(err => console.log("Audio play error:", err));
   }
 
   updateTrackDisplay();
@@ -1404,6 +1400,18 @@
         }
       });
     }
-  </script>
+ // Preload all 6 audio files into memory in the background
+    window.addEventListener("load", () => {
+      if (typeof playlist !== "undefined" && Array.isArray(playlist)) {
+        playlist.forEach(track => {
+          if (track.src) {
+            const tempAudio = new Audio();
+            tempAudio.src = track.src;
+            tempAudio.preload = "auto";
+          }
+        });
+      }
+    });
+ </script>
 </body>
 </html>
