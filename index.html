@@ -794,6 +794,216 @@
         width: 100%;
       }
     }
+    /* =========================================
+   HISTORY SECTION — SPACED OUT DESIGN
+   ========================================= */
+
+.history-section {
+  padding: 80px 20px;
+}
+
+.history-wrapper {
+  width: 100%;
+  max-width: 950px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.history-kicker {
+  color: #ffffff !important;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  margin-bottom: 14px;
+  opacity: 0.9;
+}
+
+.history-title {
+  color: #ffffff !important;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1.15;
+  margin-bottom: 18px;
+  text-align: center;
+  text-shadow: 0 0 25px rgba(255, 255, 255, 0.35);
+}
+
+.history-date {
+  color: #ffffff !important;
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin-bottom: 35px;
+  letter-spacing: 0.5px;
+}
+
+/* The three history cards */
+
+.history-cards {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin: 0 auto;
+}
+
+.history-card {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 22px;
+
+  padding: 24px 28px;
+
+  background: rgba(0, 0, 0, 0.38);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 20px;
+
+  text-align: left;
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.25),
+    inset 0 0 25px rgba(255, 255, 255, 0.025);
+
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    background 0.3s ease;
+}
+
+.history-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 180, 80, 0.45);
+  background: rgba(0, 0, 0, 0.48);
+}
+
+/* Number on the left */
+
+.history-card-number {
+  flex-shrink: 0;
+
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: rgba(255, 180, 80, 0.12);
+  border: 1px solid rgba(255, 190, 100, 0.4);
+
+  color: #ffffff !important;
+
+  font-size: 1rem;
+  font-weight: 600;
+
+  box-shadow: 0 0 18px rgba(255, 180, 80, 0.12);
+}
+
+/* Text inside each card */
+
+.history-card-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.history-year {
+  color: #ffffff !important;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  margin-bottom: 7px;
+  opacity: 0.75;
+}
+
+.history-event {
+  color: #ffffff !important;
+  font-size: 1.15rem;
+  line-height: 1.55;
+  font-weight: 400;
+}
+
+.history-comment {
+  color: #ffffff !important;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  opacity: 0.7;
+  font-style: italic;
+}
+
+/* Loading text */
+
+.history-loading {
+  color: #ffffff !important;
+  font-size: 1rem;
+  opacity: 0.8;
+  margin-bottom: 30px;
+}
+
+/* Bottom message */
+
+.history-scroll-hint {
+  color: #ffffff !important;
+  font-size: 0.95rem;
+  margin-top: 32px;
+  opacity: 0.75;
+}
+
+/* Error message */
+
+.history-error {
+  color: #ffffff !important;
+  font-size: 1rem;
+  padding: 25px;
+  border-radius: 18px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 600px) {
+
+  .history-section {
+    padding: 70px 16px;
+  }
+
+  .history-title {
+    font-size: 2rem;
+  }
+
+  .history-date {
+    font-size: 1.15rem;
+    margin-bottom: 25px;
+  }
+
+  .history-card {
+    gap: 14px;
+    padding: 20px;
+    border-radius: 17px;
+  }
+
+  .history-card-number {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+  }
+
+  .history-event {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .history-comment {
+    font-size: 0.82rem;
+  }
+}
   </style>
 </head>
 <body>
