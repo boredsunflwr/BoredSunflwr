@@ -1004,6 +1004,185 @@
     font-size: 0.82rem;
   }
 }
+    /* =========================================
+   HARRY POTTER BIRTHDAY EASTER EGG
+   ========================================= */
+
+.potter-lore {
+  width: 100%;
+  max-width: 900px;
+  margin: 65px auto 35px;
+  text-align: center;
+}
+
+.potter-lore-kicker {
+  color: #ffffff !important;
+  font-size: 1rem;
+  opacity: 0.75;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.potter-lore-title {
+  color: #ffffff !important;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  line-height: 1.2;
+  margin: 0 0 12px;
+  text-shadow: 0 0 25px rgba(255, 255, 255, 0.25);
+}
+
+.potter-lore-subtitle {
+  color: #ffffff !important;
+  font-size: 1rem;
+  opacity: 0.7;
+  margin-bottom: 30px;
+}
+
+
+/* Individual Potter cards */
+
+.potter-lore-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+
+  width: 100%;
+  padding: 25px 28px;
+
+  margin-bottom: 16px;
+
+  text-align: left;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(100, 0, 20, 0.28),
+      rgba(0, 0, 0, 0.5)
+    );
+
+  border: 1px solid rgba(180, 70, 90, 0.3);
+  border-radius: 20px;
+
+  box-shadow:
+    0 12px 35px rgba(0, 0, 0, 0.3),
+    inset 0 0 25px rgba(255, 255, 255, 0.02);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.potter-lore-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(220, 100, 120, 0.55);
+}
+
+
+/* Icon */
+
+.potter-lore-icon {
+  flex-shrink: 0;
+
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: rgba(120, 0, 25, 0.3);
+  border: 1px solid rgba(220, 100, 120, 0.3);
+
+  font-size: 1.35rem;
+}
+
+
+/* Text */
+
+.potter-lore-content {
+  flex: 1;
+}
+
+.potter-lore-label {
+  color: #ffffff !important;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  margin-bottom: 9px;
+  opacity: 0.7;
+}
+
+.potter-lore-event {
+  color: #ffffff !important;
+  font-size: 1.08rem;
+  line-height: 1.6;
+}
+
+.potter-lore-comment {
+  color: #ffffff !important;
+  font-size: 0.9rem;
+  font-style: italic;
+  opacity: 0.65;
+  margin-top: 11px;
+}
+
+
+/* Dramione card gets a slightly different feel */
+
+.dramione-card {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(70, 0, 25, 0.32),
+      rgba(0, 0, 0, 0.52)
+    );
+}
+
+
+/* Final little message */
+
+.potter-lore-footer {
+  color: #ffffff !important;
+  font-size: 0.95rem;
+  opacity: 0.65;
+  margin-top: 25px;
+  font-style: italic;
+}
+
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+  .potter-lore {
+    margin-top: 50px;
+  }
+
+  .potter-lore-card {
+    gap: 14px;
+    padding: 20px;
+  }
+
+  .potter-lore-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+
+  .potter-lore-event {
+    font-size: 0.98rem;
+    line-height: 1.55;
+  }
+
+  .potter-lore-title {
+    font-size: 2rem;
+  }
+}
   </style>
 </head>
 <body>
@@ -1326,6 +1505,80 @@
     </div>
 
     <div id="history-cards" class="history-cards"></div>
+    <!-- HARRY POTTER BIRTHDAY EASTER EGG -->
+<div class="potter-lore">
+
+  <div class="potter-lore-kicker">
+    🪄 okay wait...
+  </div>
+
+  <h3 class="potter-lore-title">
+    WAIT... THERE'S POTTER LORE TOO?
+  </h3>
+
+  <div class="potter-lore-subtitle">
+    Apparently October 12 wasn't content with being a birthday.
+  </div>
+
+  <div class="potter-lore-card">
+
+    <div class="potter-lore-icon">
+      ⚡
+    </div>
+
+    <div class="potter-lore-content">
+
+      <div class="potter-lore-label">
+        🏰 HARRY POTTER · OCTOBER 12
+      </div>
+
+      <div class="potter-lore-event">
+        October 12 has its own little bit of wizarding-world chaos.
+        In 1996, Harry discovers the spell <i>Levicorpus</i>,
+        while other rather unfortunate things are happening around Hogwarts.
+      </div>
+
+      <div class="potter-lore-comment">
+        honestly, Hogwarts needed a normal Tuesday 😭
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="potter-lore-card dramione-card">
+
+    <div class="potter-lore-icon">
+      💕
+    </div>
+
+    <div class="potter-lore-content">
+
+      <div class="potter-lore-label">
+        👀 AND THEN... DRAMIONE
+      </div>
+
+      <div class="potter-lore-event">
+        October 12 also has its own little corner in the
+        Dramione fanfiction universe, with fan works and
+        community posts appearing around this date.
+      </div>
+
+      <div class="potter-lore-comment">
+        we are absolutely counting fanfiction as historical research.
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="potter-lore-footer">
+    So yeah... apparently your birthday has wizarding lore now. 🪄
+  </div>
+
+</div>
 
     <div class="history-scroll-hint">
       You scrolled this far. Might as well learn some history too. 😭
