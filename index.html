@@ -1401,6 +1401,17 @@
         if (audioEl && audioEl.duration) {
           const seekTime = (progressBar.value / 100) * audioEl.duration;
           audioEl.currentTime = seekTime;
+        }
+      });
+    }
+ // Preload all 6 audio files into memory in the background
+    window.addEventListener("load", () => {
+      if (typeof playlist !== "undefined" && Array.isArray(playlist)) {
+        playlist.forEach(track => {
+          if (track.src) {
+            const tempAudio = new Audio();
+            tempAudio.src = track.src;
+            tempAudio.preload = "auto";
           }
         });
       }
