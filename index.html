@@ -1183,6 +1183,301 @@
     font-size: 2rem;
   }
 }
+    /* =========================================
+   SCRATCH MESSAGE CARD
+   ========================================= */
+
+.scratch-message-section {
+  width: 100%;
+  min-height: 82vh;
+  padding: 90px 20px 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.scratch-kicker {
+  font-size: 0.78rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-bottom: 12px;
+}
+
+.scratch-title {
+  margin: 0;
+  font-size: clamp(1.5rem, 4vw, 2.3rem);
+  letter-spacing: 1px;
+  color: #ffffff;
+}
+
+.scratch-subtitle {
+  margin-top: 10px;
+  font-size: 0.95rem;
+  opacity: 0.75;
+}
+
+/* CARD POSITION */
+
+.scratch-card-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 34px auto 20px;
+  perspective: 1200px;
+}
+
+/* THE CARD */
+
+.scratch-card {
+  position: relative;
+
+  width: min(520px, 84vw);
+  aspect-ratio: 4 / 3;
+
+  overflow: hidden;
+
+  /* warm paper underneath */
+  background:
+    radial-gradient(
+      circle at 30% 25%,
+      rgba(255,255,255,0.22),
+      transparent 35%
+    ),
+    linear-gradient(
+      135deg,
+      #ead9aa,
+      #d7bd7e 45%,
+      #e8d29b
+    );
+
+  border-radius: 6px 9px 5px 8px;
+
+  transform: rotate(-0.7deg);
+
+  box-shadow:
+    0 20px 45px rgba(0,0,0,0.38),
+    0 5px 12px rgba(0,0,0,0.25),
+    inset 0 0 0 1px rgba(105,72,20,0.35);
+
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+/* tiny imperfect paper edge */
+
+.scratch-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+
+  border: 1px solid rgba(91,60,18,0.28);
+
+  box-shadow:
+    inset 0 0 25px rgba(91,60,18,0.15),
+    inset 0 0 70px rgba(255,255,255,0.08);
+
+  z-index: 5;
+}
+
+/* MESSAGE UNDER THE SCRATCH LAYER */
+
+.scratch-message {
+  position: absolute;
+  inset: 0;
+
+  padding: 35px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  color: #5a2026;
+
+  background:
+    radial-gradient(
+      circle at 75% 20%,
+      rgba(255,255,255,0.35),
+      transparent 30%
+    ),
+    linear-gradient(
+      145deg,
+      #f5e8c5,
+      #ead5a3
+    );
+
+  overflow: hidden;
+}
+
+/* subtle paper grain underneath */
+
+.scratch-message::before {
+  content: "";
+  position: absolute;
+  inset: -50%;
+
+  background:
+    repeating-linear-gradient(
+      8deg,
+      transparent 0px,
+      transparent 7px,
+      rgba(91,60,18,0.035) 8px,
+      transparent 10px
+    );
+
+  opacity: 0.8;
+  transform: rotate(-3deg);
+
+  pointer-events: none;
+}
+
+/* MESSAGE TEXT */
+
+.scratch-message-small,
+.scratch-message-main,
+.scratch-message-text,
+.scratch-message-signoff {
+  position: relative;
+  z-index: 1;
+}
+
+.scratch-message-small {
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-bottom: 15px;
+}
+
+.scratch-message-main {
+  font-size: clamp(1.7rem, 5vw, 2.5rem);
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.scratch-message-text {
+  max-width: 390px;
+  font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+  line-height: 1.6;
+}
+
+.scratch-message-signoff {
+  margin-top: 22px;
+  font-size: 0.78rem;
+  font-style: italic;
+  opacity: 0.75;
+}
+
+/* GOLDEN SCRATCH SURFACE */
+
+#scratch-canvas {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  z-index: 2;
+
+  display: block;
+
+  cursor: crosshair;
+
+  touch-action: none;
+
+  transition: opacity 0.55s ease;
+}
+
+/* SCRATCH ME TEXT */
+
+.scratch-instruction {
+  position: absolute;
+  inset: 0;
+
+  z-index: 3;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  pointer-events: none;
+
+  color: rgba(255,248,220,0.95);
+
+  font-size: clamp(0.9rem, 2.5vw, 1.15rem);
+  font-weight: 700;
+  letter-spacing: 4px;
+
+  text-shadow:
+    0 1px 3px rgba(76,48,10,0.5),
+    0 0 10px rgba(255,238,160,0.35);
+
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+}
+
+.scratch-progress-text {
+  min-height: 24px;
+
+  font-size: 0.78rem;
+  letter-spacing: 1px;
+
+  opacity: 0.65;
+
+  transition: opacity 0.3s ease;
+}
+
+/* WHEN THE CARD IS FULLY REVEALED */
+
+.scratch-card.revealed {
+  transform: rotate(0deg) scale(1.015);
+
+  box-shadow:
+    0 24px 55px rgba(0,0,0,0.42),
+    0 0 30px rgba(218,176,79,0.18);
+}
+
+.scratch-card.revealed .scratch-instruction {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+  .scratch-message-section {
+    min-height: 78vh;
+    padding: 70px 15px 90px;
+  }
+
+  .scratch-card {
+    width: min(520px, 88vw);
+  }
+
+  .scratch-message {
+    padding: 25px;
+  }
+
+  .scratch-message-text {
+    line-height: 1.45;
+  }
+
+  .scratch-progress-text {
+    font-size: 0.72rem;
+  }
+}
   </style>
 </head>
 <body>
@@ -1579,7 +1874,64 @@
   </div>
 
 </div>
+<!-- SCRATCH MESSAGE CARD -->
+<div class="scratch-message-section">
 
+  <div class="scratch-kicker">
+    okay... one last little secret 👀
+  </div>
+
+  <h3 class="scratch-title">
+    THERE'S SOMETHING FOR YOU HERE
+  </h3>
+
+  <div class="scratch-subtitle">
+    scratch the golden paper to find out ✨
+  </div>
+
+  <div class="scratch-card-wrapper">
+
+    <div class="scratch-card">
+
+      <!-- MESSAGE UNDERNEATH -->
+      <div class="scratch-message">
+        <div class="scratch-message-small">
+          💌 A LITTLE MESSAGE FOR YOU
+        </div>
+
+        <div class="scratch-message-main">
+          Happy Birthday! ❤️
+        </div>
+
+        <div class="scratch-message-text">
+          You actually scratched through an entire golden piece
+          of paper just to read this. 😭
+          <br><br>
+          This is where your real message will go.
+        </div>
+
+        <div class="scratch-message-signoff">
+          — someone who definitely spent too much time making this 🫶
+        </div>
+      </div>
+
+      <!-- GOLDEN SCRATCH SURFACE -->
+      <canvas id="scratch-canvas"></canvas>
+
+      <!-- INSTRUCTION -->
+      <div class="scratch-instruction" id="scratch-instruction">
+        ✨ SCRATCH ME ✨
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="scratch-progress-text" id="scratch-progress-text">
+    drag across the paper with your mouse 🖱️
+  </div>
+
+</div>
     <div class="history-scroll-hint">
       You scrolled this far. Might as well learn some history too. 😭
     </div>
@@ -2231,6 +2583,965 @@ if (historySection) {
 
   historyObserver.observe(historySection);
 }
+   // =========================================
+// SCRATCH MESSAGE CARD
+// =========================================
+
+(function () {
+
+  const scratchSection = document.querySelector(".scratch-message-section");
+  const scratchCard = document.querySelector(".scratch-card");
+  const canvas = document.getElementById("scratch-canvas");
+  const instruction = document.getElementById("scratch-instruction");
+  const progressText = document.getElementById("scratch-progress-text");
+
+  if (!scratchSection || !scratchCard || !canvas) return;
+
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+
+  let cardWidth = 0;
+  let cardHeight = 0;
+  let devicePixelRatio = 1;
+
+  let scratching = false;
+  let lastPoint = null;
+
+  let scratchPoints = [];
+  let revealed = false;
+  let initialized = false;
+
+  let progressCheckTimer = null;
+
+
+  // =========================================
+  // CREATE GOLDEN PAPER
+  // =========================================
+
+  function drawScratchSurface() {
+
+    if (!cardWidth || !cardHeight) return;
+
+    ctx.save();
+
+    ctx.setTransform(
+      devicePixelRatio,
+      0,
+      0,
+      devicePixelRatio,
+      0,
+      0
+    );
+
+    ctx.globalCompositeOperation = "source-over";
+    ctx.globalAlpha = 1;
+
+    ctx.clearRect(0, 0, cardWidth, cardHeight);
+
+
+    // Main antique gold gradient
+    const goldGradient = ctx.createLinearGradient(
+      0,
+      0,
+      cardWidth,
+      cardHeight
+    );
+
+    goldGradient.addColorStop(0, "#e8c873");
+    goldGradient.addColorStop(0.18, "#c69a3b");
+    goldGradient.addColorStop(0.38, "#efd58d");
+    goldGradient.addColorStop(0.55, "#c18d2d");
+    goldGradient.addColorStop(0.75, "#e5c16c");
+    goldGradient.addColorStop(1, "#b77d20");
+
+    ctx.fillStyle = goldGradient;
+
+    ctx.fillRect(
+      0,
+      0,
+      cardWidth,
+      cardHeight
+    );
+
+
+    // Soft light patches
+    const glow1 = ctx.createRadialGradient(
+      cardWidth * 0.25,
+      cardHeight * 0.2,
+      0,
+      cardWidth * 0.25,
+      cardHeight * 0.2,
+      cardWidth * 0.55
+    );
+
+    glow1.addColorStop(
+      0,
+      "rgba(255,245,190,0.28)"
+    );
+
+    glow1.addColorStop(
+      1,
+      "rgba(255,245,190,0)"
+    );
+
+    ctx.fillStyle = glow1;
+
+    ctx.fillRect(
+      0,
+      0,
+      cardWidth,
+      cardHeight
+    );
+
+
+    const glow2 = ctx.createRadialGradient(
+      cardWidth * 0.78,
+      cardHeight * 0.75,
+      0,
+      cardWidth * 0.78,
+      cardHeight * 0.75,
+      cardWidth * 0.45
+    );
+
+    glow2.addColorStop(
+      0,
+      "rgba(91,57,12,0.15)"
+    );
+
+    glow2.addColorStop(
+      1,
+      "rgba(91,57,12,0)"
+    );
+
+    ctx.fillStyle = glow2;
+
+    ctx.fillRect(
+      0,
+      0,
+      cardWidth,
+      cardHeight
+    );
+
+
+    // =========================================
+    // PAPER GRAIN
+    // =========================================
+
+    for (let i = 0; i < 950; i++) {
+
+      const x = Math.random() * cardWidth;
+      const y = Math.random() * cardHeight;
+
+      const size = Math.random() * 1.5 + 0.2;
+
+      const opacity =
+        Math.random() * 0.09 + 0.025;
+
+      ctx.fillStyle =
+        `rgba(70,45,12,${opacity})`;
+
+      ctx.beginPath();
+
+      ctx.arc(
+        x,
+        y,
+        size,
+        0,
+        Math.PI * 2
+      );
+
+      ctx.fill();
+    }
+
+
+    // =========================================
+    // CRUMPLED PAPER CREASES
+    // =========================================
+
+    for (let i = 0; i < 15; i++) {
+
+      const startX =
+        Math.random() * cardWidth;
+
+      const startY =
+        Math.random() * cardHeight;
+
+      const endX =
+        startX +
+        (Math.random() - 0.5) *
+        cardWidth *
+        0.8;
+
+      const endY =
+        startY +
+        (Math.random() - 0.5) *
+        cardHeight *
+        0.8;
+
+      const controlX =
+        (startX + endX) / 2 +
+        (Math.random() - 0.5) * 100;
+
+      const controlY =
+        (startY + endY) / 2 +
+        (Math.random() - 0.5) * 80;
+
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        startX,
+        startY
+      );
+
+      ctx.quadraticCurveTo(
+        controlX,
+        controlY,
+        endX,
+        endY
+      );
+
+      ctx.strokeStyle =
+        "rgba(90,57,15,0.12)";
+
+      ctx.lineWidth =
+        Math.random() * 1.2 + 0.4;
+
+      ctx.stroke();
+
+
+      // little highlight beside the crease
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        startX + 1,
+        startY + 1
+      );
+
+      ctx.quadraticCurveTo(
+        controlX + 2,
+        controlY + 2,
+        endX + 1,
+        endY + 1
+      );
+
+      ctx.strokeStyle =
+        "rgba(255,244,190,0.14)";
+
+      ctx.lineWidth = 0.7;
+
+      ctx.stroke();
+    }
+
+
+    // =========================================
+    // DARKER EDGE
+    // =========================================
+
+    const edgeGradient =
+      ctx.createLinearGradient(
+        0,
+        0,
+        0,
+        cardHeight
+      );
+
+    edgeGradient.addColorStop(
+      0,
+      "rgba(73,46,10,0.22)"
+    );
+
+    edgeGradient.addColorStop(
+      0.12,
+      "rgba(73,46,10,0)"
+    );
+
+    edgeGradient.addColorStop(
+      0.88,
+      "rgba(73,46,10,0)"
+    );
+
+    edgeGradient.addColorStop(
+      1,
+      "rgba(73,46,10,0.25)"
+    );
+
+    ctx.fillStyle = edgeGradient;
+
+    ctx.fillRect(
+      0,
+      0,
+      cardWidth,
+      cardHeight
+    );
+
+
+    // Replay previous scratches after resizing
+    ctx.globalCompositeOperation =
+      "destination-out";
+
+    scratchPoints.forEach(point => {
+
+      erasePoint(
+        point.x,
+        point.y,
+        point.radius
+      );
+
+    });
+
+    ctx.restore();
+  }
+
+
+  // =========================================
+  // RESIZE CANVAS
+  // =========================================
+
+  function resizeCanvas() {
+
+    const rect =
+      canvas.getBoundingClientRect();
+
+    if (
+      rect.width === 0 ||
+      rect.height === 0
+    ) {
+      return;
+    }
+
+    cardWidth = rect.width;
+    cardHeight = rect.height;
+
+    devicePixelRatio =
+      Math.min(
+        window.devicePixelRatio || 1,
+        2
+      );
+
+    canvas.width =
+      Math.floor(
+        cardWidth * devicePixelRatio
+      );
+
+    canvas.height =
+      Math.floor(
+        cardHeight * devicePixelRatio
+      );
+
+    drawScratchSurface();
+  }
+
+
+  // =========================================
+  // ERASE ONE ORGANIC SCRATCH MARK
+  // =========================================
+
+  function erasePoint(
+    x,
+    y,
+    radius
+  ) {
+
+    ctx.save();
+
+    ctx.globalCompositeOperation =
+      "destination-out";
+
+    ctx.globalAlpha = 1;
+
+
+    // Main scratch
+    ctx.beginPath();
+
+    ctx.arc(
+      x,
+      y,
+      radius,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    // Uneven edges
+    ctx.beginPath();
+
+    ctx.arc(
+      x + radius * 0.55,
+      y - radius * 0.35,
+      radius * 0.48,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+      x - radius * 0.45,
+      y + radius * 0.4,
+      radius * 0.38,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    ctx.restore();
+  }
+
+
+  // =========================================
+  // GET POINTER POSITION
+  // =========================================
+
+  function getPointerPosition(event) {
+
+    const rect =
+      canvas.getBoundingClientRect();
+
+    return {
+
+      x:
+        event.clientX -
+        rect.left,
+
+      y:
+        event.clientY -
+        rect.top
+
+    };
+  }
+
+
+  // =========================================
+  // SCRATCH BETWEEN TWO POINTS
+  // =========================================
+
+  function scratchBetween(
+    from,
+    to
+  ) {
+
+    const dx =
+      to.x - from.x;
+
+    const dy =
+      to.y - from.y;
+
+    const distance =
+      Math.sqrt(
+        dx * dx +
+        dy * dy
+      );
+
+    const radius =
+      Math.max(
+        18,
+        Math.min(
+          27,
+          cardWidth * 0.045
+        )
+      );
+
+    const spacing =
+      Math.max(
+        5,
+        radius * 0.35
+      );
+
+    const steps =
+      Math.ceil(
+        distance / spacing
+      );
+
+
+    for (let i = 0; i <= steps; i++) {
+
+      const t =
+        steps === 0
+          ? 1
+          : i / steps;
+
+      const x =
+        from.x +
+        dx * t;
+
+      const y =
+        from.y +
+        dy * t;
+
+
+      erasePoint(
+        x,
+        y,
+        radius
+      );
+
+
+      scratchPoints.push({
+
+        x,
+        y,
+        radius
+
+      });
+
+    }
+  }
+
+
+  // =========================================
+  // START SCRATCHING
+  // =========================================
+
+  function startScratch(event) {
+
+    if (revealed) return;
+
+    event.preventDefault();
+
+    scratching = true;
+
+    canvas.setPointerCapture(
+      event.pointerId
+    );
+
+    const point =
+      getPointerPosition(event);
+
+    lastPoint = point;
+
+    const radius =
+      Math.max(
+        18,
+        Math.min(
+          27,
+          cardWidth * 0.045
+        )
+      );
+
+    erasePoint(
+      point.x,
+      point.y,
+      radius
+    );
+
+    scratchPoints.push({
+
+      x: point.x,
+      y: point.y,
+      radius
+
+    });
+
+    scheduleProgressCheck();
+  }
+
+
+  // =========================================
+  // CONTINUE SCRATCHING
+  // =========================================
+
+  function continueScratch(event) {
+
+    if (
+      !scratching ||
+      revealed
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+
+    const point =
+      getPointerPosition(event);
+
+    if (lastPoint) {
+
+      scratchBetween(
+        lastPoint,
+        point
+      );
+
+    }
+
+    lastPoint = point;
+
+    scheduleProgressCheck();
+  }
+
+
+  // =========================================
+  // STOP SCRATCHING
+  // =========================================
+
+  function stopScratch() {
+
+    scratching = false;
+    lastPoint = null;
+
+  }
+
+
+  // =========================================
+  // CALCULATE SCRATCH %
+  // =========================================
+
+  function calculateScratchPercentage() {
+
+    if (
+      !canvas.width ||
+      !canvas.height
+    ) {
+      return 0;
+    }
+
+    const imageData =
+      ctx.getImageData(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
+
+    const pixels =
+      imageData.data;
+
+    // We don't need to check every pixel.
+    // Sampling makes this much faster.
+    const sampleStep =
+      Math.max(
+        8,
+        Math.floor(
+          Math.min(
+            canvas.width,
+            canvas.height
+          ) / 100
+        )
+      );
+
+    let transparentPixels = 0;
+    let totalPixels = 0;
+
+
+    for (
+      let y = 0;
+      y < canvas.height;
+      y += sampleStep
+    ) {
+
+      for (
+        let x = 0;
+        x < canvas.width;
+        x += sampleStep
+      ) {
+
+        const index =
+          (
+            y *
+            canvas.width +
+            x
+          ) *
+          4;
+
+        const alpha =
+          pixels[index + 3];
+
+        totalPixels++;
+
+
+        if (alpha < 70) {
+          transparentPixels++;
+        }
+
+      }
+
+    }
+
+
+    if (totalPixels === 0) {
+      return 0;
+    }
+
+    return (
+      transparentPixels /
+      totalPixels
+    ) * 100;
+  }
+
+
+  // =========================================
+  // UPDATE PROGRESS
+  // =========================================
+
+  function checkScratchProgress() {
+
+    if (revealed) return;
+
+    const percentage =
+      calculateScratchPercentage();
+
+
+    if (percentage >= 75) {
+
+      revealCard();
+
+      return;
+    }
+
+
+    if (percentage >= 60) {
+
+      progressText.textContent =
+        "almost there... keep going 😭";
+
+    }
+
+    else if (percentage >= 35) {
+
+      progressText.textContent =
+        "okayyy it's working 👀";
+
+    }
+
+    else {
+
+      progressText.textContent =
+        "drag across the golden paper 👆";
+
+    }
+
+
+    // Slowly fade the instruction
+    // as the card gets scratched
+
+    const instructionOpacity =
+      Math.max(
+        0,
+        1 - percentage / 30
+      );
+
+    instruction.style.opacity =
+      instructionOpacity;
+  }
+
+
+  // =========================================
+  // DON'T CHECK EVERY SINGLE PIXEL MOVE
+  // =========================================
+
+  function scheduleProgressCheck() {
+
+    if (progressCheckTimer) {
+      return;
+    }
+
+    progressCheckTimer =
+      setTimeout(() => {
+
+        progressCheckTimer = null;
+
+        checkScratchProgress();
+
+      }, 300);
+  }
+
+
+  // =========================================
+  // REVEAL EVERYTHING AT 75%
+  // =========================================
+
+  function revealCard() {
+
+    if (revealed) return;
+
+    revealed = true;
+
+    scratching = false;
+
+    scratchCard.classList.add(
+      "revealed"
+    );
+
+
+    progressText.textContent =
+      "✨ message unlocked ✨";
+
+
+    // Fade away the remaining gold
+
+    canvas.style.opacity = "0";
+
+    canvas.style.pointerEvents =
+      "none";
+
+
+    instruction.style.opacity =
+      "0";
+
+
+    // Tiny celebration if your site
+    // already has the confetti library
+
+    if (
+      typeof confetti === "function"
+    ) {
+
+      confetti({
+
+        particleCount: 55,
+
+        spread: 65,
+
+        startVelocity: 25,
+
+        origin: {
+          x: 0.5,
+          y: 0.7
+        }
+
+      });
+
+    }
+
+
+    // Completely clear the canvas
+    // after the fade finishes
+
+    setTimeout(() => {
+
+      ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
+
+    }, 650);
+
+  }
+
+
+  // =========================================
+  // MOUSE + FINGER EVENTS
+  // =========================================
+
+  canvas.addEventListener(
+    "pointerdown",
+    startScratch
+  );
+
+  canvas.addEventListener(
+    "pointermove",
+    continueScratch
+  );
+
+  canvas.addEventListener(
+    "pointerup",
+    stopScratch
+  );
+
+  canvas.addEventListener(
+    "pointercancel",
+    stopScratch
+  );
+
+
+  // =========================================
+  // INITIALIZE WHEN CARD BECOMES VISIBLE
+  // =========================================
+
+  function initializeScratchCard() {
+
+    if (initialized) return;
+
+    const rect =
+      scratchCard.getBoundingClientRect();
+
+    if (
+      rect.width === 0 ||
+      rect.height === 0
+    ) {
+      return;
+    }
+
+    initialized = true;
+
+    resizeCanvas();
+  }
+
+
+  // The history section may be hidden
+  // when the page first loads.
+  // So wait until the scratch card
+  // actually enters the screen.
+
+  const scratchObserver =
+    new IntersectionObserver(
+      (entries) => {
+
+        entries.forEach(entry => {
+
+          if (
+            entry.isIntersecting
+          ) {
+
+            initializeScratchCard();
+
+          }
+
+        });
+
+      },
+      {
+        threshold: 0.05
+      }
+    );
+
+
+  scratchObserver.observe(
+    scratchSection
+  );
+
+
+  // Also try immediately in case
+  // the section is already visible.
+
+  initializeScratchCard();
+
+
+  // Rebuild the surface if the
+  // browser changes size/orientation.
+
+  let resizeTimer;
+
+  window.addEventListener(
+    "resize",
+    () => {
+
+      if (!initialized) return;
+
+      clearTimeout(
+        resizeTimer
+      );
+
+      resizeTimer =
+        setTimeout(() => {
+
+          resizeCanvas();
+
+        }, 180);
+
+    }
+  );
+
+})();
  </script>
 </body>
 </html>
