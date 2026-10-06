@@ -1478,6 +1478,491 @@
     font-size: 0.72rem;
   }
 }
+    /* =========================================
+   MISCHIEF MANAGED ENDING
+   ========================================= */
+
+.mischief-ending {
+  width: 100%;
+  margin: 65px auto 30px;
+  padding: 35px 20px 70px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+}
+
+.mischief-line {
+  font-size: clamp(1.1rem, 3vw, 1.45rem);
+  color: rgba(255, 255, 255, 0.92);
+
+  letter-spacing: 1px;
+
+  text-shadow:
+    0 0 12px rgba(218, 176, 79, 0.25);
+}
+
+.mischief-hint {
+  margin-top: 12px;
+
+  font-size: 0.78rem;
+  line-height: 1.7;
+
+  color: rgba(255, 255, 255, 0.58);
+
+  letter-spacing: 0.5px;
+}
+
+.mischief-hint span {
+  color: rgba(231, 198, 116, 0.9);
+}
+
+/* THE BUTTON */
+
+.mischief-button {
+  position: relative;
+
+  margin-top: 25px;
+
+  padding: 13px 30px;
+
+  border: 1px solid rgba(214, 171, 72, 0.7);
+  border-radius: 4px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(115, 76, 20, 0.75),
+      rgba(64, 39, 10, 0.9)
+    );
+
+  color: #f4d98b;
+
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+
+  letter-spacing: 2px;
+  text-transform: uppercase;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.28),
+    inset 0 0 12px rgba(255, 219, 130, 0.06);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.mischief-button:hover {
+  transform: translateY(-3px);
+
+  color: #ffe8a8;
+
+  border-color: rgba(241, 204, 112, 0.95);
+
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.35),
+    0 0 20px rgba(218, 176, 79, 0.15),
+    inset 0 0 15px rgba(255, 219, 130, 0.08);
+}
+
+.mischief-button:active {
+  transform: translateY(0);
+}
+
+/* tiny golden shine */
+
+.mischief-button::after {
+  content: "✦";
+
+  position: absolute;
+
+  top: -8px;
+  right: -7px;
+
+  font-size: 0.7rem;
+
+  color: #f0cf78;
+
+  opacity: 0.75;
+
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
+}
+
+.mischief-button:hover::after {
+  transform: rotate(20deg) scale(1.2);
+  opacity: 1;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+  .mischief-ending {
+    margin-top: 45px;
+    padding-bottom: 55px;
+  }
+
+  .mischief-button {
+    padding: 13px 25px;
+    font-size: 0.72rem;
+  }
+
+}
+    <!-- FINAL BIRTHDAY SCREEN -->
+<div class="final-birthday-screen" id="final-birthday-screen">
+
+  <div class="final-film-grain"></div>
+
+  <div class="final-gold-dust"></div>
+
+  <div class="final-birthday-content">
+
+    <div class="final-small-text">
+      ✦ and that's a wrap ✦
+    </div>
+
+    <div class="final-birthday-title">
+      Happy Birthday
+    </div>
+
+    <div class="final-birthday-name">
+      [NAME]
+    </div>
+
+    <div class="final-final-line">
+      Mischief Managed. 🪄
+    </div>
+
+  </div>
+
+</div>
+    /* =========================================
+   FINAL VINTAGE BIRTHDAY SCREEN
+   ========================================= */
+
+.final-birthday-screen {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    radial-gradient(
+      circle at center,
+      #260b10 0%,
+      #130609 45%,
+      #080306 100%
+    );
+
+  opacity: 0;
+
+  visibility: hidden;
+
+  pointer-events: none;
+
+  transition:
+    opacity 1.8s ease,
+    visibility 1.8s ease;
+}
+
+
+/* when activated */
+
+.final-birthday-screen.active {
+  opacity: 1;
+
+  visibility: visible;
+
+  pointer-events: auto;
+}
+
+
+/* =========================================
+   FINAL CONTENT
+   ========================================= */
+
+.final-birthday-content {
+  position: relative;
+
+  z-index: 3;
+
+  width: 90%;
+
+  text-align: center;
+
+  opacity: 0;
+
+  transform: translateY(18px);
+
+  transition:
+    opacity 2.2s ease 0.8s,
+    transform 2.2s ease 0.8s;
+}
+
+.final-birthday-screen.active
+.final-birthday-content {
+
+  opacity: 1;
+
+  transform: translateY(0);
+
+}
+
+
+/* =========================================
+   SMALL TOP TEXT
+   ========================================= */
+
+.final-small-text {
+
+  margin-bottom: 22px;
+
+  color:
+    rgba(220, 181, 91, 0.72);
+
+  font-size: 0.7rem;
+
+  letter-spacing: 4px;
+
+  text-transform: uppercase;
+
+}
+
+
+/* =========================================
+   HAPPY BIRTHDAY
+   ========================================= */
+
+.final-birthday-title {
+
+  color: #e5bd68;
+
+  font-family:
+    "Brush Script MT",
+    "Segoe Script",
+    cursive;
+
+  font-size:
+    clamp(4rem, 11vw, 8rem);
+
+  line-height: 0.95;
+
+  font-weight: 400;
+
+  letter-spacing: 1px;
+
+  text-shadow:
+
+    0 0 5px
+    rgba(244, 211, 132, 0.55),
+
+    0 0 20px
+    rgba(205, 157, 57, 0.35),
+
+    0 3px 15px
+    rgba(0, 0, 0, 0.6);
+
+}
+
+
+/* =========================================
+   NAME
+   ========================================= */
+
+.final-birthday-name {
+
+  margin-top: 22px;
+
+  color: #f1d18a;
+
+  font-family:
+    "Brush Script MT",
+    "Segoe Script",
+    cursive;
+
+  font-size:
+    clamp(2.2rem, 6vw, 4.5rem);
+
+  font-weight: 400;
+
+  text-shadow:
+
+    0 0 8px
+    rgba(240, 202, 112, 0.45),
+
+    0 0 25px
+    rgba(205, 157, 57, 0.25);
+
+}
+
+
+/* =========================================
+   FINAL LINE
+   ========================================= */
+
+.final-final-line {
+
+  margin-top: 45px;
+
+  color:
+    rgba(255, 231, 171, 0.62);
+
+  font-size: 0.75rem;
+
+  letter-spacing: 3px;
+
+}
+
+
+/* =========================================
+   FILM GRAIN
+   ========================================= */
+
+.final-film-grain {
+
+  position: absolute;
+
+  inset: -50%;
+
+  z-index: 2;
+
+  pointer-events: none;
+
+  opacity: 0.13;
+
+  background-image:
+
+    repeating-radial-gradient(
+      circle at 0 0,
+      rgba(255,255,255,0.18) 0,
+      rgba(255,255,255,0.18) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+
+  animation:
+    filmGrain 0.18s steps(2) infinite;
+}
+
+
+/* =========================================
+   GOLD DUST
+   ========================================= */
+
+.final-gold-dust {
+
+  position: absolute;
+
+  inset: 0;
+
+  pointer-events: none;
+
+  opacity: 0.35;
+
+  background-image:
+
+    radial-gradient(
+      circle,
+      rgba(235,196,106,0.7) 0,
+      rgba(235,196,106,0.7) 1px,
+      transparent 2px
+    );
+
+  background-size:
+    140px 170px;
+
+  animation:
+    goldDust 18s linear infinite;
+}
+
+
+/* =========================================
+   ANIMATIONS
+   ========================================= */
+
+@keyframes filmGrain {
+
+  0% {
+    transform: translate(0, 0);
+  }
+
+  25% {
+    transform: translate(-2%, 1%);
+  }
+
+  50% {
+    transform: translate(1%, -2%);
+  }
+
+  75% {
+    transform: translate(2%, 2%);
+  }
+
+  100% {
+    transform: translate(-1%, -1%);
+  }
+
+}
+
+
+@keyframes goldDust {
+
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-25px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 600px) {
+
+  .final-birthday-title {
+    font-size: clamp(3.5rem, 16vw, 5rem);
+  }
+
+  .final-birthday-name {
+    font-size: clamp(2rem, 10vw, 3.2rem);
+  }
+
+  .final-small-text {
+    font-size: 0.6rem;
+    letter-spacing: 3px;
+  }
+
+  .final-final-line {
+    margin-top: 35px;
+    font-size: 0.65rem;
+  }
+
+}
   </style>
 </head>
 <body>
@@ -1935,6 +2420,27 @@
     <div class="history-scroll-hint">
       You scrolled this far. Might as well learn some history too. 😭
     </div>
+    <!-- MISCHIEF MANAGED ENDING -->
+<div class="mischief-ending">
+
+  <div class="mischief-line">
+    Mischief Managed. 🪄
+  </div>
+
+  <div class="mischief-hint">
+    think you've reached the end?<br>
+    <span>go on... tap the button 👀</span>
+  </div>
+
+  <button
+    class="mischief-button"
+    id="mischief-button"
+    type="button"
+  >
+    Mischief Managed ✨
+  </button>
+
+</div>
   </div>
 </section>
  <script>
@@ -3542,6 +4048,49 @@ if (historySection) {
   );
 
 })();
+   // =========================================
+// MISCHIEF MANAGED → FINAL BIRTHDAY SCREEN
+// =========================================
+
+const mischiefButton =
+  document.getElementById("mischief-button");
+
+const finalBirthdayScreen =
+  document.getElementById("final-birthday-screen");
+
+
+if (
+  mischiefButton &&
+  finalBirthdayScreen
+) {
+
+  mischiefButton.addEventListener(
+    "click",
+    () => {
+
+      // Prevent accidental double clicks
+      mischiefButton.disabled = true;
+
+
+      // Slowly activate the final screen
+      finalBirthdayScreen.classList.add(
+        "active"
+      );
+
+
+      // Small delay before hiding
+      // the page underneath
+      setTimeout(() => {
+
+        document.body.style.overflow =
+          "hidden";
+
+      }, 900);
+
+    }
+  );
+
+}
  </script>
 </body>
 </html>
