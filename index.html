@@ -2433,12 +2433,13 @@
   </div>
 
   <button
-    class="mischief-button"
-    id="mischief-button"
-    type="button"
-  >
-    Mischief Managed ✨
-  </button>
+  class="mischief-button"
+  id="mischief-button"
+  type="button"
+  onclick="showFinalBirthday()"
+>
+  Mischief Managed ✨
+</button>
 
 </div>
   </div>
@@ -4048,46 +4049,26 @@ if (historySection) {
   );
 
 })();
-   // =========================================
+  // =========================================
 // MISCHIEF MANAGED → FINAL BIRTHDAY SCREEN
 // =========================================
 
-const mischiefButton =
-  document.getElementById("mischief-button");
+function showFinalBirthday() {
 
-const finalBirthdayScreen =
-  document.getElementById("final-birthday-screen");
+  const finalScreen =
+    document.getElementById("final-birthday-screen");
 
+  if (!finalScreen) {
+    console.log("Final birthday screen not found!");
+    return;
+  }
 
-if (
-  mischiefButton &&
-  finalBirthdayScreen
-) {
+  // Make the final screen appear
+  finalScreen.classList.add("active");
 
-  mischiefButton.addEventListener(
-    "click",
-    () => {
-
-      // Prevent accidental double clicks
-      mischiefButton.disabled = true;
-
-
-      // Slowly activate the final screen
-      finalBirthdayScreen.classList.add(
-        "active"
-      );
-
-
-      // Small delay before hiding
-      // the page underneath
-      setTimeout(() => {
-
-        document.body.style.overflow =
-          "hidden";
-
-      }, 900);
-
-    }
+  // Stop the page underneath from scrolling
+  document.body.style.overflow = "hidden";
+}
   );
 
 }
