@@ -1931,21 +1931,7 @@
 
 }
     
-/* =========================================
-   WEBSITE FADES AWAY FOR THE FINAL ENDING
-   ========================================= */
 
-body.birthday-ending > *:not(#final-birthday-screen) {
-  animation: pageFadeAway 1.2s ease forwards;
-  pointer-events: none;
-}
-
-@keyframes pageFadeAway {
-  to {
-    opacity: 0;
-    visibility: hidden;
-  }
-}
     
 /* =========================================
    SUBTLE GOLDEN DUST
@@ -2716,6 +2702,10 @@ body.birthday-ending > *:not(#final-birthday-screen) {
         document.getElementById("step-playlist").classList.remove("hidden");
         document.getElementById("step-history").classList.remove("hidden");
         document.getElementById("welcome-header").innerText = `Happy Birthday, ${userName}! 🎉`;
+        window.scrollTo({
+  top: 0,
+  behavior: "auto"
+});
 
         if (typeof confetti === 'function') {
           confetti({ particleCount: 140, spread: 100, origin: { y: 0.5 } });
