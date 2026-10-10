@@ -15,6 +15,9 @@
   
   <!-- Canvas Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
   /* ============================= */
 /* ON THIS DAY HISTORY SECTION    */
 /* ============================= */
@@ -1624,46 +1627,39 @@
    FINAL VINTAGE BIRTHDAY SCREEN
    ========================================= */
 
+
 .final-birthday-screen {
   position: fixed;
-
   inset: 0;
+  z-index: 99999;
 
-  z-index: 9999;
+  background: #000;
+  color: #d8b15a;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  background:
-    radial-gradient(
-      circle at center,
-      #260b10 0%,
-      #130609 45%,
-      #080306 100%
-    );
-
   opacity: 0;
-
   visibility: hidden;
-
   pointer-events: none;
 
   transition:
-    opacity 1.8s ease,
-    visibility 1.8s ease;
+    opacity 1.2s ease,
+    visibility 1.2s ease;
 }
+
 
 
 /* when activated */
 
+
 .final-birthday-screen.active {
   opacity: 1;
-
   visibility: visible;
-
   pointer-events: auto;
 }
+
 
 
 /* =========================================
@@ -1722,67 +1718,65 @@
    HAPPY BIRTHDAY
    ========================================= */
 
+
 .final-birthday-title {
-
-  color: #e5bd68;
-
-  font-family:
-    "Brush Script MT",
-    "Segoe Script",
-    cursive;
-
-  font-size:
-    clamp(4rem, 11vw, 8rem);
-
-  line-height: 0.95;
-
-  font-weight: 400;
-
-  letter-spacing: 1px;
-
-  text-shadow:
-
-    0 0 5px
-    rgba(244, 211, 132, 0.55),
-
-    0 0 20px
-    rgba(205, 157, 57, 0.35),
-
-    0 3px 15px
-    rgba(0, 0, 0, 0.6);
-
+  font-family: 'Great Vibes', cursive;
+  color: #e8c66a;
+  font-size: clamp(3rem, 9vw, 7rem);
+  text-align: center;
+  text-shadow: 0 0 12px rgba(232, 198, 106, 0.18);
+  opacity: 0;
 }
+
+.final-birthday-screen.active .final-birthday-title {
+  animation: birthdayTitleReveal 4s ease forwards;
+  animation-delay: 1s;
+}
+
+@keyframes birthdayTitleReveal {
+  from {
+    opacity: 0;
+    filter: blur(5px);
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
 
 
 /* =========================================
    NAME
    ========================================= */
 
+
 .final-birthday-name {
-
-  margin-top: 22px;
-
-  color: #f1d18a;
-
-  font-family:
-    "Brush Script MT",
-    "Segoe Script",
-    cursive;
-
-  font-size:
-    clamp(2.2rem, 6vw, 4.5rem);
-
-  font-weight: 400;
-
-  text-shadow:
-
-    0 0 8px
-    rgba(240, 202, 112, 0.45),
-
-    0 0 25px
-    rgba(205, 157, 57, 0.25);
-
+  font-family: 'Great Vibes', cursive;
+  color: #d8b15a;
+  font-size: clamp(2rem, 5vw, 4rem);
+  text-align: center;
+  opacity: 0;
 }
+
+.final-birthday-screen.active .final-birthday-name {
+  animation: birthdayNameReveal 2.5s ease forwards;
+  animation-delay: 4s;
+}
+
+@keyframes birthdayNameReveal {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 
 
 /* =========================================
@@ -1802,6 +1796,19 @@
 
 }
 
+
+body.birthday-ending > *:not(#final-birthday-screen) {
+  animation: pageFadeAway 1.2s ease forwards;
+  pointer-events: none;
+}
+
+@keyframes pageFadeAway {
+  to {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
 
 /* =========================================
    FILM GRAIN
@@ -1936,6 +1943,54 @@
   }
 
 }
+    
+/* =========================================
+   WEBSITE FADES AWAY FOR THE FINAL ENDING
+   ========================================= */
+
+body.birthday-ending > *:not(#final-birthday-screen) {
+  animation: pageFadeAway 1.2s ease forwards;
+  pointer-events: none;
+}
+
+@keyframes pageFadeAway {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+    
+/* =========================================
+   SUBTLE GOLDEN DUST
+   ========================================= */
+
+.final-gold-dust {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.4;
+
+  background-image:
+    radial-gradient(circle, #e8c66a 1px, transparent 1.5px),
+    radial-gradient(circle, #b99038 1px, transparent 1.5px);
+
+  background-size: 83px 97px, 137px 151px;
+  background-position: 0 0, 35px 60px;
+
+  animation: goldDustDrift 18s linear infinite;
+}
+
+@keyframes goldDustDrift {
+  from {
+    background-position: 0 0, 35px 60px;
+  }
+
+  to {
+    background-position: 83px 97px, 172px 211px;
+  }
+}
+
+
   </style>
 </head>
   
@@ -2407,13 +2462,15 @@
   </div>
 
   
+
 <button
   type="button"
   id="mischief-button"
-  onclick="alert('BUTTON WORKS!')"
+  class="mischief-button"
 >
   Mischief Managed ✨
 </button>
+
 
 
 </div>
@@ -4026,9 +4083,9 @@ if (
     () => {
 
       // Prevent accidental double clicks
-      mischiefButton.disabled = true;
+    
 
-
+document.body.classList.add("birthday-ending");
       // Slowly activate the final screen
       finalBirthdayScreen.classList.add(
         "active"
