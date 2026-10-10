@@ -1990,7 +1990,14 @@ body.birthday-ending > *:not(#final-birthday-screen) {
   }
 }
 
-
+.website-ending {
+  text-align: center;
+  padding: 60px 20px 40px;
+  color: #d8b15a;
+  font-family: Georgia, serif;
+  font-size: 18px;
+  letter-spacing: 2px;
+}
   </style>
 </head>
   
@@ -2463,13 +2470,7 @@ body.birthday-ending > *:not(#final-birthday-screen) {
 
   
 
-<button
-  type="button"
-  id="mischief-button"
-  class="mischief-button"
->
-  Mischief Managed ✨
-</button>
+
 
 
 
@@ -4063,61 +4064,10 @@ if (historySection) {
 
 })();
    // =========================================
-// MISCHIEF MANAGED → FINAL BIRTHDAY SCREEN
-// =========================================
-
-const mischiefButton =
-  document.getElementById("mischief-button");
-
-const finalBirthdayScreen =
-  document.getElementById("final-birthday-screen");
-
-
-if (
-  mischiefButton &&
-  finalBirthdayScreen
-) {
-
-  mischiefButton.addEventListener(
-    "click",
-    () => {
-
-      // Prevent accidental double clicks
-    
-
-document.body.classList.add("birthday-ending");
-      // Slowly activate the final screen
-      finalBirthdayScreen.classList.add(
-        "active"
-      );
-
-
-      // Small delay before hiding
-      // the page underneath
-      setTimeout(() => {
-
-        document.body.style.overflow =
-          "hidden";
-
-      }, 900);
-
-    }
-  );
-
-}
+// 
  </script>
    <!-- FINAL BIRTHDAY SCREEN -->
-<div class="final-birthday-screen" id="final-birthday-screen">
 
-  <div class="final-film-grain"></div>
-
-  <div class="final-gold-dust"></div>
-
-  <div class="final-birthday-content">
-
-    <div class="final-small-text">
-      ✦ and that's a wrap ✦
-    </div>
 
     <div class="final-birthday-title">
       Happy Birthday
@@ -4133,6 +4083,10 @@ document.body.classList.add("birthday-ending");
 
   </div>
 
+</div>
+<!-- SIMPLE WEBSITE ENDING -->
+<div class="website-ending">
+  Mischief Managed.
 </div>
 </body>
 </html>
