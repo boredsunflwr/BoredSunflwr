@@ -1619,34 +1619,7 @@
   }
 
 }
-    <!-- FINAL BIRTHDAY SCREEN -->
-<div class="final-birthday-screen" id="final-birthday-screen">
-
-  <div class="final-film-grain"></div>
-
-  <div class="final-gold-dust"></div>
-
-  <div class="final-birthday-content">
-
-    <div class="final-small-text">
-      ✦ and that's a wrap ✦
-    </div>
-
-    <div class="final-birthday-title">
-      Happy Birthday
-    </div>
-
-    <div class="final-birthday-name">
-      [NAME]
-    </div>
-
-    <div class="final-final-line">
-      Mischief Managed. 🪄
-    </div>
-
-  </div>
-
-</div>
+   
     /* =========================================
    FINAL VINTAGE BIRTHDAY SCREEN
    ========================================= */
@@ -1965,6 +1938,7 @@
 }
   </style>
 </head>
+  
 <body>
 
   <!-- LAYER 1: Underneath Oppositional Gradient -->
@@ -3002,51 +2976,32 @@ async function loadHistoryForToday() {
 
 
 // Give historical events a rough "coolness" score
+
 function getHistoryScore(event) {
   let score = 0;
-
   const text = (event.text || "").toLowerCase();
 
-  const coolWords = [
-    "first",
-    "discovered",
-    "invented",
-    "founded",
-    "born",
-    "died",
-    "war",
-    "battle",
-    "revolution",
-    "independence",
-    "king",
-    "queen",
-    "president",
-    "space",
-    "moon",
-    "apollo",
-    "nobel",
-    "world war",
-    "agreement",
-    "treaty",
-    "elected",
-    "launched"
+  // Fun, interesting topics to prioritise
+  const funWords = [
+    "invented", "discovered", "launched", "first flight",
+    "space", "moon", "satellite", "planet", "astronomy",
+    "scientist", "experiment", "technology", "computer",
+    "internet", "music", "album", "film", "movie",
+    "television", "animation", "video game", "game",
+    "art", "book", "novel", "museum", "festival",
+    "opened", "founded", "first successful", "record",
+    "nobel prize", "born", "premiered", "released"
   ];
 
-  coolWords.forEach(word => {
-    if (text.includes(word)) {
-      score += 5;
-    }
+  funWords.forEach(word => {
+    if (text.includes(word)) score += 5;
   });
 
-  // Prefer events with Wikipedia pages
-  if (event.pages && event.pages.length > 0) {
-    score += 3;
-  }
+  // Recent-ish events can be more relatable
+  if (event.year >= 1950) score += 2;
 
-  // Slight preference for more recent historical events
-  if (event.year >= 1900) {
-    score += 2;
-  }
+  // Wikipedia links can indicate a topic worth exploring
+  if (event.pages && event.pages.length > 0) score += 2;
 
   return score;
 }
@@ -3055,9 +3010,9 @@ function getHistoryScore(event) {
 // Little comments under each event
 function getHistoryComment(index) {
   const comments = [
-    "okay this one is actually pretty cool 👀",
-    "history was kinda wild ngl 😭",
-    "imagine being there for this 💀"
+    "👀",
+    "😭",
+    "💀"
   ];
 
   return comments[index] || "history really said plot twist";
@@ -4092,5 +4047,33 @@ if (
 
 }
  </script>
+   <!-- FINAL BIRTHDAY SCREEN -->
+<div class="final-birthday-screen" id="final-birthday-screen">
+
+  <div class="final-film-grain"></div>
+
+  <div class="final-gold-dust"></div>
+
+  <div class="final-birthday-content">
+
+    <div class="final-small-text">
+      ✦ and that's a wrap ✦
+    </div>
+
+    <div class="final-birthday-title">
+      Happy Birthday
+    </div>
+
+    <div class="final-birthday-name">
+      [NAME]
+    </div>
+
+    <div class="final-final-line">
+      Mischief Managed. 🪄
+    </div>
+
+  </div>
+
+</div>
 </body>
 </html>
