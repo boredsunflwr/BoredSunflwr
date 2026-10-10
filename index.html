@@ -2390,7 +2390,7 @@
       <!-- MESSAGE UNDERNEATH -->
       <div class="scratch-message">
         <div class="scratch-message-small">
-          💌 A LITTLE MESSAGE FOR YOU
+          💌 A Lil MESSAGE FOR YOU
         </div>
 
         <div class="scratch-message-main">
@@ -2398,8 +2398,7 @@
         </div>
 
         <div class="scratch-message-text">
-          You actually scratched through an entire golden piece
-          of paper just to read this. 😭
+          will paste later
           <br><br>
           
         </div>
@@ -2702,6 +2701,10 @@
         document.getElementById("step-playlist").classList.remove("hidden");
         document.getElementById("step-history").classList.remove("hidden");
         document.getElementById("welcome-header").innerText = `Happy Birthday, ${userName}! 🎉`;
+        document.getElementById("step-main").scrollIntoView({
+  behavior: "instant",
+  block: "start"
+});
         window.scrollTo({
   top: 0,
   behavior: "auto"
